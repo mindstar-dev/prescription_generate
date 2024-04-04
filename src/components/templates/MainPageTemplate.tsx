@@ -112,6 +112,7 @@ const MainPageTemplate: React.FunctionComponent<IProps> = (props) => {
                 {props.doctorName}
               </p>
             </div>
+            <div className="w-full h-[90%]">{props.children}</div>
           </div>
         </div>
       </main>
