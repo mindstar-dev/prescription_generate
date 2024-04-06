@@ -10,6 +10,7 @@ import templates_icon from "../../../images/Dashboard.png";
 import Image from "next/image";
 import { FaSignOutAlt } from "react-icons/fa";
 import { FaCircleUser } from "react-icons/fa6";
+import { getSession, useSession } from "next-auth/react";
 interface IProps {
   templateParams?: {
     title: string;
@@ -44,7 +45,14 @@ const MainPageTemplate: React.FunctionComponent<IProps> = (props) => {
                 alt="Description of the image"
                 className="ml-10 h-10 w-10"
               />
-              <p className="text-lg font-medium text-white">
+              <p
+                className="text-lg font-medium text-white"
+                onClick={async () => {
+                  const ses = await getSession();
+
+                  console.log(ses?.user);
+                }}
+              >
                 Patient Registration
               </p>
             </div>
