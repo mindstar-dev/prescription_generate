@@ -61,8 +61,7 @@ const authOptions: AuthOptions = {
   },
 
   pages: {
-    // signIn: "/welcome-page",
-    // signOut: "/basic-unit",
+    signOut: "/doctor-login",
   },
 };
 

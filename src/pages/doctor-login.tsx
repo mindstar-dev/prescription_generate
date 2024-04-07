@@ -25,7 +25,7 @@ const DoctorLogin: React.FunctionComponent = () => {
     });
     if (res?.ok) {
       await router.push({
-        pathname: "/compounder-dashboard",
+        pathname: "/doctor-dashboard",
         query: { user_type: userInfo.user_type },
       });
     }
