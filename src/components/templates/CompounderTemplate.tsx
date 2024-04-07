@@ -10,21 +10,20 @@ import templates_icon from "../../../images/Dashboard.png";
 import Image from "next/image";
 import { FaSignOutAlt } from "react-icons/fa";
 import { FaCircleUser } from "react-icons/fa6";
+import { getSession, signOut, useSession } from "next-auth/react";
 interface IProps {
   templateParams?: {
     title: string;
   };
   activePage:
     | "patient_registration"
-    | "appointments"
-    | "patient_list"
-    | "reports"
+    | "patient_details"
     | "upload_reports"
-    | "templates";
+    | "";
   doctorName: string;
   children?: JSX.Element | JSX.Element[];
 }
-const MainPageTemplate: React.FunctionComponent<IProps> = (props) => {
+const CompounderPageTemplate: React.FunctionComponent<IProps> = (props) => {
   return (
     <>
       <title></title>
@@ -44,40 +43,29 @@ const MainPageTemplate: React.FunctionComponent<IProps> = (props) => {
                 alt="Description of the image"
                 className="ml-10 h-10 w-10"
               />
-              <p className="text-lg font-medium text-white">
+              <p
+                className="text-lg font-medium text-white"
+                onClick={async () => {
+                  const ses = await getSession();
+
+                  console.log(ses?.user);
+                }}
+              >
                 Patient Registration
               </p>
             </div>
+
             <div
-              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "appointments" ? "bg-[#FCA19F]" : "bg-transparent"}`}
-            >
-              <Image
-                src={appointments_icon}
-                alt="Description of the image"
-                className="ml-10 h-10 w-10"
-              />
-              <p className="text-lg font-medium text-white">Appointments</p>
-            </div>
-            <div
-              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "patient_list" ? "bg-[#FCA19F]" : "bg-transparent"}`}
+              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "patient_details" ? "bg-[#FCA19F]" : "bg-transparent"}`}
             >
               <Image
                 src={patient_list_icon}
                 alt="Description of the image"
                 className="ml-10 h-10 w-10"
               />
-              <p className="text-lg font-medium text-white">Patient List</p>
+              <p className="text-lg font-medium text-white">Patient Details</p>
             </div>
-            <div
-              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "reports" ? "bg-[#FCA19F]" : "bg-transparent"}`}
-            >
-              <Image
-                src={reports_icon}
-                alt="Description of the image"
-                className="ml-10 h-10 w-10"
-              />
-              <p className="text-lg font-medium text-white">Reports</p>
-            </div>
+
             <div
               className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "upload_reports" ? "bg-[#FCA19F]" : "bg-transparent"}`}
             >
@@ -88,18 +76,13 @@ const MainPageTemplate: React.FunctionComponent<IProps> = (props) => {
               />
               <p className="text-lg font-medium text-white">Upload Reports</p>
             </div>
-            <div
-              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "templates" ? "bg-[#FCA19F]" : "bg-transparent"}`}
-            >
-              <Image
-                src={templates_icon}
-                alt="Description of the image"
-                className="ml-10 h-10 w-10"
-              />
-              <p className="text-lg font-medium text-white">Templates</p>
-            </div>
           </div>
-          <div className="ml-10 flex cursor-pointer items-center">
+          <div
+            className="ml-10 flex cursor-pointer items-center"
+            onClick={() => {
+              signOut({ redirect: true, callbackUrl: "/doctor-login" });
+            }}
+          >
             <FaSignOutAlt className="mr-2 h-10 w-10 text-white" />
             <p className="text-lg font-medium text-white">Sign Out</p>
           </div>
@@ -119,4 +102,4 @@ const MainPageTemplate: React.FunctionComponent<IProps> = (props) => {
   );
 };
 
-export default MainPageTemplate;
+export default CompounderPageTemplate;

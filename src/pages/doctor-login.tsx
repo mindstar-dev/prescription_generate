@@ -5,9 +5,36 @@ import img2 from "../../images/healthcare-logo .png";
 import Image from "next/image";
 import { FaEye, FaUser } from "react-icons/fa";
 import { useRouter } from "next/router";
+import { signIn } from "next-auth/react";
 
 const DoctorLogin: React.FunctionComponent = () => {
   const router = useRouter();
+  const [userInfo, setUserInfo] = React.useState({
+    id: "",
+    password: "",
+    user_type: "doctor",
+  });
+
+  const handleSubmit = async () => {
+    // console.log(userInfo);
+    const res = await signIn("credentials", {
+      id: userInfo.id,
+      password: userInfo.password,
+      user_type: userInfo.user_type,
+      redirect: false,
+    });
+    if (res?.ok) {
+      await router.push({
+        pathname: "/doctor-dashboard",
+        query: { user_type: userInfo.user_type },
+      });
+    }
+    if (res?.error) {
+      // Authentication error occurred
+      alert("Incorrect username or password. Please try again.");
+    }
+    return undefined;
+  };
   return (
     <>
       <title></title>
@@ -46,25 +73,29 @@ const DoctorLogin: React.FunctionComponent = () => {
               <input
                 placeholder="Enter User-id"
                 className="ml-1 h-5/6 w-4/5 outline-none"
+                value={userInfo.id}
+                onChange={({ target }) =>
+                  setUserInfo({ ...userInfo, id: target.value })
+                }
               />
               <FaUser className="mr-4 h-5 w-5" />
             </div>
             <div className="flex h-1/3 w-full items-center justify-between rounded-xl border-2 border-[#969696]">
               <input
-                placeholder="Enter User-id"
+                placeholder="Enter Password"
                 className="ml-1 h-5/6 w-4/5 outline-none"
+                value={userInfo.password}
+                onChange={({ target }) =>
+                  setUserInfo({ ...userInfo, password: target.value })
+                }
               />
               <FaEye className="mr-4 h-5 w-5" />
             </div>
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                className="mr-4 h-4 w-4 text-lg font-normal"
-              />
-              <p>Remember Me</p>
-            </div>
           </div>
-          <button className="flex h-[6%] w-1/5 items-center justify-center rounded-2xl bg-[#3D4460] text-center text-2xl font-medium text-white">
+          <button
+            className="flex h-[6%] w-1/5 items-center justify-center rounded-2xl bg-[#3D4460] text-center text-2xl font-medium text-white"
+            onClick={handleSubmit}
+          >
             Submit
           </button>
           <p
