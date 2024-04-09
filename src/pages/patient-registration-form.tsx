@@ -1,18 +1,18 @@
-import React from 'react'
-import PatientRegistrattionForm from '~/components/form/PatientRegistrattionForm';
-import MainPageTemplate from '~/components/templates/MainPageTemplate';
+import React from "react";
+import PatientRegistrattionForm from "~/components/form/PatientRegistrattionForm";
+import DoctorPageTemplate from "~/components/templates/DoctorPageTemplate";
 
-const patientregistrationform:React.FunctionComponent = () => {
-    return (
-        <>
-          <MainPageTemplate
-            activePage="patient_registration"
-            doctorName="Doctor's Name"
-          >
-            <PatientRegistrattionForm/>
-          </MainPageTemplate>
-        </>
-      );
-}
+const patientregistrationform: React.FunctionComponent = () => {
+  return (
+    <>
+      <DoctorPageTemplate
+        activePage="patient_registration"
+        doctorName="Doctor's Name"
+      >
+        <PatientRegistrattionForm />
+      </DoctorPageTemplate>
+    </>
+  );
+};
 
-export default patientregistrationform
+export default patientregistrationform;

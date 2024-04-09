@@ -1,18 +1,18 @@
-import React from 'react'
-import PatientList from '~/components/tables/PatientList'
-import MainPageTemplate from '~/components/templates/MainPageTemplate'
+import React from "react";
+import PatientList from "~/components/tables/PatientList";
+import DoctorPageTemplate from "~/components/templates/DoctorPageTemplate";
 
-const PatientLists:React.FunctionComponent = () => {
+const PatientLists: React.FunctionComponent = () => {
   return (
     <div>
-      <MainPageTemplate
+      <DoctorPageTemplate
         activePage="patient_registration"
         doctorName="Doctor's Name"
       >
-        <PatientList/>
-      </MainPageTemplate>
+        <PatientList />
+      </DoctorPageTemplate>
     </div>
-  )
-}
+  );
+};
 
-export default PatientLists
+export default PatientLists;

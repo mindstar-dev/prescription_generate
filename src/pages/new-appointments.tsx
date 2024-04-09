@@ -1,18 +1,18 @@
-import React from 'react'
-import NewAppointments from '~/components/tables/NewAppointments'
-import MainPageTemplate from '~/components/templates/MainPageTemplate'
+import React from "react";
+import NewAppointments from "~/components/tables/NewAppointments";
+import DoctorPageTemplate from "~/components/templates/DoctorPageTemplate";
 
-const newappointments:React.FunctionComponent = () => {
+const newappointments: React.FunctionComponent = () => {
   return (
     <div>
-      <MainPageTemplate
+      <DoctorPageTemplate
         activePage="patient_registration"
         doctorName="Doctor's Name"
       >
-        <NewAppointments/>
-      </MainPageTemplate>
+        <NewAppointments />
+      </DoctorPageTemplate>
     </div>
-  )
-}
+  );
+};
 
-export default newappointments
+export default newappointments;
