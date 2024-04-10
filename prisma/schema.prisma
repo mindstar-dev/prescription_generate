@@ -80,7 +80,7 @@ model VerificationToken {
  model Patient{
     first_name String
     last_name String
-    contact_number String
+    contact_number BigInt
     email_id String?
     patient_id String @id 
     gender String
