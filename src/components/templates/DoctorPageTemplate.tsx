@@ -11,6 +11,7 @@ import Image from "next/image";
 import { FaSignOutAlt } from "react-icons/fa";
 import { FaCircleUser } from "react-icons/fa6";
 import { getSession, signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 interface IProps {
   templateParams?: {
     title: string;
@@ -27,6 +28,7 @@ interface IProps {
   children?: JSX.Element | JSX.Element[];
 }
 const DoctorPageTemplate: React.FunctionComponent<IProps> = (props) => {
+  const router = useRouter();
   const a = useSession();
   return (
     <>
@@ -41,24 +43,24 @@ const DoctorPageTemplate: React.FunctionComponent<IProps> = (props) => {
           <div className="flex h-[70%] w-full flex-col">
             <div
               className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "patient_registration" ? "bg-[#FCA19F]" : "bg-transparent"}`}
+              onClick={() => {
+                router.push("patient-registration-form");
+              }}
             >
               <Image
                 src={patient_registration_icon}
                 alt="Description of the image"
                 className="ml-10 h-10 w-10"
               />
-              <p
-                className="text-lg font-medium text-white"
-                onClick={async () => {
-                  const ses = await getSession();
-                  console.log(ses?.user);
-                }}
-              >
+              <p className="text-lg font-medium text-white">
                 Patient Registration
               </p>
             </div>
             <div
               className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "appointments" ? "bg-[#FCA19F]" : "bg-transparent"}`}
+              onClick={() => {
+                router.push("new-appointments");
+              }}
             >
               <Image
                 src={appointments_icon}
@@ -69,6 +71,9 @@ const DoctorPageTemplate: React.FunctionComponent<IProps> = (props) => {
             </div>
             <div
               className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "patient_list" ? "bg-[#FCA19F]" : "bg-transparent"}`}
+              onClick={() => {
+                router.push("patient-lists");
+              }}
             >
               <Image
                 src={patient_list_icon}
@@ -126,6 +131,7 @@ const DoctorPageTemplate: React.FunctionComponent<IProps> = (props) => {
                 {props.doctorName}
               </p>
             </div>
+            <div className="h-[90%] w-full">{props.children}</div>
           </div>
         </div>
       </main>

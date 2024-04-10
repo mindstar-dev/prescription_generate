@@ -11,19 +11,22 @@ import Image from "next/image";
 import { FaSignOutAlt } from "react-icons/fa";
 import { FaCircleUser } from "react-icons/fa6";
 import { getSession, signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 interface IProps {
   templateParams?: {
     title: string;
   };
   activePage:
     | "patient_registration"
-    | "patient_details"
+    | "patient_list"
     | "upload_reports"
+    | "appointments"
     | "";
   doctorName: string;
   children?: JSX.Element | JSX.Element[];
 }
 const CompounderPageTemplate: React.FunctionComponent<IProps> = (props) => {
+  const router = useRouter();
   return (
     <>
       <title></title>
@@ -37,6 +40,9 @@ const CompounderPageTemplate: React.FunctionComponent<IProps> = (props) => {
           <div className="flex h-[70%] w-full flex-col">
             <div
               className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "patient_registration" ? "bg-[#FCA19F]" : "bg-transparent"}`}
+              onClick={() => {
+                router.push("patient-registration-form");
+              }}
             >
               <Image
                 src={patient_registration_icon}
@@ -54,16 +60,32 @@ const CompounderPageTemplate: React.FunctionComponent<IProps> = (props) => {
                 Patient Registration
               </p>
             </div>
+            <div
+              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "appointments" ? "bg-[#FCA19F]" : "bg-transparent"}`}
+              onClick={() => {
+                router.push("new-appointments");
+              }}
+            >
+              <Image
+                src={appointments_icon}
+                alt="Description of the image"
+                className="ml-10 h-10 w-10"
+              />
+              <p className="text-lg font-medium text-white">Appointments</p>
+            </div>
 
             <div
-              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "patient_details" ? "bg-[#FCA19F]" : "bg-transparent"}`}
+              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "patient_list" ? "bg-[#FCA19F]" : "bg-transparent"}`}
+              onClick={() => {
+                router.push("patient-lists");
+              }}
             >
               <Image
                 src={patient_list_icon}
                 alt="Description of the image"
                 className="ml-10 h-10 w-10"
               />
-              <p className="text-lg font-medium text-white">Patient Details</p>
+              <p className="text-lg font-medium text-white">Patient List</p>
             </div>
 
             <div
@@ -95,6 +117,7 @@ const CompounderPageTemplate: React.FunctionComponent<IProps> = (props) => {
                 {props.doctorName}
               </p>
             </div>
+            <div className="h-[90%] w-full">{props.children}</div>
           </div>
         </div>
       </main>
