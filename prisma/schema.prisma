@@ -100,6 +100,7 @@ model VerificationToken {
     prescription_id String 
     patient_id String
     date DateTime
+    is_template  Boolean
     patient Patient @relation(fields: [prescription_id], references: [patient_id])   
     prescription_diagnos_data PrescriptionDiagnosData[]
     prescription_medicine_data PrescriptionMedicineData[]
@@ -126,3 +127,11 @@ model VerificationToken {
     prescription    Prescription @relation(fields: [prescription_id,patient_id], references: [prescription_id,patient_id])
     @@id([prescription_id,patient_id,medicine])
  }
+
+model Medicine{
+    name String @id
+}
+
+model Symptom{
+    name String @id
+}
