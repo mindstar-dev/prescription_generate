@@ -76,3 +76,53 @@ model VerificationToken {
     password String
     user_type String
  }
+
+ model Patient{
+    first_name String
+    last_name String
+    contact_number String
+    email_id String?
+    patient_id String @id 
+    gender String
+    fathers_name String?
+    husbands_name String?
+    age Int
+    address_line1 String?
+    adress_line2 String?
+    city String?
+    state String?
+    pin_code Int?
+    country String?
+    prescriptions Prescription[]
+ }
+
+ model Prescription{
+    prescription_id String 
+    patient_id String
+    date DateTime
+    patient Patient @relation(fields: [prescription_id], references: [patient_id])   
+    prescription_diagnos_data PrescriptionDiagnosData[]
+    prescription_medicine_data PrescriptionMedicineData[]
+    @@id([patient_id,prescription_id])
+ }
+
+ model PrescriptionDiagnosData{
+    prescription_id String 
+    patient_id String
+    symptom String[]
+    bp String
+    diagnosis String[]
+    weight Int
+    note String
+    prescription    Prescription @relation(fields: [prescription_id,patient_id], references: [prescription_id,patient_id])
+    @@id([prescription_id,patient_id])
+ }
+
+ model PrescriptionMedicineData{
+    prescription_id String
+    patient_id String
+    medicine String
+    repeatitions String
+    prescription    Prescription @relation(fields: [prescription_id,patient_id], references: [prescription_id,patient_id])
+    @@id([prescription_id,patient_id,medicine])
+ }
