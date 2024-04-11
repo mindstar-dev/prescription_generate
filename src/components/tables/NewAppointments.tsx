@@ -273,38 +273,38 @@ const NewAppointments: React.FunctionComponent = () => {
         <input type="date" className="m-1" />
         <button className="w-[55px] h-[42px] text-white bg-[#F36562] flex justify-center items-center"><FaSearch /></button>
       </div>
-      <div className="h-[75%] w-full overflow-y-scroll">
-        <table className="w-full h-full overflow-y-scroll">
-          <tr className="h-[86px] sticky top-0 bg-white">
-            <td className="text-center w-[15%] h-[86px]">P-ID</td>
-            <td className="text-center w-[20%] h-[86px]">NAME</td>
-            <td className="text-center w-[15%] h-[86px]">AGE</td>
-            <td className="text-center w-[20%] h-[86px]">CONTACT NO</td>
-            <td className="text-center w-[30%] h-[86px]">ACTION</td>
-          </tr>
+      <div className="h-[75%] w-full">
+        <div className="w-full h-full overflow-y-scroll flex flex-col">
+          <div className="h-[86px] sticky top-0 bg-white flex flex-row w-full">
+            <div className="text-center  flex items-center justify-center w-[15%] h-[86px]">P-ID</div>
+            <div className="text-center  flex items-center justify-center w-[20%] h-[86px]">NAME</div>
+            <div className="text-center  flex items-center justify-center w-[15%] h-[86px]">AGE</div>
+            <div className="text-center  flex items-center justify-center w-[20%] h-[86px]">CONTACT NO</div>
+            <div className="text-center  flex items-center justify-center w-[30%] h-[86px]">ACTION</div>
+          </div>
           {Tablearray.map((item, index) => (
-            <tr
-              key={index}
-              className={`${index % 2 !== 0 ? "bg-[#F9F1F1]" : "bg-[#F0F0F0]"} h-[86px]  `}
-            >
-              <td className="w-[15%] text-center">{item.id}</td>
-              <td className="w-[20%] text-center">{item.name}</td>
-              <td className="w-[15%] text-center">{item.age}</td>
-              <td className="w-[20%] text-center">{item.phno}</td>
-              <td className="w-[30%] space-x-4">
-                <button className="h-[41px] w-[95px] bg-[#FCA19F] hover:bg-[#F36562]">
-                  DETAILS
-                </button>
-                <button className="h-[41px] w-[95px] bg-[#FCA19F] hover:bg-[#F36562]">
-                  ATTEND
-                </button>
-                <button className="h-[41px] w-[95px] bg-[#FCA19F] hover:bg-[#F36562]">
-                  REPORT
-                </button>
-              </td>
-            </tr>
-          ))}
-        </table>
+          <div
+            key={index}
+            className={`${index % 2 !== 0 ? "bg-[#F9F1F1]" : "bg-[#F0F0F0]"} flex h-[86px]`}
+          >
+            <div className="w-[15%]  flex items-center justify-center">{item.id}</div>
+            <div className="w-[20%]  flex items-center justify-center">{item.name}</div>
+            <div className="w-[15%] flex items-center justify-center">{item.age}</div>
+            <div className="w-[20%]  flex items-center justify-center">{item.phno}</div>
+            <div className="w-[30%] space-x-4 flex items-center">
+              <button className="h-[41px] w-[95px] bg-[#FCA19F] hover:bg-[#F36562]">
+                DETAILS
+              </button>
+              <button className="h-[41px] w-[95px] bg-[#FCA19F] hover:bg-[#F36562]">
+                ATTEND
+              </button>
+              <button className="h-[41px] w-[95px] bg-[#FCA19F] hover:bg-[#F36562]">
+                REPORT
+              </button>
+            </div>
+          </div>
+        ))}
+        </div>
       </div>
     </div>
   );
