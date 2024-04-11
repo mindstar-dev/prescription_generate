@@ -1,17 +1,14 @@
 import * as React from "react";
-import NewAppointments from "~/components/tables/NewAppointments";
-import PatientList from "~/components/tables/PatientList";
-import MainPageTemplate from "~/components/templates/MainPageTemplate";
+
+import CompounderPageTemplate from "~/components/templates/CompounderTemplate";
 
 const CompounderDashBoard: React.FunctionComponent = () => {
   return (
     <>
-      <MainPageTemplate
-        activePage="patient_registration"
+      <CompounderPageTemplate
+        activePage=""
         doctorName="Doctor's Name"
-      >
-        
-      </MainPageTemplate>
+      ></CompounderPageTemplate>
     </>
   );
 };

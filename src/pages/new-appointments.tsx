@@ -1,18 +1,30 @@
-import React from 'react'
-import NewAppointments from '~/components/tables/NewAppointments'
-import MainPageTemplate from '~/components/templates/MainPageTemplate'
+import { useSession } from "next-auth/react";
+import React from "react";
+import NewAppointments from "~/components/tables/NewAppointments";
+import CompounderPageTemplate from "~/components/templates/CompounderTemplate";
+import DoctorPageTemplate from "~/components/templates/DoctorPageTemplate";
 
-const newappointments:React.FunctionComponent = () => {
+const newappointments: React.FunctionComponent = () => {
+  const ses = useSession();
   return (
     <div>
-      <MainPageTemplate
-        activePage="patient_registration"
-        doctorName="Doctor's Name"
-      >
-        <NewAppointments/>
-      </MainPageTemplate>
+      {ses.data && ses.data.user.email === "doctor" ? (
+        <DoctorPageTemplate
+          activePage="appointments"
+          doctorName="Doctor's Name"
+        >
+          <NewAppointments />
+        </DoctorPageTemplate>
+      ) : (
+        <CompounderPageTemplate
+          activePage="appointments"
+          doctorName="Doctor's Name"
+        >
+          <NewAppointments />
+        </CompounderPageTemplate>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default newappointments
+export default newappointments;
