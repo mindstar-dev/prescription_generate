@@ -9,10 +9,10 @@ const registerPatientSchema = z.object({
   last_name: z.string({
     required_error: "Describe your basic units name",
   }),
-  contact_number: z.number({
+  contact_number: z.string({
     required_error: "Describe your basic units name",
   }),
-  email_id: z.string(),
+  email_id: z.string() || z.undefined(),
   patient_id: z.string({
     required_error: "Describe your basic units name",
   }),
@@ -21,14 +21,14 @@ const registerPatientSchema = z.object({
   }),
   fathers_name: z.string(),
   husbands_name: z.string(),
-  age: z.number({
+  age: z.string({
     required_error: "Describe your basic units name",
   }),
   address_line1: z.string(),
   address_line2: z.string(),
   city: z.string(),
   state: z.string(),
-  pin_code: z.number(),
+  pin_code: z.string(),
   country: z.string(),
 });
 
@@ -40,23 +40,23 @@ export const patientRouter = createTRPCRouter({
   }),
   register_patient: protectedProcedure
     .input(registerPatientSchema)
-    .query(async ({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       return await ctx.db.patient.create({
         data: {
-          age: input.age,
-          contact_number: input.contact_number,
+          age: parseInt(input.age),
+          contact_number: parseInt(input.contact_number),
           first_name: input.first_name,
           gender: input.gender,
           last_name: input.last_name,
           patient_id: input.patient_id,
           address_line1: input.address_line1,
-          adress_line2: input.address_line2,
+          address_line2: input.address_line2,
           city: input.city,
           country: input.country,
           email_id: input.email_id,
           fathers_name: input.fathers_name,
           husbands_name: input.husbands_name,
-          pin_code: input.pin_code,
+          pin_code: parseInt(input.pin_code),
           state: input.state,
         },
       });

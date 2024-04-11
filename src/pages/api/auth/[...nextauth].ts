@@ -42,6 +42,7 @@ const authOptions: AuthOptions = {
   callbacks: {
     async session({ session, token, user }) {
       session.user.id = token.id as string;
+
       const userA = await prisma.userData.findUnique({
         where: { id: session.user.id },
       });
