@@ -276,11 +276,11 @@ const NewAppointments: React.FunctionComponent = () => {
       <div className="h-[75%] w-full">
         <div className="w-full h-full overflow-y-scroll flex flex-col">
           <div className="h-[86px] sticky top-0 bg-white flex flex-row w-full">
-            <div className="text-center w-[15%] h-[86px]">P-ID</div>
-            <div className="text-center w-[20%] h-[86px]">NAME</div>
-            <div className="text-center w-[15%] h-[86px]">AGE</div>
-            <div className="text-center w-[20%] h-[86px]">CONTACT NO</div>
-            <div className="text-center w-[30%] h-[86px]">ACTION</div>
+            <div className="text-center  flex items-center justify-center w-[15%] h-[86px]">P-ID</div>
+            <div className="text-center  flex items-center justify-center w-[20%] h-[86px]">NAME</div>
+            <div className="text-center  flex items-center justify-center w-[15%] h-[86px]">AGE</div>
+            <div className="text-center  flex items-center justify-center w-[20%] h-[86px]">CONTACT NO</div>
+            <div className="text-center  flex items-center justify-center w-[30%] h-[86px]">ACTION</div>
           </div>
           {Tablearray.map((item, index) => (
           <div
