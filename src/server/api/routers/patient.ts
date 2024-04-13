@@ -31,6 +31,7 @@ const registerPatientSchema = z.object({
   pin_code: z.string(),
   country: z.string(),
 });
+const findPatientSchema = z.string();
 
 export const patientRouter = createTRPCRouter({
   get_all: protectedProcedure.query(async ({ ctx }) => {
@@ -60,5 +61,14 @@ export const patientRouter = createTRPCRouter({
           state: input.state,
         },
       });
+    }),
+  find_by_id: protectedProcedure
+    .input(findPatientSchema)
+    .query(async ({ ctx, input }) => {
+      const patient = await ctx.db.patient.findUnique({
+        where: { patient_id: input },
+      });
+      await ctx.db.$disconnect();
+      return patient;
     }),
 });

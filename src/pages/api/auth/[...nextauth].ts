@@ -34,6 +34,7 @@ const authOptions: AuthOptions = {
           password === user.password && user_type === user.user_type;
 
         if (!isCredentialsCorrect) return null;
+        await prisma.$disconnect();
 
         return user;
       },
@@ -46,6 +47,7 @@ const authOptions: AuthOptions = {
       const userA = await prisma.userData.findUnique({
         where: { id: session.user.id },
       });
+      await prisma.$disconnect();
       session.user.email = userA?.user_type;
 
       return session;

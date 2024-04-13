@@ -8,6 +8,8 @@ const medicineInputSchema = z.string({
 export const medicineRouter = createTRPCRouter({
   get_all: protectedProcedure.query(async ({ ctx }) => {
     const medicines = await ctx.db.medicine.findMany();
+    await ctx.db.$disconnect();
+
     return medicines;
   }),
   create: protectedProcedure
