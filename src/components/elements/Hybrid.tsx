@@ -1,83 +1,49 @@
 import React, { useState } from "react";
+import { api } from "~/utils/api";
 
-interface MultiSelectInputProps {
-  onSelectedValuesChange: (values: string[]) => void;
-}
-
-function MultiSelectInput({ onSelectedValuesChange }: MultiSelectInputProps) {
+const MultiSelectInput: React.FC = () => {
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-  };
-
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedOption = e.target.value;
-
-    if (!selectedValues.includes(selectedOption)) {
-      const updatedValues = [...selectedValues, selectedOption];
-      setSelectedValues(updatedValues);
-      onSelectedValuesChange(updatedValues);
-    }
-  };
-
-  const handleKeyDown = (
-    e: React.KeyboardEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
-    if (e.key === "Enter") {
-      const newOption = inputValue.trim();
-      if (newOption && !selectedValues.includes(newOption)) {
-        setSelectedValues([...selectedValues, newOption]);
-        setInputValue("");
-        onSelectedValuesChange([...selectedValues, newOption]);
-      }
-    }
-  };
-
-  const handleRemoveValue = (valueToRemove: string) => {
-    setSelectedValues(
-      selectedValues.filter((value) => value !== valueToRemove),
-    );
-    onSelectedValuesChange(
-      selectedValues.filter((value) => value !== valueToRemove),
-    );
-  };
+  const { data: sym } = api.symptom.get_all.useQuery();
 
   return (
-    <div>
-      <select
-        value={inputValue}
-        onChange={handleSelectChange}
-        onKeyPress={handleKeyDown}
-        onBlur={() => setInputValue("")}
-        multiple
-      >
-        {selectedValues.map((value, index) => (
-          <option key={index} value={value} disabled>
-            {value}
-          </option>
+    <div className="flex h-fit w-[30%] border-2 border-black">
+      <div className="flex h-16 w-1/2 bg-red-500">
+        {selectedValues.map((item) => (
+          <p>{item}</p>
         ))}
-        <option>asdas</option>
-        <option>465</option>
-      </select>
-      <input
-        type="text"
-        value={inputValue}
-        onChange={handleInputChange}
-        onKeyDown={handleKeyDown}
-        placeholder="Type here to add new option"
-      />
-      <div>
-        {selectedValues.map((value, index) => (
-          <span key={index}>
-            {value}
-            <button onClick={() => handleRemoveValue(value)}>x</button>
-          </span>
-        ))}
+      </div>
+      <div className="flex w-1/2 flex-col">
+        <input
+          className="h-16"
+          onChange={(e) => {
+            setInputValue(e.target.value);
+          }}
+        />
+        <div className="w-full bg-slate-500">
+          {sym
+            ?.filter(
+              (item) =>
+                inputValue !== "" &&
+                item.name.includes(inputValue) &&
+                !selectedValues.includes(item.name),
+            )
+            .map((item, index) => {
+              return (
+                <p
+                  className="hover:bg-white"
+                  onClick={() => {
+                    setSelectedValues([...selectedValues, `${item.name},`]);
+                  }}
+                >
+                  {item.name}
+                </p>
+              );
+            })}
+        </div>
       </div>
     </div>
   );
-}
+};
 
 export default MultiSelectInput;

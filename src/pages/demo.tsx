@@ -9,10 +9,8 @@ function ParentComponent() {
   };
 
   return (
-    <div>
-      <h1>Parent Component</h1>
-      <MultiSelectInput onSelectedValuesChange={handleSelectedValuesChange} />
-      <p>Selected Values: {selectedValues.join(", ")}</p>
+    <div className="flex h-screen w-screen">
+      <MultiSelectInput />
     </div>
   );
 }
