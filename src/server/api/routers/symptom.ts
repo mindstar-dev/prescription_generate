@@ -9,6 +9,7 @@ export const symptomRouter = createTRPCRouter({
   get_all: protectedProcedure.query(async ({ ctx }) => {
     const symptoms = await ctx.db.symptom.findMany();
     return symptoms;
+    await ctx.db.$disconnect();
   }),
   create: protectedProcedure
     .input(symmptomInputSchema)
