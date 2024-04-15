@@ -122,6 +122,7 @@ model VerificationToken {
 
 model Template{
     template_id String @id
+    description String
     template_data TemplateData[]
 }
 model TemplateData{

@@ -4,11 +4,19 @@ import Heading from "../elements/Heading";
 import { FaSearch } from "react-icons/fa";
 import { api } from "~/utils/api";
 import { useRouter } from "next/router";
+import { css, Modal, styled } from "@mui/material";
+import { blue, grey } from "@mui/material/colors";
+import clsx from "clsx";
 
 const NewAppointments: React.FunctionComponent = () => {
   const { data, isLoading, isError } = api.patient.get_all.useQuery();
   const [searchData, setSearchData] = React.useState("");
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const router = useRouter();
+  const { data: templates } = api.template.get_all.useQuery();
+
   return (
     <div className="h-full w-full">
       <Heading
@@ -83,14 +91,27 @@ const NewAppointments: React.FunctionComponent = () => {
                   <button
                     className="h-[41px] w-[95px] bg-[#FCA19F] hover:bg-[#F36562]"
                     onClick={() => {
-                      router.push({
-                        pathname: "patient-prescription",
-                        query: { patient_id: item.patient_id },
-                      });
+                      handleOpen();
+                      // router.push({
+                      //   pathname: "patient-prescription",
+                      //   query: { patient_id: item.patient_id },
+                      // });
                     }}
                   >
                     ATTEND
                   </button>
+                  <Modal
+                    aria-labelledby="unstyled-modal-title"
+                    aria-describedby="unstyled-modal-description"
+                    open={open}
+                    onClose={handleClose}
+                    slots={{ backdrop: StyledBackdrop }}
+                    className="flex items-center justify-center"
+                  >
+                    <div className="flex h-2/5 w-[30%] self-center overflow-y-scroll bg-white">
+                      {/* add code for popup to select templates */}
+                    </div>
+                  </Modal>
                   <button className="h-[41px] w-[95px] bg-[#FCA19F] hover:bg-[#F36562]">
                     REPORT
                   </button>
@@ -104,3 +125,23 @@ const NewAppointments: React.FunctionComponent = () => {
 };
 
 export default NewAppointments;
+const Backdrop = React.forwardRef<
+  HTMLDivElement,
+  { open?: boolean; className: string }
+>((props, ref) => {
+  const { open, className, ...other } = props;
+  return (
+    <div
+      className={clsx({ "base-Backdrop-open": open }, className)}
+      ref={ref}
+      {...other}
+    />
+  );
+});
+const StyledBackdrop = styled(Backdrop)`
+  z-index: -1;
+  position: fixed;
+  inset: 0;
+  background-color: rgb(0 0 0 / 0.5);
+  -webkit-tap-highlight-color: transparent;
+`;

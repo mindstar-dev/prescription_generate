@@ -24,14 +24,12 @@ const Prescriptiion: React.FunctionComponent = () => {
     medicine: [] as {
       medicine: string;
       repeatitions: string;
-      timing: string;
       id: string;
     }[],
   });
   const [medicineList, setMedicineList] = useState({
     medicine: "",
     repeatitions: "",
-    timing: "",
     id: "",
   });
   const handleMedicineChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,7 +40,7 @@ const Prescriptiion: React.FunctionComponent = () => {
       id: date.toTimeString(),
     });
   };
-  const { data: symptom } = api.symptom.get_all.useQuery();
+  const { data: medicine } = api.medicine.get_all.useQuery();
 
   return (
     <div className="flex h-full w-full flex-col">
@@ -138,7 +136,6 @@ const Prescriptiion: React.FunctionComponent = () => {
                     <div className="my-2 flex w-3/5 items-center justify-between text-xl">
                       <p className="w-1/4">{item.medicine}</p>
                       <p className="w-1/4">{item.repeatitions}</p>
-                      <p className="w-1/4">{item.timing}</p>
                       <FaPen
                         className="h-4 w-4 text-[#4690C7]"
                         onClick={() => {
@@ -184,7 +181,7 @@ const Prescriptiion: React.FunctionComponent = () => {
                   value={medicineList.medicine}
                 />
                 <datalist id="medicine">
-                  {symptom?.map((item, index) => {
+                  {medicine?.map((item, index) => {
                     return <option key={index} value={item.name}></option>;
                   })}
                 </datalist>
@@ -202,22 +199,10 @@ const Prescriptiion: React.FunctionComponent = () => {
                   <option value="Two Times Daily"></option>
                   <option value="Thrice Daily"></option>
                 </datalist>
-                <input
-                  name="timing"
-                  className="h-11 w-[20%] border-2 border-[#DBDBDB] focus:outline-[#DBDBDB]"
-                  list="timings"
-                  type="text"
-                  placeholder="Select Timing"
-                  onChange={handleMedicineChange}
-                  value={medicineList.timing}
-                />
-                <datalist id="timings">
-                  <option value="Before Meal"></option>
-                  <option value="After Meal"></option>
-                </datalist>
+
                 <button
                   className="h-10 w-[10%] bg-[#F36562] text-white"
-                  onClick={async () => {
+                  onClick={() => {
                     console.log(medicineList);
                     setPrescriptionData((prevData) => ({
                       ...prevData,
@@ -226,7 +211,6 @@ const Prescriptiion: React.FunctionComponent = () => {
                     setMedicineList({
                       medicine: "",
                       repeatitions: "",
-                      timing: "",
                       id: "",
                     });
                   }}
