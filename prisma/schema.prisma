@@ -100,7 +100,6 @@ model VerificationToken {
     prescription_id String
     patient_id String
     date DateTime
-    is_template  Boolean
     symptom String
     bp String
     diagnosis String
@@ -121,6 +120,18 @@ model VerificationToken {
     @@id([prescription_id,patient_id,medicine])
  }
 
+model Template{
+    template_id String @id
+    template_data TemplateData[]
+}
+model TemplateData{
+    template_id String 
+    medicine String
+    doseage String
+    @@id([template_id,medicine])
+    template Template @relation(fields: [template_id], references: [template_id])
+    
+}
 model Medicine{
     name String @id
 }
