@@ -7,11 +7,30 @@ import { api } from "~/utils/api";
 
 const Prescriptiion: React.FunctionComponent = () => {
   const router = useRouter();
-  const { patient_id } = router.query;
+  const [initialFetchDone, setInitialFetchDone] = useState(false);
+
+  const { patient_id, template_id } = router.query;
   const date = new Date();
   const { data: patient } = api.patient.find_by_id.useQuery(
     patient_id as string,
   );
+  const {
+    data: template_data,
+    isError,
+    isLoading,
+  } = api.template.template_data_by_id.useQuery({
+    template_id: template_id as string,
+  });
+  useEffect(() => {
+    if (!isLoading && !isError && template_data && !initialFetchDone) {
+      // Perform your desired operation here
+      console.log("Data successfully fetched:", template_data);
+      // You can perform any operation you want with the fetched data here
+
+      // Set initial fetch done to true
+      setInitialFetchDone(true);
+    }
+  }, [template_data, isLoading, isError, initialFetchDone]);
   const [prescriptionData, setPrescriptionData] = useState({
     patient_id: patient_id as string,
     date: `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`,
@@ -41,6 +60,9 @@ const Prescriptiion: React.FunctionComponent = () => {
     });
   };
   const { data: medicine } = api.medicine.get_all.useQuery();
+  if (isError || isLoading) {
+    return <div>Loading</div>;
+  }
 
   return (
     <div className="flex h-full w-full flex-col">
@@ -122,7 +144,12 @@ const Prescriptiion: React.FunctionComponent = () => {
             </div>
             <div className="h-full w-[15%]">
               <div className="flex w-1/2 cursor-pointer flex-col">
-                <FaPrint className="h-8 w-8 text-[#7E7E7E]" />
+                <FaPrint
+                  className="h-8 w-8 text-[#7E7E7E]"
+                  onClick={() => {
+                    console.log(template_id, patient_id);
+                  }}
+                />
                 <p>Print</p>
               </div>
             </div>
