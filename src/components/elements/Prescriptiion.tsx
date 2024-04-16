@@ -21,16 +21,7 @@ const Prescriptiion: React.FunctionComponent = () => {
   } = api.template.template_data_by_id.useQuery({
     template_id: template_id as string,
   });
-  useEffect(() => {
-    if (!isLoading && !isError && template_data && !initialFetchDone) {
-      // Perform your desired operation here
-      console.log("Data successfully fetched:", template_data);
-      // You can perform any operation you want with the fetched data here
 
-      // Set initial fetch done to true
-      setInitialFetchDone(true);
-    }
-  }, [template_data, isLoading, isError, initialFetchDone]);
   const [prescriptionData, setPrescriptionData] = useState({
     patient_id: patient_id as string,
     date: `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`,
@@ -51,6 +42,32 @@ const Prescriptiion: React.FunctionComponent = () => {
     repeatitions: "",
     id: "",
   });
+  useEffect(() => {
+    if (!isLoading && !isError && template_data && !initialFetchDone) {
+      // Perform your desired operation here
+      console.log("Data successfully fetched:", template_data);
+      // You can perform any operation you want with the fetched data here
+      const arr: {
+        id: string;
+        medicine: string;
+        repeatitions: string;
+      }[] = [];
+      template_data.forEach((item) => {
+        const newItem = {
+          id: date.toISOString(),
+          medicine: item.medicine,
+          repeatitions: item.doseage, // Renaming 'doseage' to 'repetitions'
+        };
+        arr.push(newItem);
+      });
+      setPrescriptionData({
+        ...prescriptionData,
+        medicine: arr,
+      });
+      // Set initial fetch done to true
+      setInitialFetchDone(true);
+    }
+  }, [template_data, isLoading, isError, initialFetchDone]);
   const handleMedicineChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setMedicineList({
@@ -167,12 +184,18 @@ const Prescriptiion: React.FunctionComponent = () => {
                         className="h-4 w-4 text-[#4690C7]"
                         onClick={() => {
                           const element = prescriptionData.medicine.find(
-                            (ele) => ele.id === item.id,
+                            (ele) =>
+                              ele.id === item.id &&
+                              ele.medicine === item.medicine &&
+                              ele.repeatitions === item.repeatitions,
                           );
                           element ? setMedicineList(element) : null;
                           const updatedMedicineList =
                             prescriptionData.medicine.filter(
-                              (ele) => ele.id !== item.id,
+                              (ele) =>
+                                ele.id !== item.id ||
+                                ele.medicine !== item.medicine ||
+                                ele.repeatitions !== item.repeatitions,
                             );
                           setPrescriptionData({
                             ...prescriptionData,
@@ -185,7 +208,10 @@ const Prescriptiion: React.FunctionComponent = () => {
                         onClick={() => {
                           const updatedMedicineList =
                             prescriptionData.medicine.filter(
-                              (ele) => ele.id !== item.id,
+                              (ele) =>
+                                ele.id !== item.id ||
+                                ele.medicine !== item.medicine ||
+                                ele.repeatitions !== item.repeatitions,
                             );
                           setPrescriptionData({
                             ...prescriptionData,
@@ -222,9 +248,12 @@ const Prescriptiion: React.FunctionComponent = () => {
                   value={medicineList.repeatitions}
                 />
                 <datalist id="repeatitions">
-                  <option value="Once Daily"></option>
-                  <option value="Two Times Daily"></option>
-                  <option value="Thrice Daily"></option>
+                  <option value="OD BM">OD BM</option>
+                  <option value="OD AM">OD AM</option>
+                  <option value="BD AM">BD AM</option>
+                  <option value="BD BM">BD BM</option>
+                  <option value="TD BM">TD BM</option>
+                  <option value="TD AM">TD AM</option>
                 </datalist>
 
                 <button
@@ -258,10 +287,9 @@ const Prescriptiion: React.FunctionComponent = () => {
                 <p className="w-32 text-xl font-bold">Notes</p>
                 <TextField
                   id="outlined-multiline-static"
-                  label="Multiline"
+                  label="Notes"
                   multiline
                   rows={4}
-                  defaultValue="Default Value"
                   className="min-w-0 flex-grow"
                 />
               </div>
