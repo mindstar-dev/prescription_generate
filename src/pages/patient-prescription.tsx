@@ -1,18 +1,18 @@
-import React from 'react'
-import Prescriptiion from '~/components/elements/Prescriptiion'
-import MainPageTemplate from '~/components/templates/MainPageTemplate'
+import React from "react";
+import Prescriptiion from "~/components/elements/Prescriptiion";
+import DoctorPageTemplate from "~/components/templates/DoctorPageTemplate";
 
-const patientprescription:React.FunctionComponent= () => {
+const patientprescription: React.FunctionComponent = () => {
   return (
     <div>
-      <MainPageTemplate
+      <DoctorPageTemplate
         activePage="patient_registration"
         doctorName="Doctor's Name"
       >
-        <Prescriptiion/>
-      </MainPageTemplate>
+        <Prescriptiion />
+      </DoctorPageTemplate>
     </div>
-  )
-}
+  );
+};
 
-export default patientprescription
+export default patientprescription;
