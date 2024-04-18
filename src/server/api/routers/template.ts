@@ -21,6 +21,11 @@ const templateInputSchema = z.object({
     }),
   ),
 });
+const findtemplateDataSchema = z.object({
+  template_id: z.string({
+    required_error: "Describe your basic units name",
+  }),
+});
 
 export const templateRouter = createTRPCRouter({
   get_all: protectedProcedure.query(async ({ ctx }) => {
@@ -33,6 +38,17 @@ export const templateRouter = createTRPCRouter({
     await ctx.db.$disconnect();
     return templateData;
   }),
+  template_data_by_id: protectedProcedure
+    .input(findtemplateDataSchema)
+    .query(async ({ ctx, input }) => {
+      const templateData = await ctx.db.templateData.findMany({
+        where: {
+          template_id: input.template_id,
+        },
+      });
+      await ctx.db.$disconnect();
+      return templateData;
+    }),
   create_template: protectedProcedure
     .input(templateInputSchema)
     .mutation(async ({ ctx, input }) => {

@@ -108,8 +108,40 @@ const NewAppointments: React.FunctionComponent = () => {
                     slots={{ backdrop: StyledBackdrop }}
                     className="flex items-center justify-center"
                   >
-                    <div className="flex h-2/5 w-[30%] self-center overflow-y-scroll bg-white">
+                    <div className="flex h-2/5 w-[30%] flex-col self-center overflow-y-scroll bg-white">
                       {/* add code for popup to select templates */}
+                      <div
+                        className="flex h-10 w-full hover:bg-[#F0F0F0]"
+                        onClick={() => {
+                          router.push({
+                            pathname: "patient-prescription",
+                            query: {
+                              patient_id: item.patient_id,
+                              template_id: "",
+                            },
+                          });
+                        }}
+                      >
+                        Blank
+                      </div>
+                      {templates?.map((template, index) => {
+                        return (
+                          <div
+                            className="h-10 w-full hover:bg-[#F0F0F0]"
+                            onClick={() => {
+                              router.push({
+                                pathname: "patient-prescription",
+                                query: {
+                                  patient_id: item.patient_id,
+                                  template_id: template.template_id,
+                                },
+                              });
+                            }}
+                          >
+                            {template.template_id}
+                          </div>
+                        );
+                      })}
                     </div>
                   </Modal>
                   <button className="h-[41px] w-[95px] bg-[#FCA19F] hover:bg-[#F36562]">
