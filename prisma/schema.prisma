@@ -127,7 +127,7 @@ model PrescriptionTesteReport{
     medicine String
     repeatitions String
     prescription    Prescription @relation(fields: [prescription_id], references: [prescription_id])
-    @@id([prescription_id,patient_id,medicine])
+    @@id([prescription_id,patient_id,medicine,date,repeatitions])
  }
 
 model Template{

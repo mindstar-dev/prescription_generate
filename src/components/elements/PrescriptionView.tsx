@@ -11,6 +11,7 @@ import { image } from "html2canvas/dist/types/css/types/image";
 interface PrescriptionViewProps {
   prescription_id: string;
   pateint_id: string;
+  template_id: string;
 }
 const PrescriptionView: React.FunctionComponent<PrescriptionViewProps> = (
   props,
@@ -67,7 +68,7 @@ const PrescriptionView: React.FunctionComponent<PrescriptionViewProps> = (
     });
   return (
     <div className="flex h-full w-full flex-col">
-      <div className="flex h-[20%] w-full flex-row justify-between bg-[#F0F0F0] p-[1%]">
+      <div className="flex h-fit w-full flex-row justify-between bg-[#F0F0F0] p-[1%]">
         <div className="flex flex-col ">
           <span className=" space-x-5">
             <span className="font-bold text-black">P-ID:</span>
@@ -99,9 +100,9 @@ const PrescriptionView: React.FunctionComponent<PrescriptionViewProps> = (
           </span>
         </div>
       </div>
-      <div className="flex h-[80%] flex-row  p-[1%]">
+      <div className="flex h-[80%] flex-1  flex-row p-[1%]">
         <div className="flex h-full w-[50%] flex-col space-y-[2%]  border-r border-gray-700">
-          <div className="flex flex-row justify-end space-x-[2%]">
+          <div className="flex flex-row justify-end space-x-[2%] pr-[1%]">
             {/* <select
               name=""
               id=""
@@ -164,6 +165,13 @@ const PrescriptionView: React.FunctionComponent<PrescriptionViewProps> = (
               className="h-[42px] w-[103px] bg-[#F36562] text-white"
               onClick={() => {
                 console.log(props.prescription_id);
+                router.push({
+                  pathname: "patient-prescription",
+                  query: {
+                    template_id: props.template_id,
+                    patient_id: props.pateint_id,
+                  },
+                });
               }}
             >
               <p>Back</p>
@@ -208,12 +216,19 @@ const PrescriptionView: React.FunctionComponent<PrescriptionViewProps> = (
           </div>
         </div>
       </div>
-      <Modal open={openModal} onClose={handleCloseModal}>
-        <div className="modal-container">
-          <Button onClick={handleCloseModal}>Close Modal</Button>
+      <Modal
+        open={openModal}
+        onClose={handleCloseModal}
+        className="flex h-full w-full items-center justify-center"
+      >
+        <div className="flex h-fit w-fit items-center justify-center">
           {selectedImage && (
-            <div className="image-container">
-              <Image src={selectedImage} alt="" width={100} height={100} className="h-full aspect-square"/>
+            <div className="h-fit w-fit">
+              <img
+                src={selectedImage}
+                alt=""
+                className="aspect-square h-fit w-fit"
+              />
             </div>
           )}
         </div>
