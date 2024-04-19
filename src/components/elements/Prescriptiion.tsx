@@ -1,12 +1,14 @@
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaPen, FaPrint } from "react-icons/fa";
 import { FaXmark } from "react-icons/fa6";
-import { OutlinedInput, Select, TextField } from "@mui/material";
+import { Modal, TextField } from "@mui/material";
 import { api } from "~/utils/api";
-
+import PrescipttionPopup from "./ViewPrescriptionPopup";
 const Prescriptiion: React.FunctionComponent = () => {
   const router = useRouter();
+  const ref = useRef<HTMLDivElement>(null);
+  const [selectPreviousPrescription, setPreviousPrescription] = useState("");
   const [initialFetchDone, setInitialFetchDone] = useState(false);
 
   const { patient_id, template_id } = router.query;
@@ -21,16 +23,24 @@ const Prescriptiion: React.FunctionComponent = () => {
   } = api.template.template_data_by_id.useQuery({
     template_id: template_id as string,
   });
-
+  const { data: previous_prescriptions } =
+    api.prescription.get_by_patient_id.useQuery({
+      patient_id: patient_id as string,
+    });
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const [prescriptionData, setPrescriptionData] = useState({
+    prescription_id: `${patient_id}_${String(date.getDate()).padStart(2, "0")}${String(date.getMonth() + 1).padStart(2, "0")}${String(date.getFullYear()).slice(2)}${String(date.getHours()).padStart(2, "0")}${String(date.getMinutes()).padStart(2, "0")}`,
     patient_id: patient_id as string,
-    date: `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`,
-    is_template: false,
+    date: date,
+    tests: "",
     symptom: "",
     bp: "",
     diagnosis: "",
     weight: "",
     note: "",
+    test_report: "",
     medicine: [] as {
       medicine: string;
       repeatitions: string;
@@ -43,6 +53,13 @@ const Prescriptiion: React.FunctionComponent = () => {
     id: "",
   });
   useEffect(() => {
+    if (patient_id) {
+      setPrescriptionData({
+        ...prescriptionData,
+        patient_id: patient_id as string,
+        prescription_id: `${patient_id}_${String(date.getDate()).padStart(2, "0")}${String(date.getMonth() + 1).padStart(2, "0")}${String(date.getFullYear()).slice(2)}${String(date.getHours()).padStart(2, "0")}${String(date.getMinutes()).padStart(2, "0")}`,
+      });
+    }
     if (!isLoading && !isError && template_data && !initialFetchDone) {
       // Perform your desired operation here
       console.log("Data successfully fetched:", template_data);
@@ -76,13 +93,48 @@ const Prescriptiion: React.FunctionComponent = () => {
       id: date.toTimeString(),
     });
   };
+
+  const savePrescription = api.prescription.create_prescription.useMutation({
+    onError(error, variables, context) {
+      alert(error.message);
+    },
+    onSuccess(data, variables, context) {
+      alert("success");
+    },
+  });
+  const create = () => {
+    console.log(prescriptionData.patient_id, prescriptionData.prescription_id);
+    if (
+      prescriptionData.patient_id === "" ||
+      prescriptionData.medicine.length === 0
+    ) {
+      alert("Be sure to fill all required details");
+      console.log(prescriptionData.medicine.length);
+    } else {
+      savePrescription.mutate(prescriptionData);
+    }
+  };
+
   const { data: medicine } = api.medicine.get_all.useQuery();
   if (isError || isLoading) {
     return <div>Loading</div>;
   }
 
   return (
-    <div className="flex h-full w-full flex-col">
+    <div className="flex h-full w-full flex-col" id="pdfContainer">
+      <Modal
+        aria-labelledby="unstyled-modal-title"
+        aria-describedby="unstyled-modal-description"
+        open={open}
+        onClose={handleClose}
+        className="flex  items-center justify-center"
+      >
+        <PrescipttionPopup
+          patient={patient}
+          prescription_data={prescriptionData}
+          ref={ref}
+        ></PrescipttionPopup>
+      </Modal>
       <div className="flex h-fit w-full flex-row justify-between bg-[#F0F0F0] p-[1%]">
         <div className="flex flex-col ">
           <span className=" space-x-5">
@@ -129,6 +181,12 @@ const Prescriptiion: React.FunctionComponent = () => {
                     type="text"
                     placeholder="Enter Symptoms"
                     className="m-2 h-full w-[70%] border-2 border-black p-2"
+                    onChange={(e) => {
+                      setPrescriptionData({
+                        ...prescriptionData,
+                        symptom: e.target.value,
+                      });
+                    }}
                   />
                 </div>
                 <div className="ml-2 flex h-full w-1/2 items-center justify-between ">
@@ -137,6 +195,12 @@ const Prescriptiion: React.FunctionComponent = () => {
                     type="text"
                     placeholder="Enter BP"
                     className="m-2 h-full w-[70%] border-2 border-black p-2"
+                    onChange={(e) => {
+                      setPrescriptionData({
+                        ...prescriptionData,
+                        bp: e.target.value,
+                      });
+                    }}
                   />
                 </div>
               </div>
@@ -147,14 +211,26 @@ const Prescriptiion: React.FunctionComponent = () => {
                     type="text"
                     placeholder="Enter Diagnosis"
                     className="m-2 h-full w-[70%] border-2 border-black p-2"
+                    onChange={(e) => {
+                      setPrescriptionData({
+                        ...prescriptionData,
+                        diagnosis: e.target.value,
+                      });
+                    }}
                   />
                 </div>
                 <div className="ml-2 flex h-full w-1/2 items-center justify-between ">
                   <p className="w-[20%] text-lg font-bold">Weight</p>
                   <input
-                    type="text"
+                    type="number"
                     placeholder="Enter Weight (in Kg)"
                     className="m-2 h-full w-[70%] border-2 border-black p-2"
+                    onChange={(e) => {
+                      setPrescriptionData({
+                        ...prescriptionData,
+                        weight: e.target.value,
+                      });
+                    }}
                   />
                 </div>
               </div>
@@ -164,10 +240,12 @@ const Prescriptiion: React.FunctionComponent = () => {
                 <FaPrint
                   className="h-8 w-8 text-[#7E7E7E]"
                   onClick={() => {
+                    create();
                     console.log(template_id, patient_id);
                   }}
                 />
-                <p>Print</p>
+
+                <p>Preview</p>
               </div>
             </div>
           </div>
@@ -178,8 +256,9 @@ const Prescriptiion: React.FunctionComponent = () => {
                 {prescriptionData.medicine.map((item, index) => {
                   return (
                     <div className="my-2 flex w-3/5 items-center justify-between text-xl">
-                      <p className="w-1/4">{item.medicine}</p>
+                      <p className="min-w-1/4 max-w-fit ">{item.medicine}</p>
                       <p className="w-1/4">{item.repeatitions}</p>
+
                       <FaPen
                         className="h-4 w-4 text-[#4690C7]"
                         onClick={() => {
@@ -203,6 +282,7 @@ const Prescriptiion: React.FunctionComponent = () => {
                           });
                         }}
                       />
+
                       <FaXmark
                         className="h-6 w-6 text-[#E43030]"
                         onClick={() => {
@@ -260,6 +340,13 @@ const Prescriptiion: React.FunctionComponent = () => {
                   className="h-10 w-[10%] bg-[#F36562] text-white"
                   onClick={() => {
                     console.log(medicineList);
+                    if (
+                      medicineList.medicine === "" ||
+                      medicineList.repeatitions === ""
+                    ) {
+                      alert("medicine name or repeatation cant be empty");
+                      return;
+                    }
                     setPrescriptionData((prevData) => ({
                       ...prevData,
                       medicine: [...prevData.medicine, medicineList],
@@ -274,6 +361,7 @@ const Prescriptiion: React.FunctionComponent = () => {
                   Save
                 </button>
               </div>
+
               <div className="mt-4 flex h-fit w-4/5 items-center justify-between">
                 <p className="w-32 text-xl font-bold">Tests To do</p>
                 <TextField
@@ -281,8 +369,15 @@ const Prescriptiion: React.FunctionComponent = () => {
                   multiline
                   maxRows={4}
                   className="min-w-0 flex-grow"
+                  onChange={(e) => {
+                    setPrescriptionData({
+                      ...prescriptionData,
+                      tests: e.target.value,
+                    });
+                  }}
                 />
               </div>
+
               <div className="mt-4 flex h-fit w-4/5 items-center justify-between">
                 <p className="w-32 text-xl font-bold">Notes</p>
                 <TextField
@@ -291,6 +386,12 @@ const Prescriptiion: React.FunctionComponent = () => {
                   multiline
                   rows={4}
                   className="min-w-0 flex-grow"
+                  onChange={(e) => {
+                    setPrescriptionData({
+                      ...prescriptionData,
+                      note: e.target.value,
+                    });
+                  }}
                 />
               </div>
             </div>
@@ -307,8 +408,43 @@ const Prescriptiion: React.FunctionComponent = () => {
               <div className="ml-4 mt-2 flex h-full w-[45%] flex-col justify-evenly">
                 <p className="text-lg font-bold">Test Procedures & Reports</p>
                 <div className="flex w-full items-center justify-between">
-                  <select className="mr-2 h-12 w-[75%] border-2 border-[#958E8E]"></select>
-                  <button className="h-12 w-[20%] min-w-[20%] bg-[#F36562] font-semibold text-white">
+                  <select
+                    className="mr-2 h-12 w-[75%] border-2 border-[#958E8E]"
+                    onChange={(e) => {
+                      setPreviousPrescription(e.target.value);
+                    }}
+                  >
+                    <option value="">
+                      Tap to view previous prescriptions with report
+                    </option>
+                    {previous_prescriptions?.map(
+                      (previous_prescription, index) => {
+                        return (
+                          <option value={previous_prescription.prescription_id}>
+                            {previous_prescription.prescription_id}
+                          </option>
+                        );
+                      },
+                    )}
+                  </select>
+                  <button
+                    className="h-12 w-[20%] min-w-[20%] bg-[#F36562] font-semibold text-white"
+                    onClick={async (e) => {
+                      e.preventDefault();
+                      console.log(selectPreviousPrescription);
+                      if (selectPreviousPrescription !== "") {
+                        await router.push({
+                          pathname: "prescription-view",
+                          query: {
+                            prescription_id: selectPreviousPrescription,
+                            patient_id: patient_id,
+                          },
+                        });
+                      } else {
+                        alert("No previous prescription is selected");
+                      }
+                    }}
+                  >
                     View
                   </button>
                 </div>

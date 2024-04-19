@@ -97,26 +97,36 @@ model VerificationToken {
  }
 
  model Prescription{
-    prescription_id String
+    prescription_id String @id
     patient_id String
     date DateTime
     symptom String
     bp String
+    tests String?
     diagnosis String
     weight Int
-    note String
-    patient Patient @relation(fields: [prescription_id], references: [patient_id])   
+    note String?
+    patient Patient @relation(fields: [patient_id], references: [patient_id])   
     prescription_medicine_data PrescriptionMedicineData[]
-    @@id([patient_id,prescription_id])
+    prescription_test_report PrescriptionTesteReport[]
+ }
+
+model PrescriptionTesteReport{
+    prescription_id String
+    test_report String
+    date DateTime
+    prescription    Prescription @relation(fields: [prescription_id], references: [prescription_id])
+    @@id([prescription_id,test_report,date])
  }
 
 
  model PrescriptionMedicineData{
     prescription_id String
     patient_id String
+    date DateTime
     medicine String
     repeatitions String
-    prescription    Prescription @relation(fields: [prescription_id,patient_id], references: [prescription_id,patient_id])
+    prescription    Prescription @relation(fields: [prescription_id], references: [prescription_id])
     @@id([prescription_id,patient_id,medicine])
  }
 

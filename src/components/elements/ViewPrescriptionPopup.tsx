@@ -1,5 +1,4 @@
 import React, { useRef, useState } from "react";
-import MultiSelectInput from "./../components/elements/Hybrid";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 interface pdfProps {
@@ -39,7 +38,7 @@ interface pdfProps {
   };
   ref: React.RefObject<HTMLDivElement>;
 }
-const ParentComponent: React.FC<pdfProps> = (props) => {
+const PrescipttionPopup: React.FC<pdfProps> = (props) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const date = new Date();
@@ -187,4 +186,4 @@ const ParentComponent: React.FC<pdfProps> = (props) => {
   );
 };
 
-export default ParentComponent;
+export default PrescipttionPopup;

@@ -5,10 +5,7 @@ import DoctorPageTemplate from "~/components/templates/DoctorPageTemplate";
 const patientprescription: React.FunctionComponent = () => {
   return (
     <div>
-      <DoctorPageTemplate
-        activePage="patient_registration"
-        doctorName="Doctor's Name"
-      >
+      <DoctorPageTemplate activePage="appointments" doctorName="Doctor's Name">
         <Prescriptiion />
       </DoctorPageTemplate>
     </div>
