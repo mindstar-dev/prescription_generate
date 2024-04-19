@@ -1,10 +1,13 @@
 import Image from "next/image";
 import x from "/public/gojo.jpeg";
-import { FaPlusCircle, FaPrint } from "react-icons/fa";
-import { FaCircleMinus, FaCopy } from "react-icons/fa6";
+import y from "/public/favicon.ico";
+import { Button, Modal } from "@mui/material";
+import { FaPrint } from "react-icons/fa";
+import { FaCopy } from "react-icons/fa6";
 import React, { useState } from "react";
 import { api } from "~/utils/api";
 import { useRouter } from "next/router";
+import { image } from "html2canvas/dist/types/css/types/image";
 interface PrescriptionViewProps {
   prescription_id: string;
   pateint_id: string;
@@ -12,12 +15,23 @@ interface PrescriptionViewProps {
 const PrescriptionView: React.FunctionComponent<PrescriptionViewProps> = (
   props,
 ) => {
-  const [scale, setScale] = useState(1);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [startY, setStartY] = useState(0);
   const [translateX, setTranslateX] = useState(0);
   const [translateY, setTranslateY] = useState(0);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  let image = [{ imagesrc: "/favicon.ico" }, { imagesrc: "/gojo2.jpeg" }];
+
+  const handleImageClick = (imageUrl: string) => {
+    setSelectedImage(imageUrl);
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     setIsDragging(true);
@@ -39,15 +53,6 @@ const PrescriptionView: React.FunctionComponent<PrescriptionViewProps> = (
     setIsDragging(false);
   };
 
-  const handleZoomIn = () => {
-    setScale(scale + 0.1);
-  };
-
-  const handleZoomOut = () => {
-    if (scale > 0.2) {
-      setScale(scale - 0.1);
-    }
-  };
   const router = useRouter();
 
   const { data } = api.prescription.get_by_id.useQuery({
@@ -62,7 +67,7 @@ const PrescriptionView: React.FunctionComponent<PrescriptionViewProps> = (
     });
   return (
     <div className="flex h-full w-full flex-col">
-      <div className="flex h-fit w-full flex-row justify-between bg-[#F0F0F0] p-[1%]">
+      <div className="flex h-[20%] w-full flex-row justify-between bg-[#F0F0F0] p-[1%]">
         <div className="flex flex-col ">
           <span className=" space-x-5">
             <span className="font-bold text-black">P-ID:</span>
@@ -94,7 +99,7 @@ const PrescriptionView: React.FunctionComponent<PrescriptionViewProps> = (
           </span>
         </div>
       </div>
-      <div className="m-[1%] flex grow flex-row">
+      <div className="flex h-[80%] flex-row  p-[1%]">
         <div className="flex h-full w-[50%] flex-col space-y-[2%]  border-r border-gray-700">
           <div className="flex flex-row justify-end space-x-[2%]">
             {/* <select
@@ -165,7 +170,7 @@ const PrescriptionView: React.FunctionComponent<PrescriptionViewProps> = (
             </button>
           </div>
         </div>
-        <div className="flex h-full w-[50%] flex-col flex-wrap items-center justify-center border-l border-gray-700">
+        <div className="flex h-full w-[50%] flex-col  items-center justify-center overflow-hidden">
           {/* <div className="mx-[2%] h-[10%] w-full">
             <div className="flex flex-row space-x-[2%] ">
               <select
@@ -182,26 +187,37 @@ const PrescriptionView: React.FunctionComponent<PrescriptionViewProps> = (
               </button>
             </div>
           </div> */}
-          {/* <div className="flex h-[90%] w-full flex-col items-center justify-center"> */}
-          <div className="scroll scrollbar-hidden flex h-fit w-fit cursor-grab self-center overflow-auto">
-            <Image
-              src={x}
-              alt=""
-              style={{ transform: `scale(${scale})` }}
-              className="h-full w-full transform transition-transform duration-300 ease-in-out"
-            />
-          </div>
-          <div className="mx-[2%] space-x-[2%]">
-            <button onClick={handleZoomIn}>
-              <FaPlusCircle />
-            </button>
-            <button onClick={handleZoomOut}>
-              <FaCircleMinus />
-            </button>
+          <div className="h-[59%] w-[62%] overflow-hidden bg-black">
+            <div className="h-full snap-y snap-mandatory overflow-x-hidden overflow-y-scroll">
+              {image.map((item, index) => (
+                <div
+                  className="h-full w-full snap-center"
+                  key={index}
+                  onClick={() => handleImageClick(item.imagesrc)}
+                >
+                  <Image
+                    src={item.imagesrc}
+                    alt={""}
+                    width={100} // Specify the actual width of the image
+                    height={100}
+                    className=" aspect-square h-full w-full"
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-        {/* </div> */}
       </div>
+      <Modal open={openModal} onClose={handleCloseModal}>
+        <div className="modal-container">
+          <Button onClick={handleCloseModal}>Close Modal</Button>
+          {selectedImage && (
+            <div className="image-container">
+              <Image src={selectedImage} alt="" width={100} height={100} className="h-full aspect-square"/>
+            </div>
+          )}
+        </div>
+      </Modal>
     </div>
   );
 };
