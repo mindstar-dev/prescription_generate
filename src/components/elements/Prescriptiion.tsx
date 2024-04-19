@@ -2,15 +2,13 @@ import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import { FaPen, FaPrint } from "react-icons/fa";
 import { FaXmark } from "react-icons/fa6";
-import { Modal, OutlinedInput, Select, TextField } from "@mui/material";
+import { Modal, TextField } from "@mui/material";
 import { api } from "~/utils/api";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
-import ParentComponent from "~/pages/demo";
+import PrescipttionPopup from "./ViewPrescriptionPopup";
 const Prescriptiion: React.FunctionComponent = () => {
   const router = useRouter();
   const ref = useRef<HTMLDivElement>(null);
-  const [inPrint, setInPrint] = useState(false);
+  const [selectPreviousPrescription, setPreviousPrescription] = useState("");
   const [initialFetchDone, setInitialFetchDone] = useState(false);
 
   const { patient_id, template_id } = router.query;
@@ -25,6 +23,10 @@ const Prescriptiion: React.FunctionComponent = () => {
   } = api.template.template_data_by_id.useQuery({
     template_id: template_id as string,
   });
+  const { data: previous_prescriptions } =
+    api.prescription.get_by_patient_id.useQuery({
+      patient_id: patient_id as string,
+    });
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -127,11 +129,11 @@ const Prescriptiion: React.FunctionComponent = () => {
         onClose={handleClose}
         className="flex  items-center justify-center"
       >
-        <ParentComponent
+        <PrescipttionPopup
           patient={patient}
           prescription_data={prescriptionData}
           ref={ref}
-        ></ParentComponent>
+        ></PrescipttionPopup>
       </Modal>
       <div className="flex h-fit w-full flex-row justify-between bg-[#F0F0F0] p-[1%]">
         <div className="flex flex-col ">
@@ -406,8 +408,43 @@ const Prescriptiion: React.FunctionComponent = () => {
               <div className="ml-4 mt-2 flex h-full w-[45%] flex-col justify-evenly">
                 <p className="text-lg font-bold">Test Procedures & Reports</p>
                 <div className="flex w-full items-center justify-between">
-                  <select className="mr-2 h-12 w-[75%] border-2 border-[#958E8E]"></select>
-                  <button className="h-12 w-[20%] min-w-[20%] bg-[#F36562] font-semibold text-white">
+                  <select
+                    className="mr-2 h-12 w-[75%] border-2 border-[#958E8E]"
+                    onChange={(e) => {
+                      setPreviousPrescription(e.target.value);
+                    }}
+                  >
+                    <option value="">
+                      Tap to view previous prescriptions with report
+                    </option>
+                    {previous_prescriptions?.map(
+                      (previous_prescription, index) => {
+                        return (
+                          <option value={previous_prescription.prescription_id}>
+                            {previous_prescription.prescription_id}
+                          </option>
+                        );
+                      },
+                    )}
+                  </select>
+                  <button
+                    className="h-12 w-[20%] min-w-[20%] bg-[#F36562] font-semibold text-white"
+                    onClick={async (e) => {
+                      e.preventDefault();
+                      console.log(selectPreviousPrescription);
+                      if (selectPreviousPrescription !== "") {
+                        await router.push({
+                          pathname: "prescription-view",
+                          query: {
+                            prescription_id: selectPreviousPrescription,
+                            patient_id: patient_id,
+                          },
+                        });
+                      } else {
+                        alert("No previous prescription is selected");
+                      }
+                    }}
+                  >
                     View
                   </button>
                 </div>

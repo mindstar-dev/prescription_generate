@@ -5,6 +5,11 @@ const prescriptionUniqueSchema = z.object({
     required_error: "Describe your basic units name",
   }),
 });
+const prescriptionFindByPatientSchema = z.object({
+  patient_id: z.string({
+    required_error: "Describe your basic units name",
+  }),
+});
 const prescriptionInputSchema = z.object({
   patient_id: z.string({
     required_error: "Describe your basic units name",
@@ -25,7 +30,6 @@ const prescriptionInputSchema = z.object({
   weight: z.string({ required_error: "Describe your basic units name" }),
   note: z.string(),
   tests: z.string(),
-  test_report: z.string(),
   medicine: z.array(
     z.object({
       medicine: z.string({
@@ -47,6 +51,28 @@ export const prescriptionRouter = createTRPCRouter({
       const prescription = await ctx.db.prescription.findUnique({
         where: {
           prescription_id: input.prescription_id,
+        },
+      });
+      await ctx.db.$disconnect();
+      return prescription;
+    }),
+  get_prescription_medicine_data: protectedProcedure
+    .input(prescriptionUniqueSchema)
+    .query(async ({ ctx, input }) => {
+      const prescription = await ctx.db.prescriptionMedicineData.findMany({
+        where: {
+          prescription_id: input.prescription_id,
+        },
+      });
+      await ctx.db.$disconnect();
+      return prescription;
+    }),
+  get_by_patient_id: protectedProcedure
+    .input(prescriptionFindByPatientSchema)
+    .query(async ({ ctx, input }) => {
+      const prescription = await ctx.db.prescription.findMany({
+        where: {
+          patient_id: input.patient_id,
         },
       });
       await ctx.db.$disconnect();
