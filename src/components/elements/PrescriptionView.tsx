@@ -66,6 +66,10 @@ const PrescriptionView: React.FunctionComponent<PrescriptionViewProps> = (
     api.prescription.get_prescription_medicine_data.useQuery({
       prescription_id: props.prescription_id,
     });
+  const { data: testReport } =
+    api.prescription.ger_test_report_by_prescription_id.useQuery({
+      prescription_id: props.prescription_id,
+    });
   return (
     <div className="flex h-full w-full flex-col">
       <div className="flex h-fit w-full flex-row justify-between bg-[#F0F0F0] p-[1%]">
@@ -197,14 +201,14 @@ const PrescriptionView: React.FunctionComponent<PrescriptionViewProps> = (
           </div> */}
           <div className="h-[59%] w-[62%] overflow-hidden bg-black">
             <div className="h-full snap-y snap-mandatory overflow-x-hidden overflow-y-scroll">
-              {image.map((item, index) => (
+              {testReport?.map((item, index) => (
                 <div
                   className="h-full w-full snap-center"
                   key={index}
-                  onClick={() => handleImageClick(item.imagesrc)}
+                  onClick={() => handleImageClick(item.test_report)}
                 >
                   <Image
-                    src={item.imagesrc}
+                    src={item.test_report}
                     alt={""}
                     width={100} // Specify the actual width of the image
                     height={100}

@@ -144,7 +144,17 @@ const NewAppointments: React.FunctionComponent = () => {
                       })}
                     </div>
                   </Modal>
-                  <button className="h-[41px] w-[95px] bg-[#FCA19F] hover:bg-[#F36562]">
+                  <button
+                    className="h-[41px] w-[95px] bg-[#FCA19F] hover:bg-[#F36562]"
+                    onClick={() => {
+                      router.push({
+                        pathname: "report-upload",
+                        query: {
+                          patient_id: item.patient_id,
+                        },
+                      });
+                    }}
+                  >
                     REPORT
                   </button>
                 </div>
