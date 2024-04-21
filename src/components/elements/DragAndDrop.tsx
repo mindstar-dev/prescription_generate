@@ -72,9 +72,8 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
   });
 
   const handleFileUpload = async () => {
-    const supabase_url = "https://eqaymhxmfqnbfxalgrui.supabase.co";
-    const supabase_anon_key =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVxYXltaHhtZnFuYmZ4YWxncnVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTIzMDc2MDQsImV4cCI6MjAyNzg4MzYwNH0.nVUgHv-EMU_M6lZJ6JJ8fp8G69AJ3_vLPVPslxLcXM4";
+    const supabase_url = env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabase_anon_key = env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
     const supabase = createClient(supabase_url, supabase_anon_key);
 
     // Check if files exist
@@ -92,7 +91,7 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
 
     // Upload the file to Supabase Storage
     const { data, error } = await supabase.storage
-      .from("test_report")
+      .from("test")
       .upload(
         `${selectedPrescription.prescription}_${fileData.name}`,
         fileData,

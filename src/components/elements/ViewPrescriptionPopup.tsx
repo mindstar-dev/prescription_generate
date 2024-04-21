@@ -77,9 +77,9 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
     <div className="flex h-fit w-fit flex-col items-center justify-center">
       <button
         onClick={handleGeneratePdf}
-        className="mb-4 h-8 w-16 self-end bg-[#F36562] text-white"
+        className="mb-4 h-8 w-fit min-w-16 self-end bg-[#F36562] px-2 text-white"
       >
-        Print
+        Download
       </button>
       <div
         className="flex h-[841px] w-[595px] flex-col  bg-white"

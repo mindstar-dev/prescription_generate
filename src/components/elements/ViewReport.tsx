@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { api } from "~/utils/api";
 import Image from "next/image";
 import { Modal } from "@mui/material";
+import { env } from "~/env";
+import { createClient } from "@supabase/supabase-js";
 interface DragAndDropProps {
   patient_id: string;
 }
@@ -21,6 +23,9 @@ const ViewReport: React.FunctionComponent<DragAndDropProps> = (props) => {
     prescription: "",
   });
   useEffect(() => {
+    const supabase_url = env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabase_anon_key = env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    const supabase = createClient(supabase_url, supabase_anon_key);
     if (props.patient_id) {
       setSelectedPrescription((prevState) => ({
         ...prevState,
@@ -129,8 +134,8 @@ const ViewReport: React.FunctionComponent<DragAndDropProps> = (props) => {
           </select>
         </div>
 
-        <div className="h-fit w-fit self-center overflow-hidden bg-black">
-          <div className="h-full snap-y snap-mandatory overflow-x-hidden overflow-y-scroll">
+        <div className="h-[400px] w-[400px] self-center overflow-hidden">
+          <div className="h-full snap-y snap-mandatory overflow-x-hidden overflow-y-scroll ">
             {reports?.map((item, index) =>
               selectedPrescription.prescription === item.prescription_id ? (
                 <div
@@ -141,8 +146,8 @@ const ViewReport: React.FunctionComponent<DragAndDropProps> = (props) => {
                   <Image
                     src={item.test_report}
                     alt={""}
-                    width={100} // Specify the actual width of the image
-                    height={100}
+                    width={400} // Specify the actual width of the image
+                    height={400}
                     className=" aspect-square h-full w-full"
                   />
                 </div>

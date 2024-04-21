@@ -1,16 +1,18 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
-import { FaPen, FaPrint } from "react-icons/fa";
+import { FaEye, FaPen, FaPrint } from "react-icons/fa";
 import { FaXmark } from "react-icons/fa6";
 import { Modal, TextField } from "@mui/material";
 import { api } from "~/utils/api";
 import PrescipttionPopup from "./ViewPrescriptionPopup";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 const Prescriptiion: React.FunctionComponent = () => {
   const router = useRouter();
   const ref = useRef<HTMLDivElement>(null);
   const [selectPreviousPrescription, setPreviousPrescription] = useState("");
   const [initialFetchDone, setInitialFetchDone] = useState(false);
-
+  const [isSaved, setIsSaved] = useState(false);
   const { patient_id, template_id } = router.query;
   const date = new Date();
   const { data: patient } = api.patient.find_by_id.useQuery(
@@ -123,7 +125,36 @@ const Prescriptiion: React.FunctionComponent = () => {
   if (isError || isLoading) {
     return <div>Loading</div>;
   }
+  const handleGeneratePdf = async () => {
+    if (!ref.current) {
+      return;
+    }
 
+    // Increase the resolution of the captured canvas
+    const scaleFactor = 4; // You can adjust this value for higher resolution
+    const canvas = await html2canvas(ref.current, {
+      scale: scaleFactor,
+    });
+
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF("p", "px", "a4", true);
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+    const imgWidth = canvas.width / scaleFactor; // Adjusted width based on scale factor
+    const imgHeight = canvas.height / scaleFactor; // Adjusted height based on scale factor
+    const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+    const imgX = (pdfWidth - imgWidth * ratio) / 2;
+    const imgY = 0;
+    pdf.addImage(
+      imgData,
+      "PNG",
+      imgX,
+      imgY,
+      imgWidth * ratio,
+      imgHeight * ratio,
+    );
+    pdf.output("dataurlnewwindow");
+  };
   return (
     <div className="flex h-full w-full flex-col" id="pdfContainer">
       <Modal
@@ -239,8 +270,8 @@ const Prescriptiion: React.FunctionComponent = () => {
                 </div>
               </div>
             </div>
-            <div className="h-full w-[15%]">
-              <div className="flex w-1/2 cursor-pointer flex-col">
+            <div className="flex h-full w-[15%]">
+              <div className="flex w-1/2 cursor-pointer flex-col items-center justify-center">
                 <FaPrint
                   className="h-8 w-8 text-[#7E7E7E]"
                   onClick={() => {
@@ -249,6 +280,16 @@ const Prescriptiion: React.FunctionComponent = () => {
                   }}
                 />
 
+                <p>Save</p>
+              </div>
+              <div className="flex w-1/2 cursor-pointer flex-col items-center justify-center">
+                <FaEye
+                  className="h-8 w-8 text-[#7E7E7E]"
+                  onClick={() => {
+                    setOpen(true);
+                    console.log(template_id, patient_id);
+                  }}
+                />
                 <p>Preview</p>
               </div>
             </div>
@@ -260,8 +301,8 @@ const Prescriptiion: React.FunctionComponent = () => {
                 {prescriptionData.medicine.map((item, index) => {
                   return (
                     <div className="my-2 flex w-3/5 items-center justify-between text-xl">
-                      <p className="min-w-1/4 max-w-fit ">{item.medicine}</p>
-                      <p className="w-1/4">{item.repeatitions}</p>
+                      <p className="w-[40%] ">{item.medicine}</p>
+                      <p className="w-[40%]">{item.repeatitions}</p>
 
                       <FaPen
                         className="h-4 w-4 text-[#4690C7]"
@@ -400,17 +441,10 @@ const Prescriptiion: React.FunctionComponent = () => {
               </div>
             </div>
             <div className=" flex h-1/5 w-full flex-wrap justify-between border-t-2 border-[#958E8E]">
-              <div className="mt-2 flex h-full w-1/2 flex-col justify-evenly">
-                <p className="text-lg font-bold">Previous Presctiption</p>
-                <div className="flex w-full items-center justify-between">
-                  <select className="mr-2 h-12 w-[75%] border-2 border-[#958E8E]"></select>
-                  <button className="h-12 w-[20%] min-w-[20%] bg-[#F36562] font-semibold text-white">
-                    View
-                  </button>
-                </div>
-              </div>
               <div className="ml-4 mt-2 flex h-full w-[45%] flex-col justify-evenly">
-                <p className="text-lg font-bold">Test Procedures & Reports</p>
+                <p className="text-lg font-bold">
+                  Prescription, Test Procedures & Reports
+                </p>
                 <div className="flex w-full items-center justify-between">
                   <select
                     className="mr-2 h-12 w-[75%] border-2 border-[#958E8E]"
