@@ -1,18 +1,18 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
-import { FaPen, FaPrint } from "react-icons/fa";
+import { FaEye, FaPen, FaPrint } from "react-icons/fa";
 import { FaXmark } from "react-icons/fa6";
-import { Modal, OutlinedInput, Select, TextField } from "@mui/material";
+import { Modal, TextField } from "@mui/material";
 import { api } from "~/utils/api";
-import jsPDF from "jspdf";
+import PrescipttionPopup from "./ViewPrescriptionPopup";
 import html2canvas from "html2canvas";
-import ParentComponent from "~/pages/demo";
+import jsPDF from "jspdf";
 const Prescriptiion: React.FunctionComponent = () => {
   const router = useRouter();
   const ref = useRef<HTMLDivElement>(null);
-  const [inPrint, setInPrint] = useState(false);
+  const [selectPreviousPrescription, setPreviousPrescription] = useState("");
   const [initialFetchDone, setInitialFetchDone] = useState(false);
-
+  const [isSaved, setIsSaved] = useState(false);
   const { patient_id, template_id } = router.query;
   const date = new Date();
   const { data: patient } = api.patient.find_by_id.useQuery(
@@ -25,11 +25,15 @@ const Prescriptiion: React.FunctionComponent = () => {
   } = api.template.template_data_by_id.useQuery({
     template_id: template_id as string,
   });
+  const { data: previous_prescriptions } =
+    api.prescription.get_by_patient_id.useQuery({
+      patient_id: patient_id as string,
+    });
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [prescriptionData, setPrescriptionData] = useState({
-    prescription_id: `${patient_id}_${String(date.getDate()).padStart(2, "0")}${String(date.getMonth() + 1).padStart(2, "0")}${String(date.getFullYear()).slice(2)}${String(date.getHours()).padStart(2, "0")}${String(date.getMinutes()).padStart(2, "0")}`,
+    prescription_id: `${patient_id?.toString()}_${String(date.getDate()).padStart(2, "0")}${String(date.getMonth() + 1).padStart(2, "0")}${String(date.getFullYear()).slice(2)}${String(date.getHours()).padStart(2, "0")}${String(date.getMinutes()).padStart(2, "0")}`,
     patient_id: patient_id as string,
     date: date,
     tests: "",
@@ -55,7 +59,7 @@ const Prescriptiion: React.FunctionComponent = () => {
       setPrescriptionData({
         ...prescriptionData,
         patient_id: patient_id as string,
-        prescription_id: `${patient_id}_${String(date.getDate()).padStart(2, "0")}${String(date.getMonth() + 1).padStart(2, "0")}${String(date.getFullYear()).slice(2)}${String(date.getHours()).padStart(2, "0")}${String(date.getMinutes()).padStart(2, "0")}`,
+        prescription_id: `${patient_id.toString()}_${String(date.getDate()).padStart(2, "0")}${String(date.getMonth() + 1).padStart(2, "0")}${String(date.getFullYear()).slice(2)}${String(date.getHours()).padStart(2, "0")}${String(date.getMinutes()).padStart(2, "0")}`,
       });
     }
     if (!isLoading && !isError && template_data && !initialFetchDone) {
@@ -82,7 +86,14 @@ const Prescriptiion: React.FunctionComponent = () => {
       // Set initial fetch done to true
       setInitialFetchDone(true);
     }
-  }, [template_data, isLoading, isError, initialFetchDone]);
+  }, [
+    template_data,
+    isLoading,
+    isError,
+    initialFetchDone,
+    patient_id,
+    prescriptionData,
+  ]);
   const handleMedicineChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setMedicineList({
@@ -101,6 +112,10 @@ const Prescriptiion: React.FunctionComponent = () => {
     },
   });
   const create = () => {
+    setPrescriptionData({
+      ...prescriptionData,
+      prescription_id: `${patient_id?.toString()}_${String(date.getDate()).padStart(2, "0")}${String(date.getMonth() + 1).padStart(2, "0")}${String(date.getFullYear()).slice(2)}${String(date.getHours()).padStart(2, "0")}${String(date.getMinutes()).padStart(2, "0")}`,
+    });
     console.log(prescriptionData.patient_id, prescriptionData.prescription_id);
     if (
       prescriptionData.patient_id === "" ||
@@ -117,7 +132,36 @@ const Prescriptiion: React.FunctionComponent = () => {
   if (isError || isLoading) {
     return <div>Loading</div>;
   }
+  const handleGeneratePdf = async () => {
+    if (!ref.current) {
+      return;
+    }
 
+    // Increase the resolution of the captured canvas
+    const scaleFactor = 4; // You can adjust this value for higher resolution
+    const canvas = await html2canvas(ref.current, {
+      scale: scaleFactor,
+    });
+
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF("p", "px", "a4", true);
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+    const imgWidth = canvas.width / scaleFactor; // Adjusted width based on scale factor
+    const imgHeight = canvas.height / scaleFactor; // Adjusted height based on scale factor
+    const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+    const imgX = (pdfWidth - imgWidth * ratio) / 2;
+    const imgY = 0;
+    pdf.addImage(
+      imgData,
+      "PNG",
+      imgX,
+      imgY,
+      imgWidth * ratio,
+      imgHeight * ratio,
+    );
+    pdf.output("dataurlnewwindow");
+  };
   return (
     <div className="flex h-full w-full flex-col" id="pdfContainer">
       <Modal
@@ -127,11 +171,11 @@ const Prescriptiion: React.FunctionComponent = () => {
         onClose={handleClose}
         className="flex  items-center justify-center"
       >
-        <ParentComponent
+        <PrescipttionPopup
           patient={patient}
           prescription_data={prescriptionData}
           ref={ref}
-        ></ParentComponent>
+        ></PrescipttionPopup>
       </Modal>
       <div className="flex h-fit w-full flex-row justify-between bg-[#F0F0F0] p-[1%]">
         <div className="flex flex-col ">
@@ -233,8 +277,8 @@ const Prescriptiion: React.FunctionComponent = () => {
                 </div>
               </div>
             </div>
-            <div className="h-full w-[15%]">
-              <div className="flex w-1/2 cursor-pointer flex-col">
+            <div className="flex h-full w-[15%]">
+              <div className="flex w-1/2 cursor-pointer flex-col items-center justify-center">
                 <FaPrint
                   className="h-8 w-8 text-[#7E7E7E]"
                   onClick={() => {
@@ -243,6 +287,16 @@ const Prescriptiion: React.FunctionComponent = () => {
                   }}
                 />
 
+                <p>Save</p>
+              </div>
+              <div className="flex w-1/2 cursor-pointer flex-col items-center justify-center">
+                <FaEye
+                  className="h-8 w-8 text-[#7E7E7E]"
+                  onClick={() => {
+                    setOpen(true);
+                    console.log(template_id, patient_id);
+                  }}
+                />
                 <p>Preview</p>
               </div>
             </div>
@@ -253,9 +307,12 @@ const Prescriptiion: React.FunctionComponent = () => {
                 <p className="mt-[4%] text-3xl font-bold">RX</p>
                 {prescriptionData.medicine.map((item, index) => {
                   return (
-                    <div className="my-2 flex w-3/5 items-center justify-between text-xl">
-                      <p className="min-w-1/4 max-w-fit ">{item.medicine}</p>
-                      <p className="w-1/4">{item.repeatitions}</p>
+                    <div
+                      className="my-2 flex w-3/5 items-center justify-between text-xl"
+                      key={index}
+                    >
+                      <p className="w-[40%] ">{item.medicine}</p>
+                      <p className="w-[40%]">{item.repeatitions}</p>
 
                       <FaPen
                         className="h-4 w-4 text-[#4690C7]"
@@ -383,7 +440,7 @@ const Prescriptiion: React.FunctionComponent = () => {
                   label="Notes"
                   multiline
                   rows={4}
-                  className="min-w-0 flex-grow"
+                  className="h-fit min-w-0 flex-grow"
                   onChange={(e) => {
                     setPrescriptionData({
                       ...prescriptionData,
@@ -394,20 +451,52 @@ const Prescriptiion: React.FunctionComponent = () => {
               </div>
             </div>
             <div className=" flex h-1/5 w-full flex-wrap justify-between border-t-2 border-[#958E8E]">
-              <div className="mt-2 flex h-full w-1/2 flex-col justify-evenly">
-                <p className="text-lg font-bold">Previous Presctiption</p>
-                <div className="flex w-full items-center justify-between">
-                  <select className="mr-2 h-12 w-[75%] border-2 border-[#958E8E]"></select>
-                  <button className="h-12 w-[20%] min-w-[20%] bg-[#F36562] font-semibold text-white">
-                    View
-                  </button>
-                </div>
-              </div>
               <div className="ml-4 mt-2 flex h-full w-[45%] flex-col justify-evenly">
-                <p className="text-lg font-bold">Test Procedures & Reports</p>
+                <p className="text-lg font-bold">
+                  Prescription, Test Procedures & Reports
+                </p>
                 <div className="flex w-full items-center justify-between">
-                  <select className="mr-2 h-12 w-[75%] border-2 border-[#958E8E]"></select>
-                  <button className="h-12 w-[20%] min-w-[20%] bg-[#F36562] font-semibold text-white">
+                  <select
+                    className="mr-2 h-12 w-[75%] border-2 border-[#958E8E]"
+                    onChange={(e) => {
+                      setPreviousPrescription(e.target.value);
+                    }}
+                  >
+                    <option value="">
+                      Tap to view previous prescriptions with report
+                    </option>
+                    {previous_prescriptions?.map(
+                      (previous_prescription, index) => {
+                        return (
+                          <option
+                            value={previous_prescription.prescription_id}
+                            key={index}
+                          >
+                            {previous_prescription.prescription_id}
+                          </option>
+                        );
+                      },
+                    )}
+                  </select>
+                  <button
+                    className="h-12 w-[20%] min-w-[20%] bg-[#F36562] font-semibold text-white"
+                    onClick={async (e) => {
+                      e.preventDefault();
+                      console.log(selectPreviousPrescription);
+                      if (selectPreviousPrescription !== "") {
+                        await router.push({
+                          pathname: "prescription-view",
+                          query: {
+                            prescription_id: selectPreviousPrescription,
+                            patient_id: patient_id,
+                            template_id: template_id,
+                          },
+                        });
+                      } else {
+                        alert("No previous prescription is selected");
+                      }
+                    }}
+                  >
                     View
                   </button>
                 </div>

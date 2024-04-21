@@ -9,8 +9,8 @@ const MultiSelectInput: React.FC = () => {
   return (
     <div className="flex h-fit w-[30%] border-2 border-black">
       <div className="flex h-16 w-1/2 bg-red-500">
-        {selectedValues.map((item) => (
-          <p>{item}</p>
+        {selectedValues.map((item, index) => (
+          <p key={index}>{item}</p>
         ))}
       </div>
       <div className="flex w-1/2 flex-col">
@@ -32,6 +32,7 @@ const MultiSelectInput: React.FC = () => {
               return (
                 <p
                   className="hover:bg-white"
+                  key={index}
                   onClick={() => {
                     setSelectedValues([...selectedValues, `${item.name},`]);
                   }}

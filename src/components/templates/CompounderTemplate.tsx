@@ -90,6 +90,9 @@ const CompounderPageTemplate: React.FunctionComponent<IProps> = (props) => {
 
             <div
               className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "upload_reports" ? "bg-[#FCA19F]" : "bg-transparent"}`}
+              onClick={() => {
+                router.push("report-upload");
+              }}
             >
               <Image
                 src={upload_reports_icon}

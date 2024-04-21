@@ -1,11 +1,15 @@
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import React from "react";
-import NewAppointmentsTable from "~/components/tables/NewAppointments";
+import DragAndDrop from "~/components/elements/DragAndDrop";
 import CompounderPageTemplate from "~/components/templates/CompounderTemplate";
-import DoctorPageTemplate from "~/components/templates/DoctorPageTemplate";
 import DoctorLogin from "./doctor-login";
+import DoctorPageTemplate from "~/components/templates/DoctorPageTemplate";
+import ViewReport from "~/components/elements/ViewReport";
 
-const NewAppointments: React.FunctionComponent = () => {
+const ReportView: React.FunctionComponent = () => {
+  const router = useRouter();
+  const { patient_id } = router.query;
   const ses = useSession();
   if (ses.status === "loading") {
     return <div></div>;
@@ -14,8 +18,8 @@ const NewAppointments: React.FunctionComponent = () => {
     ses.data.user.email === "doctor"
   ) {
     return (
-      <DoctorPageTemplate activePage="appointments" doctorName="Doctor's Name">
-        <NewAppointments />
+      <DoctorPageTemplate activePage="reports" doctorName="Doctor's Name">
+        <ViewReport patient_id={patient_id as string} />
       </DoctorPageTemplate>
     );
   } else if (
@@ -23,14 +27,9 @@ const NewAppointments: React.FunctionComponent = () => {
     ses.data.user.email === "compounder"
   ) {
     return (
-      <div>
-        <CompounderPageTemplate
-          activePage="appointments"
-          doctorName="Doctor's Name"
-        >
-          <NewAppointments />
-        </CompounderPageTemplate>
-      </div>
+      <>
+        <p>Not authorised for this page</p>
+      </>
     );
   } else {
     return (
@@ -43,4 +42,4 @@ const NewAppointments: React.FunctionComponent = () => {
   }
 };
 
-export default NewAppointments;
+export default ReportView;

@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
-import MultiSelectInput from "./../components/elements/Hybrid";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import Image from "next/image";
 interface pdfProps {
   patient:
     | {
@@ -39,7 +39,7 @@ interface pdfProps {
   };
   ref: React.RefObject<HTMLDivElement>;
 }
-const ParentComponent: React.FC<pdfProps> = (props) => {
+const PrescipttionPopup: React.FC<pdfProps> = (props) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const date = new Date();
@@ -78,9 +78,9 @@ const ParentComponent: React.FC<pdfProps> = (props) => {
     <div className="flex h-fit w-fit flex-col items-center justify-center">
       <button
         onClick={handleGeneratePdf}
-        className="mb-4 h-8 w-16 self-end bg-[#F36562] text-white"
+        className="mb-4 h-8 w-fit min-w-16 self-end bg-[#F36562] px-2 text-white"
       >
-        Print
+        Download
       </button>
       <div
         className="flex h-[841px] w-[595px] flex-col  bg-white"
@@ -89,7 +89,7 @@ const ParentComponent: React.FC<pdfProps> = (props) => {
       >
         <div className="flex h-[14%] w-full flex-row items-center justify-between bg-[#9AA0B9] px-[2rem]">
           <div className="h-[40%] w-[10%]">
-            <img
+            <Image
               src="medical-symbol 1.png"
               className="h-full w-full text-white"
               alt=""
@@ -162,7 +162,10 @@ const ParentComponent: React.FC<pdfProps> = (props) => {
               <div className="flex h-[25%] w-full flex-col ">
                 {props.prescription_data.medicine.map((item, index) => {
                   return (
-                    <div className="flex w-[80%] flex-row justify-between">
+                    <div
+                      className="flex w-[80%] flex-row justify-between"
+                      key={index}
+                    >
                       <span>{item.medicine}</span>
                       <span>{item.repeatitions}</span>
                     </div>
@@ -187,4 +190,4 @@ const ParentComponent: React.FC<pdfProps> = (props) => {
   );
 };
 
-export default ParentComponent;
+export default PrescipttionPopup;

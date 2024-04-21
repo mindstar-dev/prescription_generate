@@ -132,7 +132,10 @@ const Template: React.FunctionComponent = () => {
                   <p className="mt-[4%] text-3xl font-bold">RX</p>
                   {templateData.template_data.map((item, index) => {
                     return (
-                      <div className="my-2 flex w-3/5 items-center justify-between text-xl">
+                      <div
+                        className="my-2 flex w-3/5 items-center justify-between text-xl"
+                        key={index}
+                      >
                         <p className="w-2/4">{item.medicine}</p>
                         <p className="w-1/4">{item.repeatitions}</p>
                         <FaPen
@@ -280,7 +283,7 @@ const Template: React.FunctionComponent = () => {
                 </div>
                 <div className="flex w-1/5 justify-center text-[#F36562]">
                   <FaEdit
-                    onClick={async () => {
+                    onClick={() => {
                       handleOpen();
                       const temp_data = templatesData?.filter(
                         (ele) => ele.template_id === item.template_id,
@@ -323,7 +326,7 @@ const Backdrop = React.forwardRef<
     />
   );
 });
-
+Backdrop.displayName = "Backdrop";
 const blue = {
   200: "#99CCFF",
   300: "#66B2FF",

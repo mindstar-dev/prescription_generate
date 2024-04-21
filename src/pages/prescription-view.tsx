@@ -1,11 +1,15 @@
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import React from "react";
-import PatientRegistrattionFormComponent from "~/components/form/PatientRegistrattionForm";
+import PrescriptionViewComponent from "~/components/elements/PrescriptionView";
 import CompounderPageTemplate from "~/components/templates/CompounderTemplate";
 import DoctorPageTemplate from "~/components/templates/DoctorPageTemplate";
+import { api } from "~/utils/api";
 import DoctorLogin from "./doctor-login";
 
-const PatientRegistrationForm: React.FunctionComponent = () => {
+const PrescriptionView: React.FunctionComponent = () => {
+  const router = useRouter();
+  const { prescription_id, patient_id, template_id } = router.query;
   const ses = useSession();
   if (ses.status === "loading") {
     return <div></div>;
@@ -15,10 +19,14 @@ const PatientRegistrationForm: React.FunctionComponent = () => {
   ) {
     return (
       <DoctorPageTemplate
-        activePage="patient_registration"
+        activePage="upload_reports"
         doctorName="Doctor's Name"
       >
-        <PatientRegistrattionFormComponent />
+        <PrescriptionViewComponent
+          prescription_id={prescription_id as string}
+          pateint_id={patient_id as string}
+          template_id={template_id as string}
+        />
       </DoctorPageTemplate>
     );
   } else if (
@@ -27,11 +35,12 @@ const PatientRegistrationForm: React.FunctionComponent = () => {
   ) {
     return (
       <div>
-        <CompounderPageTemplate
-          activePage="patient_registration"
-          doctorName={""}
-        >
-          <PatientRegistrattionFormComponent />
+        <CompounderPageTemplate activePage={""} doctorName={""}>
+          <PrescriptionViewComponent
+            prescription_id={prescription_id as string}
+            pateint_id={patient_id as string}
+            template_id={template_id as string}
+          />
         </CompounderPageTemplate>
       </div>
     );
@@ -46,4 +55,4 @@ const PatientRegistrationForm: React.FunctionComponent = () => {
   }
 };
 
-export default PatientRegistrationForm;
+export default PrescriptionView;

@@ -1,11 +1,14 @@
-import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import React from "react";
-import NewAppointmentsTable from "~/components/tables/NewAppointments";
+import PatientDetailsComponent from "~/components/elements/PatientDetails";
 import CompounderPageTemplate from "~/components/templates/CompounderTemplate";
-import DoctorPageTemplate from "~/components/templates/DoctorPageTemplate";
 import DoctorLogin from "./doctor-login";
+import DoctorPageTemplate from "~/components/templates/DoctorPageTemplate";
+import { useSession } from "next-auth/react";
 
-const NewAppointments: React.FunctionComponent = () => {
+const PatientDetails: React.FunctionComponent = () => {
+  const router = useRouter();
+  const { patient_id } = router.query;
   const ses = useSession();
   if (ses.status === "loading") {
     return <div></div>;
@@ -15,7 +18,7 @@ const NewAppointments: React.FunctionComponent = () => {
   ) {
     return (
       <DoctorPageTemplate activePage="appointments" doctorName="Doctor's Name">
-        <NewAppointments />
+        <PatientDetailsComponent patient_id={patient_id as string} />
       </DoctorPageTemplate>
     );
   } else if (
@@ -23,14 +26,11 @@ const NewAppointments: React.FunctionComponent = () => {
     ses.data.user.email === "compounder"
   ) {
     return (
-      <div>
-        <CompounderPageTemplate
-          activePage="appointments"
-          doctorName="Doctor's Name"
-        >
-          <NewAppointments />
+      <>
+        <CompounderPageTemplate activePage={""} doctorName={""}>
+          <PatientDetailsComponent patient_id={patient_id as string} />
         </CompounderPageTemplate>
-      </div>
+      </>
     );
   } else {
     return (
@@ -43,4 +43,4 @@ const NewAppointments: React.FunctionComponent = () => {
   }
 };
 
-export default NewAppointments;
+export default PatientDetails;
