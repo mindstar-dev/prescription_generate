@@ -1,6 +1,6 @@
 import { useSession } from "next-auth/react";
 import React from "react";
-import PatientList from "~/components/tables/PatientList";
+import PatientListTable from "~/components/tables/PatientList";
 import CompounderPageTemplate from "~/components/templates/CompounderTemplate";
 import DoctorPageTemplate from "~/components/templates/DoctorPageTemplate";
 import DoctorLogin from "./doctor-login";
@@ -15,7 +15,7 @@ const PatientLists: React.FunctionComponent = () => {
   ) {
     return (
       <DoctorPageTemplate activePage="patient_list" doctorName="Doctor's Name">
-        <PatientList />
+        <PatientListTable />
       </DoctorPageTemplate>
     );
   } else if (
@@ -25,7 +25,7 @@ const PatientLists: React.FunctionComponent = () => {
     return (
       <div>
         <CompounderPageTemplate activePage="patient_list" doctorName={""}>
-          <PatientList />
+          <PatientListTable />
         </CompounderPageTemplate>
       </div>
     );

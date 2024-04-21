@@ -5,7 +5,7 @@ import { FaSearch } from "react-icons/fa";
 import { api } from "~/utils/api";
 import { useRouter } from "next/router";
 
-const PatientList: React.FunctionComponent = () => {
+const PatientListTable: React.FunctionComponent = () => {
   const { data, isLoading, isError } = api.patient.get_all.useQuery();
   const [searchData, setSearchData] = React.useState("");
   const router = useRouter();
@@ -111,4 +111,4 @@ const PatientList: React.FunctionComponent = () => {
   );
 };
 
-export default PatientList;
+export default PatientListTable;

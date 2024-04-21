@@ -15,7 +15,7 @@ const NewAppointments: React.FunctionComponent = () => {
   ) {
     return (
       <DoctorPageTemplate activePage="appointments" doctorName="Doctor's Name">
-        <NewAppointments />
+        <NewAppointmentsTable />
       </DoctorPageTemplate>
     );
   } else if (
@@ -28,7 +28,7 @@ const NewAppointments: React.FunctionComponent = () => {
           activePage="appointments"
           doctorName="Doctor's Name"
         >
-          <NewAppointments />
+          <NewAppointmentsTable />
         </CompounderPageTemplate>
       </div>
     );
