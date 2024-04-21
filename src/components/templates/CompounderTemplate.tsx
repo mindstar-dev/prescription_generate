@@ -39,7 +39,7 @@ const CompounderPageTemplate: React.FunctionComponent<IProps> = (props) => {
           />
           <div className="flex h-[70%] w-full flex-col">
             <div
-              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "patient_registration" ? "bg-[#FCA19F]" : "bg-transparent"}`}
+              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "patient_registration" ? "bg-[#FCA19F]" : "bg-transparent"} cursor-pointer hover:bg-[#F36562]`}
               onClick={() => {
                 router.push("patient-registration-form");
               }}
@@ -61,7 +61,7 @@ const CompounderPageTemplate: React.FunctionComponent<IProps> = (props) => {
               </p>
             </div>
             <div
-              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "appointments" ? "bg-[#FCA19F]" : "bg-transparent"}`}
+              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "appointments" ? "bg-[#FCA19F]" : "bg-transparent"} cursor-pointer hover:bg-[#F36562]`}
               onClick={() => {
                 router.push("new-appointments");
               }}
@@ -75,7 +75,7 @@ const CompounderPageTemplate: React.FunctionComponent<IProps> = (props) => {
             </div>
 
             <div
-              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "patient_list" ? "bg-[#FCA19F]" : "bg-transparent"}`}
+              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "patient_list" ? "bg-[#FCA19F]" : "bg-transparent"} cursor-pointer hover:bg-[#F36562]`}
               onClick={() => {
                 router.push("patient-lists");
               }}
@@ -89,7 +89,7 @@ const CompounderPageTemplate: React.FunctionComponent<IProps> = (props) => {
             </div>
 
             <div
-              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "upload_reports" ? "bg-[#FCA19F]" : "bg-transparent"}`}
+              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "upload_reports" ? "bg-[#FCA19F]" : "bg-transparent"} cursor-pointer hover:bg-[#F36562]`}
               onClick={() => {
                 router.push("report-upload");
               }}
@@ -112,7 +112,7 @@ const CompounderPageTemplate: React.FunctionComponent<IProps> = (props) => {
             <p className="text-lg font-medium text-white">Sign Out</p>
           </div>
         </div>
-        <div className="flex h-screen w-4/5 items-center justify-center">
+        <div className="flex h-screen w-4/5 flex-wrap items-center justify-center overflow-y-scroll">
           <div className="flex h-[95%] w-[95%] flex-col self-center rounded-md border-2 border-black">
             <div className="flex h-[10%] w-full items-center justify-end rounded-t-md border-black bg-[#9AA0B9]">
               <FaCircleUser className="mr-4 h-10 w-10 text-white" />

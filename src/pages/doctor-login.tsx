@@ -93,7 +93,7 @@ const DoctorLogin: React.FunctionComponent = () => {
             </div>
           </div>
           <button
-            className="flex h-[6%] w-1/5 items-center justify-center rounded-2xl bg-[#3D4460] text-center text-2xl font-medium text-white"
+            className="flex h-[6%] w-1/5 cursor-pointer items-center justify-center rounded-2xl bg-[#3D4460] text-center text-2xl font-medium text-white"
             type="submit"
             onClick={handleSubmit}
           >
