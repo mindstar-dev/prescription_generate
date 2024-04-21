@@ -148,12 +148,17 @@ export const prescriptionRouter = createTRPCRouter({
   ger_test_report_by_prescription_id: protectedProcedure
     .input(prescriptionUniqueSchema)
     .query(async ({ ctx, input }) => {
-      const prescription = await ctx.db.prescriptionTesteReport.findMany({
+      const reports = await ctx.db.prescriptionTesteReport.findMany({
         where: {
           prescription_id: input.prescription_id,
         },
       });
       await ctx.db.$disconnect();
-      return prescription;
+      return reports;
     }),
+  get_all_test_report: protectedProcedure.query(async ({ ctx }) => {
+    const reports = await ctx.db.prescriptionTesteReport.findMany();
+    await ctx.db.$disconnect();
+    return reports;
+  }),
 });

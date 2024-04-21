@@ -85,7 +85,17 @@ const NewAppointments: React.FunctionComponent = () => {
                   {item.contact_number.toString()}
                 </div>
                 <div className="flex w-[30%] items-center space-x-4">
-                  <button className="h-[41px] w-[95px] bg-[#FCA19F] hover:bg-[#F36562]">
+                  <button
+                    className="h-[41px] w-[95px] bg-[#FCA19F] hover:bg-[#F36562]"
+                    onClick={() => {
+                      router.push({
+                        pathname: "patient-details",
+                        query: {
+                          patient_id: item.patient_id,
+                        },
+                      });
+                    }}
+                  >
                     DETAILS
                   </button>
                   <button

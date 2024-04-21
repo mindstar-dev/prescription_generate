@@ -1,10 +1,14 @@
 import React from "react";
-import Prescriptiion from "~/components/elements/Prescriptiion";
+import PatientDetailsEdit from "~/components/elements/PatientDetailsEdit";
+import CompounderPageTemplate from "~/components/templates/CompounderTemplate";
 import DoctorPageTemplate from "~/components/templates/DoctorPageTemplate";
 import DoctorLogin from "./doctor-login";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
-const patientprescription: React.FunctionComponent = () => {
+const patientlistedit: React.FunctionComponent = () => {
+  const router = useRouter();
+  const { patient_id } = router.query;
   const ses = useSession();
   if (ses.status === "loading") {
     return <div></div>;
@@ -14,7 +18,7 @@ const patientprescription: React.FunctionComponent = () => {
   ) {
     return (
       <DoctorPageTemplate activePage="appointments" doctorName="Doctor's Name">
-        <Prescriptiion />
+        <PatientDetailsEdit patient_id={patient_id as string} />
       </DoctorPageTemplate>
     );
   } else if (
@@ -23,7 +27,9 @@ const patientprescription: React.FunctionComponent = () => {
   ) {
     return (
       <>
-        <p>Not authorised for this page</p>
+        <CompounderPageTemplate activePage={""} doctorName={""}>
+          <PatientDetailsEdit patient_id={patient_id as string} />
+        </CompounderPageTemplate>
       </>
     );
   } else {
@@ -37,4 +43,4 @@ const patientprescription: React.FunctionComponent = () => {
   }
 };
 
-export default patientprescription;
+export default patientlistedit;

@@ -3,11 +3,12 @@ import * as React from "react";
 import Heading from "../elements/Heading";
 import { FaSearch } from "react-icons/fa";
 import { api } from "~/utils/api";
+import { useRouter } from "next/router";
 
 const PatientList: React.FunctionComponent = () => {
   const { data, isLoading, isError } = api.patient.get_all.useQuery();
   const [searchData, setSearchData] = React.useState("");
-
+  const router = useRouter();
   return (
     <div className="h-full w-full">
       <Heading
@@ -75,10 +76,30 @@ const PatientList: React.FunctionComponent = () => {
                   {item.contact_number.toString()}
                 </div>
                 <div className="flex w-[30%] items-center justify-center space-x-4">
-                  <button className="h-[41px] w-[95px] bg-[#FCA19F] hover:bg-[#F36562]">
+                  <button
+                    className="h-[41px] w-[95px] bg-[#FCA19F] hover:bg-[#F36562]"
+                    onClick={() => {
+                      router.push({
+                        pathname: "patient-details",
+                        query: {
+                          patient_id: item.patient_id,
+                        },
+                      });
+                    }}
+                  >
                     DETAILS
                   </button>
-                  <button className="h-[41px] w-[95px] bg-[#FCA19F] hover:bg-[#F36562]">
+                  <button
+                    className="h-[41px] w-[95px] bg-[#FCA19F] hover:bg-[#F36562]"
+                    onClick={() => {
+                      router.push({
+                        pathname: "report-view",
+                        query: {
+                          patient_id: item.patient_id,
+                        },
+                      });
+                    }}
+                  >
                     REPORT
                   </button>
                 </div>

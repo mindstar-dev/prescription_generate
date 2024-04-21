@@ -84,6 +84,9 @@ const DoctorPageTemplate: React.FunctionComponent<IProps> = (props) => {
             </div>
             <div
               className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "reports" ? "bg-[#FCA19F]" : "bg-transparent"}`}
+              onClick={() => {
+                router.push("report-view");
+              }}
             >
               <Image
                 src={reports_icon}

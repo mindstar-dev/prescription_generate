@@ -6,7 +6,7 @@ import CompounderPageTemplate from "~/components/templates/CompounderTemplate";
 import DoctorLogin from "./doctor-login";
 import DoctorPageTemplate from "~/components/templates/DoctorPageTemplate";
 
-const compounderupload: React.FunctionComponent = () => {
+const ReportUpload: React.FunctionComponent = () => {
   const router = useRouter();
   const { patient_id } = router.query;
   const ses = useSession();
@@ -49,4 +49,4 @@ const compounderupload: React.FunctionComponent = () => {
   }
 };
 
-export default compounderupload;
+export default ReportUpload;
