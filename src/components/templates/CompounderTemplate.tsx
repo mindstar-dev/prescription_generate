@@ -39,7 +39,7 @@ const CompounderPageTemplate: React.FunctionComponent<IProps> = (props) => {
           />
           <div className="flex h-[70%] w-full flex-col">
             <div
-              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "patient_registration" ? "bg-[#FCA19F]" : "bg-transparent"}`}
+              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "patient_registration" ? "bg-[#FCA19F]" : "bg-transparent"} cursor-pointer hover:bg-[#F36562]`}
               onClick={() => {
                 router.push("patient-registration-form");
               }}
@@ -61,7 +61,7 @@ const CompounderPageTemplate: React.FunctionComponent<IProps> = (props) => {
               </p>
             </div>
             <div
-              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "appointments" ? "bg-[#FCA19F]" : "bg-transparent"}`}
+              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "appointments" ? "bg-[#FCA19F]" : "bg-transparent"} cursor-pointer hover:bg-[#F36562]`}
               onClick={() => {
                 router.push("new-appointments");
               }}
@@ -75,7 +75,7 @@ const CompounderPageTemplate: React.FunctionComponent<IProps> = (props) => {
             </div>
 
             <div
-              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "patient_list" ? "bg-[#FCA19F]" : "bg-transparent"}`}
+              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "patient_list" ? "bg-[#FCA19F]" : "bg-transparent"} cursor-pointer hover:bg-[#F36562]`}
               onClick={() => {
                 router.push("patient-lists");
               }}
@@ -89,7 +89,7 @@ const CompounderPageTemplate: React.FunctionComponent<IProps> = (props) => {
             </div>
 
             <div
-              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "upload_reports" ? "bg-[#FCA19F]" : "bg-transparent"}`}
+              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "upload_reports" ? "bg-[#FCA19F]" : "bg-transparent"} cursor-pointer hover:bg-[#F36562]`}
               onClick={() => {
                 router.push("report-upload");
               }}

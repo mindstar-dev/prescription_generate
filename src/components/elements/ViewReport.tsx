@@ -134,25 +134,27 @@ const ViewReport: React.FunctionComponent<DragAndDropProps> = (props) => {
           </select>
         </div>
 
-        <div className="h-[400px] w-[400px] self-center overflow-hidden">
-          <div className="h-full snap-y snap-mandatory overflow-x-hidden overflow-y-scroll ">
-            {reports?.map((item, index) =>
-              selectedPrescription.prescription === item.prescription_id ? (
-                <div
-                  className="h-full w-full snap-center"
-                  key={index}
-                  onClick={() => handleImageClick(item.test_report)}
-                >
-                  <Image
-                    src={item.test_report}
-                    alt={""}
-                    width={400} // Specify the actual width of the image
-                    height={400}
-                    className=" aspect-square h-full w-full"
-                  />
-                </div>
-              ) : null,
-            )}
+        <div className="flex h-full w-full flex-wrap items-center justify-center self-center">
+          <div className="h-[400px] w-[400px] self-center overflow-hidden">
+            <div className="h-full snap-y snap-mandatory overflow-x-hidden overflow-y-scroll ">
+              {reports?.map((item, index) =>
+                selectedPrescription.prescription === item.prescription_id ? (
+                  <div
+                    className="h-full w-full snap-center"
+                    key={index}
+                    onClick={() => handleImageClick(item.test_report)}
+                  >
+                    <Image
+                      src={item.test_report}
+                      alt={""}
+                      width={400} // Specify the actual width of the image
+                      height={400}
+                      className=" aspect-square h-full w-full"
+                    />
+                  </div>
+                ) : null,
+              )}
+            </div>
           </div>
         </div>
         <Modal
