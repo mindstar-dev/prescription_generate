@@ -1,11 +1,11 @@
 import { useSession } from "next-auth/react";
 import React from "react";
-import PatientRegistrattionForm from "~/components/form/PatientRegistrattionForm";
+import PatientRegistrattionFormComponent from "~/components/form/PatientRegistrattionForm";
 import CompounderPageTemplate from "~/components/templates/CompounderTemplate";
 import DoctorPageTemplate from "~/components/templates/DoctorPageTemplate";
 import DoctorLogin from "./doctor-login";
 
-const patientregistrationform: React.FunctionComponent = () => {
+const PatientRegistrationForm: React.FunctionComponent = () => {
   const ses = useSession();
   if (ses.status === "loading") {
     return <div></div>;
@@ -18,7 +18,7 @@ const patientregistrationform: React.FunctionComponent = () => {
         activePage="patient_registration"
         doctorName="Doctor's Name"
       >
-        <PatientRegistrattionForm />
+        <PatientRegistrattionFormComponent />
       </DoctorPageTemplate>
     );
   } else if (
@@ -31,7 +31,7 @@ const patientregistrationform: React.FunctionComponent = () => {
           activePage="patient_registration"
           doctorName={""}
         >
-          <PatientRegistrattionForm />
+          <PatientRegistrattionFormComponent />
         </CompounderPageTemplate>
       </div>
     );
@@ -46,4 +46,4 @@ const patientregistrationform: React.FunctionComponent = () => {
   }
 };
 
-export default patientregistrationform;
+export default PatientRegistrationForm;

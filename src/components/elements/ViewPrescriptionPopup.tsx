@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import Image from "next/image";
 interface pdfProps {
   patient:
     | {
@@ -88,7 +89,7 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
       >
         <div className="flex h-[14%] w-full flex-row items-center justify-between bg-[#9AA0B9] px-[2rem]">
           <div className="h-[40%] w-[10%]">
-            <img
+            <Image
               src="medical-symbol 1.png"
               className="h-full w-full text-white"
               alt=""
@@ -161,7 +162,10 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
               <div className="flex h-[25%] w-full flex-col ">
                 {props.prescription_data.medicine.map((item, index) => {
                   return (
-                    <div className="flex w-[80%] flex-row justify-between">
+                    <div
+                      className="flex w-[80%] flex-row justify-between"
+                      key={index}
+                    >
                       <span>{item.medicine}</span>
                       <span>{item.repeatitions}</span>
                     </div>

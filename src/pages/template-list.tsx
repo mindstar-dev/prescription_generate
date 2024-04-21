@@ -5,7 +5,7 @@ import CompounderPageTemplate from "~/components/templates/CompounderTemplate";
 import DoctorPageTemplate from "~/components/templates/DoctorPageTemplate";
 import DoctorLogin from "./doctor-login";
 
-const templatelist: React.FunctionComponent = () => {
+const TemplateList: React.FunctionComponent = () => {
   const ses = useSession();
   if (ses.status === "loading") {
     return <div></div>;
@@ -40,4 +40,4 @@ const templatelist: React.FunctionComponent = () => {
   }
 };
 
-export default templatelist;
+export default TemplateList;

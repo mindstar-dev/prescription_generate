@@ -1,11 +1,11 @@
 import { useSession } from "next-auth/react";
 import React from "react";
-import NewAppointments from "~/components/tables/NewAppointments";
+import NewAppointmentsTable from "~/components/tables/NewAppointments";
 import CompounderPageTemplate from "~/components/templates/CompounderTemplate";
 import DoctorPageTemplate from "~/components/templates/DoctorPageTemplate";
 import DoctorLogin from "./doctor-login";
 
-const newappointments: React.FunctionComponent = () => {
+const NewAppointments: React.FunctionComponent = () => {
   const ses = useSession();
   if (ses.status === "loading") {
     return <div></div>;
@@ -43,4 +43,4 @@ const newappointments: React.FunctionComponent = () => {
   }
 };
 
-export default newappointments;
+export default NewAppointments;

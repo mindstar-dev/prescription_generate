@@ -33,7 +33,7 @@ const Prescriptiion: React.FunctionComponent = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [prescriptionData, setPrescriptionData] = useState({
-    prescription_id: `${patient_id}_${String(date.getDate()).padStart(2, "0")}${String(date.getMonth() + 1).padStart(2, "0")}${String(date.getFullYear()).slice(2)}${String(date.getHours()).padStart(2, "0")}${String(date.getMinutes()).padStart(2, "0")}`,
+    prescription_id: `${patient_id?.toString()}_${String(date.getDate()).padStart(2, "0")}${String(date.getMonth() + 1).padStart(2, "0")}${String(date.getFullYear()).slice(2)}${String(date.getHours()).padStart(2, "0")}${String(date.getMinutes()).padStart(2, "0")}`,
     patient_id: patient_id as string,
     date: date,
     tests: "",
@@ -59,7 +59,7 @@ const Prescriptiion: React.FunctionComponent = () => {
       setPrescriptionData({
         ...prescriptionData,
         patient_id: patient_id as string,
-        prescription_id: `${patient_id}_${String(date.getDate()).padStart(2, "0")}${String(date.getMonth() + 1).padStart(2, "0")}${String(date.getFullYear()).slice(2)}${String(date.getHours()).padStart(2, "0")}${String(date.getMinutes()).padStart(2, "0")}`,
+        prescription_id: `${patient_id.toString()}_${String(date.getDate()).padStart(2, "0")}${String(date.getMonth() + 1).padStart(2, "0")}${String(date.getFullYear()).slice(2)}${String(date.getHours()).padStart(2, "0")}${String(date.getMinutes()).padStart(2, "0")}`,
       });
     }
     if (!isLoading && !isError && template_data && !initialFetchDone) {
@@ -86,7 +86,14 @@ const Prescriptiion: React.FunctionComponent = () => {
       // Set initial fetch done to true
       setInitialFetchDone(true);
     }
-  }, [template_data, isLoading, isError, initialFetchDone]);
+  }, [
+    template_data,
+    isLoading,
+    isError,
+    initialFetchDone,
+    patient_id,
+    prescriptionData,
+  ]);
   const handleMedicineChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setMedicineList({
@@ -107,7 +114,7 @@ const Prescriptiion: React.FunctionComponent = () => {
   const create = () => {
     setPrescriptionData({
       ...prescriptionData,
-      prescription_id: `${patient_id}_${String(date.getDate()).padStart(2, "0")}${String(date.getMonth() + 1).padStart(2, "0")}${String(date.getFullYear()).slice(2)}${String(date.getHours()).padStart(2, "0")}${String(date.getMinutes()).padStart(2, "0")}`,
+      prescription_id: `${patient_id?.toString()}_${String(date.getDate()).padStart(2, "0")}${String(date.getMonth() + 1).padStart(2, "0")}${String(date.getFullYear()).slice(2)}${String(date.getHours()).padStart(2, "0")}${String(date.getMinutes()).padStart(2, "0")}`,
     });
     console.log(prescriptionData.patient_id, prescriptionData.prescription_id);
     if (
@@ -300,7 +307,10 @@ const Prescriptiion: React.FunctionComponent = () => {
                 <p className="mt-[4%] text-3xl font-bold">RX</p>
                 {prescriptionData.medicine.map((item, index) => {
                   return (
-                    <div className="my-2 flex w-3/5 items-center justify-between text-xl">
+                    <div
+                      className="my-2 flex w-3/5 items-center justify-between text-xl"
+                      key={index}
+                    >
                       <p className="w-[40%] ">{item.medicine}</p>
                       <p className="w-[40%]">{item.repeatitions}</p>
 
@@ -458,7 +468,10 @@ const Prescriptiion: React.FunctionComponent = () => {
                     {previous_prescriptions?.map(
                       (previous_prescription, index) => {
                         return (
-                          <option value={previous_prescription.prescription_id}>
+                          <option
+                            value={previous_prescription.prescription_id}
+                            key={index}
+                          >
                             {previous_prescription.prescription_id}
                           </option>
                         );

@@ -103,7 +103,7 @@ const ViewReport: React.FunctionComponent<DragAndDropProps> = (props) => {
 
             {patient?.map((item, index) => {
               return (
-                <option value={item.patient_id}>
+                <option value={item.patient_id} key={index}>
                   {`${item.patient_id}--[${item.first_name} ${item.last_name}]`}
                 </option>
               );
@@ -124,7 +124,7 @@ const ViewReport: React.FunctionComponent<DragAndDropProps> = (props) => {
             {previousPrescription?.map((item, index) => {
               if (item.patient_id === selectedPrescription.patient) {
                 return (
-                  <option value={item.prescription_id}>
+                  <option value={item.prescription_id} key={index}>
                     {item.date.toLocaleDateString()}-
                     {item.date.toLocaleTimeString()}
                   </option>
@@ -163,7 +163,7 @@ const ViewReport: React.FunctionComponent<DragAndDropProps> = (props) => {
           <div className="flex h-fit w-fit items-center justify-center">
             {selectedImage && (
               <div className="h-fit w-fit">
-                <img
+                <Image
                   src={selectedImage}
                   alt=""
                   className="aspect-square h-fit w-fit"

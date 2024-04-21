@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { api } from "~/utils/api";
 
-const PatientRegistrattionForm: React.FunctionComponent = () => {
+const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
   const [patientData, setPatientData] = useState({
     first_name: "",
     age: "",
@@ -132,7 +132,7 @@ const PatientRegistrattionForm: React.FunctionComponent = () => {
             onChange={handleInputChange}
           />
         </div>
-        <div className="text-3xl">Patient's Address</div>
+        <div className="text-3xl">Patient&apos;s Address</div>
         <div className="flex h-[5%] flex-col justify-between">
           <input
             type="text"
@@ -202,4 +202,4 @@ const PatientRegistrattionForm: React.FunctionComponent = () => {
   );
 };
 
-export default PatientRegistrattionForm;
+export default PatientRegistrattionFormComponent;

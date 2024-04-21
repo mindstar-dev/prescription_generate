@@ -1,13 +1,13 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
-import PrescriptionView from "~/components/elements/PrescriptionView";
+import PrescriptionViewComponent from "~/components/elements/PrescriptionView";
 import CompounderPageTemplate from "~/components/templates/CompounderTemplate";
 import DoctorPageTemplate from "~/components/templates/DoctorPageTemplate";
 import { api } from "~/utils/api";
 import DoctorLogin from "./doctor-login";
 
-const prescriptionview: React.FunctionComponent = () => {
+const PrescriptionView: React.FunctionComponent = () => {
   const router = useRouter();
   const { prescription_id, patient_id, template_id } = router.query;
   const ses = useSession();
@@ -22,7 +22,7 @@ const prescriptionview: React.FunctionComponent = () => {
         activePage="upload_reports"
         doctorName="Doctor's Name"
       >
-        <PrescriptionView
+        <PrescriptionViewComponent
           prescription_id={prescription_id as string}
           pateint_id={patient_id as string}
           template_id={template_id as string}
@@ -36,7 +36,7 @@ const prescriptionview: React.FunctionComponent = () => {
     return (
       <div>
         <CompounderPageTemplate activePage={""} doctorName={""}>
-          <PrescriptionView
+          <PrescriptionViewComponent
             prescription_id={prescription_id as string}
             pateint_id={patient_id as string}
             template_id={template_id as string}
@@ -55,4 +55,4 @@ const prescriptionview: React.FunctionComponent = () => {
   }
 };
 
-export default prescriptionview;
+export default PrescriptionView;

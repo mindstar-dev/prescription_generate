@@ -4,7 +4,9 @@ import { api } from "~/utils/api";
 interface PatientDetailsEditProps {
   patient_id: string;
 }
-const PatientDetailsEdit: React.FC<PatientDetailsEditProps> = (props) => {
+const PatientDetailsEditComponent: React.FC<PatientDetailsEditProps> = (
+  props,
+) => {
   const router = useRouter();
   const [firstRender, setFirstRender] = useState(false);
   const [patientData, setPatientData] = useState({
@@ -55,7 +57,7 @@ const PatientDetailsEdit: React.FC<PatientDetailsEditProps> = (props) => {
         state: data.state || "",
       });
     }
-  }, [data, isLoading, isError]);
+  }, [data, isLoading, isError, firstRender]);
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
@@ -142,7 +144,7 @@ const PatientDetailsEdit: React.FC<PatientDetailsEditProps> = (props) => {
             id=""
             className="h-full w-[44%] border-b border-black"
             onChange={handleInputChange}
-            value={patientData?.gender}
+            value={patientData.gender}
           >
             <option value="">---Select Gender---</option>
             <option value="Male">Male</option>
@@ -156,7 +158,7 @@ const PatientDetailsEdit: React.FC<PatientDetailsEditProps> = (props) => {
             className="h-full w-[44%] border-b border-black"
             name="fathers_name"
             onChange={handleInputChange}
-            value={patientData?.fathers_name as string}
+            value={patientData.fathers_name}
           />
           <input
             type="text"
@@ -164,7 +166,7 @@ const PatientDetailsEdit: React.FC<PatientDetailsEditProps> = (props) => {
             className="h-full w-[44%] border-b border-black"
             name="husbands_name"
             onChange={handleInputChange}
-            value={patientData?.husbands_name as string}
+            value={patientData.husbands_name}
           />
         </div>
         <div className="flex h-[5%] flex-row justify-between">
@@ -174,10 +176,10 @@ const PatientDetailsEdit: React.FC<PatientDetailsEditProps> = (props) => {
             className="h-full w-[44%] border-b border-black"
             name="age"
             onChange={handleInputChange}
-            value={patientData?.age.toString()}
+            value={patientData.age}
           />
         </div>
-        <div className="text-3xl">Patient's Address</div>
+        <div className="text-3xl">Patient&apos;s Address</div>
         <div className="flex h-[5%] flex-col justify-between">
           <input
             type="text"
@@ -185,7 +187,7 @@ const PatientDetailsEdit: React.FC<PatientDetailsEditProps> = (props) => {
             className="h-full w-full border-b border-black"
             name="address_line1"
             onChange={handleInputChange}
-            value={patientData?.address_line1 as string}
+            value={patientData.address_line1}
           />
         </div>
         <div className="flex h-[5%] flex-col justify-between">
@@ -195,7 +197,7 @@ const PatientDetailsEdit: React.FC<PatientDetailsEditProps> = (props) => {
             className="h-full w-full border-b border-black"
             name="address_line2"
             onChange={handleInputChange}
-            value={patientData?.address_line2 as string}
+            value={patientData.address_line2}
           />
         </div>
         <div className="flex h-[5%] flex-row justify-between">
@@ -205,7 +207,7 @@ const PatientDetailsEdit: React.FC<PatientDetailsEditProps> = (props) => {
             className="h-full w-[44%] border-b border-black"
             name="city"
             onChange={handleInputChange}
-            value={patientData?.city as string}
+            value={patientData.city}
           />
           <input
             type="text"
@@ -213,7 +215,7 @@ const PatientDetailsEdit: React.FC<PatientDetailsEditProps> = (props) => {
             className="h-full w-[44%] border-b border-black"
             name="state"
             onChange={handleInputChange}
-            value={patientData?.state as string}
+            value={patientData.state}
           />
         </div>
         <div className="flex h-[5%] flex-row justify-between">
@@ -223,7 +225,7 @@ const PatientDetailsEdit: React.FC<PatientDetailsEditProps> = (props) => {
             className="h-full w-[44%] border-b border-black"
             name="pin_code"
             onChange={handleInputChange}
-            value={patientData?.pin_code?.toString()}
+            value={patientData.pin_code}
           />
           <input
             type="text"
@@ -231,7 +233,7 @@ const PatientDetailsEdit: React.FC<PatientDetailsEditProps> = (props) => {
             className="h-full w-[44%] border-b border-black"
             name="country"
             onChange={handleInputChange}
-            value={patientData?.country as string}
+            value={patientData.country}
           />
         </div>
         <div className="flex h-[4%] w-full justify-center space-x-8 text-white">
@@ -260,4 +262,4 @@ const PatientDetailsEdit: React.FC<PatientDetailsEditProps> = (props) => {
   );
 };
 
-export default PatientDetailsEdit;
+export default PatientDetailsEditComponent;

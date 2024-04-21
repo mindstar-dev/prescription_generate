@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 interface PatientDetailsProps {
   patient_id: string;
 }
-const PatientDetails: React.FunctionComponent<PatientDetailsProps> = (
+const PatientDetailsComponent: React.FunctionComponent<PatientDetailsProps> = (
   props,
 ) => {
   const router = useRouter();
@@ -98,4 +98,4 @@ const PatientDetails: React.FunctionComponent<PatientDetailsProps> = (
   );
 };
 
-export default PatientDetails;
+export default PatientDetailsComponent;

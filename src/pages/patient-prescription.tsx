@@ -4,7 +4,7 @@ import DoctorPageTemplate from "~/components/templates/DoctorPageTemplate";
 import DoctorLogin from "./doctor-login";
 import { useSession } from "next-auth/react";
 
-const patientprescription: React.FunctionComponent = () => {
+const PatientPrescription: React.FunctionComponent = () => {
   const ses = useSession();
   if (ses.status === "loading") {
     return <div></div>;
@@ -37,4 +37,4 @@ const patientprescription: React.FunctionComponent = () => {
   }
 };
 
-export default patientprescription;
+export default PatientPrescription;

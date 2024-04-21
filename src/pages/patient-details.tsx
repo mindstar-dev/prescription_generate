@@ -1,12 +1,12 @@
 import { useRouter } from "next/router";
 import React from "react";
-import PatientDetails from "~/components/elements/PatientDetails";
+import PatientDetailsComponent from "~/components/elements/PatientDetails";
 import CompounderPageTemplate from "~/components/templates/CompounderTemplate";
 import DoctorLogin from "./doctor-login";
 import DoctorPageTemplate from "~/components/templates/DoctorPageTemplate";
 import { useSession } from "next-auth/react";
 
-const patientdetails: React.FunctionComponent = () => {
+const PatientDetails: React.FunctionComponent = () => {
   const router = useRouter();
   const { patient_id } = router.query;
   const ses = useSession();
@@ -18,7 +18,7 @@ const patientdetails: React.FunctionComponent = () => {
   ) {
     return (
       <DoctorPageTemplate activePage="appointments" doctorName="Doctor's Name">
-        <PatientDetails patient_id={patient_id as string} />
+        <PatientDetailsComponent patient_id={patient_id as string} />
       </DoctorPageTemplate>
     );
   } else if (
@@ -28,7 +28,7 @@ const patientdetails: React.FunctionComponent = () => {
     return (
       <>
         <CompounderPageTemplate activePage={""} doctorName={""}>
-          <PatientDetails patient_id={patient_id as string} />
+          <PatientDetailsComponent patient_id={patient_id as string} />
         </CompounderPageTemplate>
       </>
     );
@@ -43,4 +43,4 @@ const patientdetails: React.FunctionComponent = () => {
   }
 };
 
-export default patientdetails;
+export default PatientDetails;

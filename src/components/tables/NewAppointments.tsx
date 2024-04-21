@@ -8,7 +8,7 @@ import { css, Modal, styled } from "@mui/material";
 import { blue, grey } from "@mui/material/colors";
 import clsx from "clsx";
 
-const NewAppointments: React.FunctionComponent = () => {
+const NewAppointmentsTable: React.FunctionComponent = () => {
   const { data, isLoading, isError } = api.patient.get_all.useQuery();
   const [searchData, setSearchData] = React.useState("");
   const [open, setOpen] = React.useState(false);
@@ -137,6 +137,7 @@ const NewAppointments: React.FunctionComponent = () => {
                       {templates?.map((template, index) => {
                         return (
                           <div
+                            key={index}
                             className="h-10 w-full hover:bg-[#F0F0F0]"
                             onClick={() => {
                               router.push({
@@ -176,7 +177,7 @@ const NewAppointments: React.FunctionComponent = () => {
   );
 };
 
-export default NewAppointments;
+export default NewAppointmentsTable;
 const Backdrop = React.forwardRef<
   HTMLDivElement,
   { open?: boolean; className: string }
@@ -190,6 +191,7 @@ const Backdrop = React.forwardRef<
     />
   );
 });
+Backdrop.displayName = "Backdrop";
 const StyledBackdrop = styled(Backdrop)`
   z-index: -1;
   position: fixed;

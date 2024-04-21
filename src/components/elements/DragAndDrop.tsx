@@ -4,7 +4,8 @@ import { api } from "~/utils/api";
 import supabase, { createClient } from "@supabase/supabase-js";
 import { env } from "~/env";
 import img from "../../../public/gojo.jpeg";
-import prescriptionview from "~/pages/prescription-view";
+import PrescriptionView from "~/pages/prescription-view";
+import Image from "next/image";
 interface DragAndDropProps {
   patient_id: string;
 }
@@ -51,7 +52,7 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
 
       // Set preview URL for the first image file
       const file = droppedFiles[0];
-      if (file && file.type.startsWith("image/")) {
+      if (file?.type.startsWith("image/")) {
         setPreviewUrl(URL.createObjectURL(file));
       } else {
         // Reset or handle non-image file type
@@ -123,7 +124,7 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
     const files = e.target.files;
     if (files) {
       const file = files[0];
-      if (file && file.type.startsWith("image/")) {
+      if (file?.type.startsWith("image/")) {
         setPreviewUrl(URL.createObjectURL(file)); // Create a URL for preview
       } else {
         // Optionally handle non-image file types or reset preview URL
@@ -209,7 +210,7 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
 
             {patient?.map((item, index) => {
               return (
-                <option value={item.patient_id}>
+                <option value={item.patient_id} key={index}>
                   {`${item.patient_id}--[${item.first_name} ${item.last_name}]`}
                 </option>
               );
@@ -230,7 +231,7 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
             {previousPrescription?.map((item, index) => {
               if (item.patient_id === selectedPrescription.patient) {
                 return (
-                  <option value={item.prescription_id}>
+                  <option value={item.prescription_id} key={index}>
                     {item.date.toLocaleDateString()}-
                     {item.date.toLocaleTimeString()}
                   </option>
@@ -287,7 +288,7 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
           </div>
         ) : (
           <div className="flex self-center">
-            <img src={previewUrl} />
+            <Image src={previewUrl} alt="" />
           </div>
         )}
       </div>

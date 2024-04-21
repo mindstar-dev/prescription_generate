@@ -13,9 +13,9 @@ interface PrescriptionViewProps {
   pateint_id: string;
   template_id: string;
 }
-const PrescriptionView: React.FunctionComponent<PrescriptionViewProps> = (
-  props,
-) => {
+const PrescriptionViewComponent: React.FunctionComponent<
+  PrescriptionViewProps
+> = (props) => {
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [startY, setStartY] = useState(0);
@@ -23,7 +23,6 @@ const PrescriptionView: React.FunctionComponent<PrescriptionViewProps> = (
   const [translateY, setTranslateY] = useState(0);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [openModal, setOpenModal] = useState<boolean>(false);
-  let image = [{ imagesrc: "/favicon.ico" }, { imagesrc: "/gojo2.jpeg" }];
 
   const handleImageClick = (imageUrl: string) => {
     setSelectedImage(imageUrl);
@@ -150,7 +149,7 @@ const PrescriptionView: React.FunctionComponent<PrescriptionViewProps> = (
             <p className="mb-[2%] text-2xl font-bold">Rx</p>
             {prescriptionData?.map((item, index) => {
               return (
-                <div className="ml-[4%] flex flex-row space-x-[3%]">
+                <div className="ml-[4%] flex flex-row space-x-[3%]" key={index}>
                   <p>{item.medicine}</p> <p>{item.repeatitions}</p>
                 </div>
               );
@@ -228,7 +227,7 @@ const PrescriptionView: React.FunctionComponent<PrescriptionViewProps> = (
         <div className="flex h-fit w-fit items-center justify-center">
           {selectedImage && (
             <div className="h-fit w-fit">
-              <img
+              <Image
                 src={selectedImage}
                 alt=""
                 className="aspect-square h-fit w-fit"
@@ -241,4 +240,4 @@ const PrescriptionView: React.FunctionComponent<PrescriptionViewProps> = (
   );
 };
 
-export default PrescriptionView;
+export default PrescriptionViewComponent;
