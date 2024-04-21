@@ -112,7 +112,7 @@ const CompounderPageTemplate: React.FunctionComponent<IProps> = (props) => {
             <p className="text-lg font-medium text-white">Sign Out</p>
           </div>
         </div>
-        <div className="flex h-screen w-4/5 items-center justify-center">
+        <div className="flex h-screen w-4/5 flex-wrap items-center justify-center overflow-y-scroll">
           <div className="flex h-[95%] w-[95%] flex-col self-center rounded-md border-2 border-black">
             <div className="flex h-[10%] w-full items-center justify-end rounded-t-md border-black bg-[#9AA0B9]">
               <FaCircleUser className="mr-4 h-10 w-10 text-white" />
