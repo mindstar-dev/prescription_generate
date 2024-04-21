@@ -10,18 +10,37 @@ import { GetServerSideProps } from "next/types";
 
 export default function Home() {
   const ses = useSession();
-
-  return (
-    <>
-      <main className="flex h-full w-full">
-        {ses.status === "unauthenticated" ? (
-          <DoctorLogin />
-        ) : ses.data?.user.email === "doctor" ? (
+  if (ses.status === "loading") {
+    return <div></div>;
+  } else if (
+    ses.status === "authenticated" &&
+    ses.data.user.email === "doctor"
+  ) {
+    return (
+      <>
+        <main className="flex h-full w-full">
           <DoctorDashBoard />
-        ) : (
+        </main>
+      </>
+    );
+  } else if (
+    ses.status === "authenticated" &&
+    ses.data.user.email === "compounder"
+  ) {
+    return (
+      <>
+        <main className="flex h-full w-full">
           <CompounderDashBoard />
-        )}
-      </main>
-    </>
-  );
+        </main>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <main className="flex h-full w-full">
+          <DoctorLogin />
+        </main>
+      </>
+    );
+  }
 }

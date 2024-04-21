@@ -54,6 +54,11 @@ const prescriptionTestReportInputSchema = z.object({
   }),
 });
 export const prescriptionRouter = createTRPCRouter({
+  get_all: protectedProcedure.query(async ({ ctx, input }) => {
+    const prescriptions = await ctx.db.prescription.findMany();
+    await ctx.db.$disconnect();
+    return prescriptions;
+  }),
   get_by_id: protectedProcedure
     .input(prescriptionUniqueSchema)
     .query(async ({ ctx, input }) => {

@@ -1,18 +1,31 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IoIosCloudUpload } from "react-icons/io";
 import { api } from "~/utils/api";
 import supabase, { createClient } from "@supabase/supabase-js";
 import { env } from "~/env";
 import img from "../../../public/gojo.jpeg";
+import prescriptionview from "~/pages/prescription-view";
 interface DragAndDropProps {
   patient_id: string;
 }
 const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
   const date = new Date();
   const [files, setFiles] = useState<FileList | null>(null);
-
   const [dragging, setDragging] = useState(false);
-  const [selectedPrescription, setSelectedPrescription] = useState("");
+  const [previewUrl, setPreviewUrl] = useState("");
+  const [selectedPrescription, setSelectedPrescription] = useState({
+    patient: "",
+    prescription: "",
+  });
+  useEffect(() => {
+    if (props.patient_id) {
+      setSelectedPrescription((prevState) => ({
+        ...prevState,
+        patient: props.patient_id,
+      }));
+    }
+  }, [props.patient_id]);
+  const ref = useRef<HTMLInputElement>(null);
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setDragging(true);
@@ -31,16 +44,24 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
     e.preventDefault();
     setDragging(false);
     // Handle dropped files
-    setFiles(e.dataTransfer.files);
-    console.log(e.dataTransfer.files);
+    const droppedFiles = e.dataTransfer.files;
+
+    if (droppedFiles.length > 0) {
+      setFiles(droppedFiles); // Storing the file or files
+
+      // Set preview URL for the first image file
+      const file = droppedFiles[0];
+      if (file && file.type.startsWith("image/")) {
+        setPreviewUrl(URL.createObjectURL(file));
+      } else {
+        // Reset or handle non-image file type
+        setPreviewUrl("");
+        console.log("Dropped file is not an image");
+      }
+    }
   };
-  const { data: previousPrescription } =
-    api.prescription.get_by_patient_id.useQuery({
-      patient_id: props.patient_id,
-    });
-  const { data: patient } = api.patient.find_by_id.useQuery(
-    props.patient_id as string,
-  );
+  const { data: previousPrescription } = api.prescription.get_all.useQuery();
+  const { data: patient } = api.patient.get_all.useQuery();
   const saveFile = api.prescription.upload_test_report.useMutation({
     onError(error, variables, context) {
       alert(error.message);
@@ -71,11 +92,15 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
 
     // Upload the file to Supabase Storage
     const { data, error } = await supabase.storage
-      .from("test")
-      .upload(fileData.name, fileData, {
-        cacheControl: "3600",
-        upsert: false,
-      });
+      .from("test_report")
+      .upload(
+        `${selectedPrescription.prescription}_${fileData.name}`,
+        fileData,
+        {
+          cacheControl: "3600",
+          upsert: false,
+        },
+      );
 
     if (error) {
       alert(error.message);
@@ -85,7 +110,7 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
       const uploadedImageUrl = `${supabase_url}/storage/v1/object/public/test/${filePathWithEncodedSpaces}`;
       saveFile.mutate({
         date: date,
-        prescription_id: selectedPrescription,
+        prescription_id: selectedPrescription.prescription,
         test_report: uploadedImageUrl,
       });
       console.log(data.path);
@@ -96,6 +121,17 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
   // Input change event handler
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Set the selected files when input changes
+    const files = e.target.files;
+    if (files) {
+      const file = files[0];
+      if (file && file.type.startsWith("image/")) {
+        setPreviewUrl(URL.createObjectURL(file)); // Create a URL for preview
+      } else {
+        // Optionally handle non-image file types or reset preview URL
+        setPreviewUrl("");
+        console.log("Selected file is not an image");
+      }
+    }
     setFiles(e.target.files);
   };
 
@@ -108,17 +144,40 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
         <div className="flex flex-col ">
           <span className=" space-x-5">
             <span className="font-bold text-black">P-ID:</span>
-            <span>{patient?.patient_id}</span>
+            <span>
+              {
+                patient?.find(
+                  (item) => item.patient_id === selectedPrescription.patient,
+                )?.patient_id
+              }
+            </span>
           </span>
           <span className=" space-x-5">
             <span className="font-bold text-black">Name:</span>
             <span>
-              {patient?.first_name}-{patient?.last_name}
+              {
+                patient?.find(
+                  (item) => item.patient_id === selectedPrescription.patient,
+                )?.first_name
+              }
+              -
+              {
+                patient?.find(
+                  (item) => item.patient_id === selectedPrescription.patient,
+                )?.last_name
+              }
             </span>
           </span>
           <span className=" space-x-5">
             <span className="font-bold text-black">Age:</span>
-            <span>{patient?.age}Y</span>
+            <span>
+              {
+                patient?.find(
+                  (item) => item.patient_id === selectedPrescription.patient,
+                )?.age
+              }
+              Y
+            </span>
           </span>
         </div>
         {/* <div className="flex flex-col">
@@ -132,26 +191,55 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
           </span>
         </div> */}
       </div>
-      <div className=" m-[1%] grow space-y-[3%]">
+      <div className=" m-[1%] flex grow flex-col space-y-[3%]">
         <p className="font-bold">Previous Prescription</p>
         <div className="flex flex-row space-x-[2%] ">
           <select
             name=""
             id=""
             className="h-[42px] w-fit border border-[#DBDBDB] p-1"
+            value={selectedPrescription.patient}
             onChange={(e) => {
-              setSelectedPrescription(e.target.value);
+              setSelectedPrescription({
+                ...selectedPrescription,
+                patient: e.target.value,
+              });
             }}
           >
-            {previousPrescription?.map((item, index) => {
+            <option value="">---select patient---</option>
+
+            {patient?.map((item, index) => {
               return (
-                <option value={item.prescription_id}>
-                  {item.date.toLocaleDateString()}-
-                  {item.date.toLocaleTimeString()}
+                <option value={item.patient_id}>
+                  {`${item.patient_id}--[${item.first_name} ${item.last_name}]`}
                 </option>
               );
             })}
           </select>
+          <select
+            name=""
+            id=""
+            className="h-[42px] w-fit border border-[#DBDBDB] p-1"
+            onChange={(e) => {
+              setSelectedPrescription({
+                ...selectedPrescription,
+                prescription: e.target.value,
+              });
+            }}
+          >
+            <option value="">---select prescription---</option>
+            {previousPrescription?.map((item, index) => {
+              if (item.patient_id === selectedPrescription.patient) {
+                return (
+                  <option value={item.prescription_id}>
+                    {item.date.toLocaleDateString()}-
+                    {item.date.toLocaleTimeString()}
+                  </option>
+                );
+              }
+            })}
+          </select>
+
           <button
             className="h-[42px] w-[103px] bg-[#F36562] text-white"
             onClick={(e) => {
@@ -160,17 +248,27 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
               console.log(selectedPrescription);
             }}
           >
-            <p>VIEW</p>
+            <p>Upload</p>
           </button>
         </div>
-        <input type="file" onChange={handleFileInputChange} />
-        {!files && (
+        <input
+          type="file"
+          onChange={handleFileInputChange}
+          ref={ref}
+          className="hidden"
+        />
+        {!files ? (
           <div
             className={`h-[61%] w-full rounded-md border-2 border-dashed border-[#656565] ${dragging ? "bg-[#d9d9d985]" : "bg-[#d9d9d9]"} p-[1%]`}
             onDragEnter={handleDragEnter}
             onDragLeave={handleDragLeave}
             onDragOver={handleDragOver}
             onDrop={handleDrop}
+            onClick={() => {
+              if (ref.current) {
+                ref.current.click();
+              }
+            }}
           >
             <div className="h-[10%] w-full  border-b-2 border-[#656565]">
               <p>Upload Document</p>
@@ -187,6 +285,10 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
                 </span>
               </div>
             </div>
+          </div>
+        ) : (
+          <div className="flex self-center">
+            <img src={previewUrl} />
           </div>
         )}
       </div>
