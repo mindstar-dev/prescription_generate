@@ -108,10 +108,10 @@ model VerificationToken {
     note String?
     patient Patient @relation(fields: [patient_id], references: [patient_id])   
     prescription_medicine_data PrescriptionMedicineData[]
-    prescription_test_report PrescriptionTesteReport[]
+    prescription_test_report PrescriptionTestReport[]
  }
 
-model PrescriptionTesteReport{
+model PrescriptionTestReport{
     prescription_id String
     test_report String
     date DateTime
@@ -147,6 +147,6 @@ model Medicine{
     name String @id
 }
 
-model Symptom{
+model Repetitions{
     name String @id
 }

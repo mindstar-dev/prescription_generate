@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import Image from "next/image";
+import img from "../../../images/medical-symbol 1.png";
 interface pdfProps {
   patient:
     | {
@@ -89,11 +90,7 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
       >
         <div className="flex h-[14%] w-full flex-row items-center justify-between bg-[#9AA0B9] px-[2rem]">
           <div className="h-[40%] w-[10%]">
-            <Image
-              src="medical-symbol 1.png"
-              className="h-full w-full text-white"
-              alt=""
-            />
+            <Image src={img} className="h-full w-full text-white" alt="" />
           </div>
           <div className="flex h-[65%] w-fit flex-col justify-between text-white">
             <span className="whitespace-nowrap">Dr. Name Surname</span>

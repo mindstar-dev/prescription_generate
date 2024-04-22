@@ -124,44 +124,20 @@ const Prescriptiion: React.FunctionComponent = () => {
       alert("Be sure to fill all required details");
       console.log(prescriptionData.medicine.length);
     } else {
-      savePrescription.mutate(prescriptionData);
+      console.log(medicineList);
+      if (medicineList.medicine !== "" || medicineList.repeatitions !== "") {
+        alert("Caution you have unsaved medicines");
+      } else {
+        savePrescription.mutate(prescriptionData);
+      }
     }
   };
+  const { data: repetitions } = api.medicine.get_repetitions.useQuery();
 
   const { data: medicine } = api.medicine.get_all.useQuery();
   if (isError || isLoading) {
     return <div>Loading</div>;
   }
-  const handleGeneratePdf = async () => {
-    if (!ref.current) {
-      return;
-    }
-
-    // Increase the resolution of the captured canvas
-    const scaleFactor = 4; // You can adjust this value for higher resolution
-    const canvas = await html2canvas(ref.current, {
-      scale: scaleFactor,
-    });
-
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF("p", "px", "a4", true);
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = pdf.internal.pageSize.getHeight();
-    const imgWidth = canvas.width / scaleFactor; // Adjusted width based on scale factor
-    const imgHeight = canvas.height / scaleFactor; // Adjusted height based on scale factor
-    const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-    const imgX = (pdfWidth - imgWidth * ratio) / 2;
-    const imgY = 0;
-    pdf.addImage(
-      imgData,
-      "PNG",
-      imgX,
-      imgY,
-      imgWidth * ratio,
-      imgHeight * ratio,
-    );
-    pdf.output("dataurlnewwindow");
-  };
   return (
     <div className="flex h-full w-full flex-col" id="pdfContainer">
       <Modal
@@ -302,7 +278,7 @@ const Prescriptiion: React.FunctionComponent = () => {
             </div>
           </div>
           <div className="flex h-[85%] w-full flex-col px-2">
-            <div className="flex h-full w-[80%] flex-col">
+            <div className="flex h-full w-full flex-col">
               <div className="h-fit w-full">
                 <p className="mt-[4%] text-3xl font-bold">RX</p>
                 {prescriptionData.medicine.map((item, index) => {
@@ -383,12 +359,13 @@ const Prescriptiion: React.FunctionComponent = () => {
                   value={medicineList.repeatitions}
                 />
                 <datalist id="repeatitions">
-                  <option value="OD BM">OD BM</option>
-                  <option value="OD AM">OD AM</option>
-                  <option value="BD AM">BD AM</option>
-                  <option value="BD BM">BD BM</option>
-                  <option value="TD BM">TD BM</option>
-                  <option value="TD AM">TD AM</option>
+                  {repetitions?.map((item, index) => {
+                    return (
+                      <option key={index} value={item.name}>
+                        {item.name}
+                      </option>
+                    );
+                  })}
                 </datalist>
 
                 <button
@@ -433,7 +410,7 @@ const Prescriptiion: React.FunctionComponent = () => {
                 />
               </div>
 
-              <div className="mt-4 flex h-fit w-4/5 items-center justify-between">
+              <div className="my-4 flex h-fit w-4/5 items-center justify-between">
                 <p className="w-32 text-xl font-bold">Notes</p>
                 <TextField
                   id="outlined-multiline-static"
@@ -449,8 +426,27 @@ const Prescriptiion: React.FunctionComponent = () => {
                   }}
                 />
               </div>
+              <div className="mb-2 mt-4 flex h-fit w-full items-center justify-center gap-x-4">
+                <button
+                  className="flex h-10 w-20 items-center justify-center bg-[#3D4460] text-white"
+                  onClick={async () => {
+                    await router.push("new-appointments");
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="flex h-10 w-20 items-center justify-center bg-[#F36562] text-white"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    create();
+                  }}
+                >
+                  Save
+                </button>
+              </div>
             </div>
-            <div className=" flex h-1/5 w-full flex-wrap justify-between border-t-2 border-[#958E8E]">
+            <div className="flex h-1/5 w-full flex-wrap justify-between border-t-2 border-[#958E8E] pb-4">
               <div className="ml-4 mt-2 flex h-full w-[45%] flex-col justify-evenly">
                 <p className="text-lg font-bold">
                   Prescription, Test Procedures & Reports

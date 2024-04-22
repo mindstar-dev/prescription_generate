@@ -131,13 +131,20 @@ export const prescriptionRouter = createTRPCRouter({
             where: { name: item.medicine },
           }),
         );
+        arr.push(
+          ctx.db.repetitions.upsert({
+            create: { name: item.repeatitions },
+            update: { name: item.repeatitions },
+            where: { name: item.repeatitions },
+          }),
+        );
       });
       await ctx.db.$transaction(arr);
     }),
   upload_test_report: protectedProcedure
     .input(prescriptionTestReportInputSchema)
     .mutation(async ({ ctx, input }) => {
-      return await ctx.db.prescriptionTesteReport.create({
+      return await ctx.db.prescriptionTestReport.create({
         data: {
           date: input.date,
           prescription_id: input.prescription_id,
@@ -148,7 +155,7 @@ export const prescriptionRouter = createTRPCRouter({
   ger_test_report_by_prescription_id: protectedProcedure
     .input(prescriptionUniqueSchema)
     .query(async ({ ctx, input }) => {
-      const reports = await ctx.db.prescriptionTesteReport.findMany({
+      const reports = await ctx.db.prescriptionTestReport.findMany({
         where: {
           prescription_id: input.prescription_id,
         },
@@ -157,7 +164,7 @@ export const prescriptionRouter = createTRPCRouter({
       return reports;
     }),
   get_all_test_report: protectedProcedure.query(async ({ ctx }) => {
-    const reports = await ctx.db.prescriptionTesteReport.findMany();
+    const reports = await ctx.db.prescriptionTestReport.findMany();
     await ctx.db.$disconnect();
     return reports;
   }),
