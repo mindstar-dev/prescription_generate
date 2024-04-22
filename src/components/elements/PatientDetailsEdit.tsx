@@ -132,11 +132,14 @@ const PatientDetailsEditComponent: React.FC<PatientDetailsEditProps> = (
           />
         </div>
         <div className="flex h-[5%] flex-row justify-between ">
-          <div className="flex h-full w-[44%] border-b border-black">
-            <p className="w-full">{data?.patient_id}</p>
-            <p className="text-red-600">
-              * Patient id can not be changed after its assign
+          <div className="flex w-[44%] flex-col">
+            <p className="border-b border-black bg-[#F0F0F0]">
+              {patientData.patient_id}
             </p>
+
+            <div className="text-red-700">
+              *Patient_id can not be edited once assigned
+            </div>
           </div>
 
           <select
