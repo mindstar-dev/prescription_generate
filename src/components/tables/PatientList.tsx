@@ -32,7 +32,7 @@ const PatientListTable: React.FunctionComponent = () => {
         </button>
       </div>
       <div className="h-[75%] w-full">
-        <div className="flex h-full w-full flex-col overflow-y-scroll">
+        <div className="flex h-full w-full flex-col pb-4">
           <div className="sticky top-0 flex h-[86px] w-full flex-row bg-white">
             <div className="flex  h-[86px] w-[15%] items-center justify-center text-center">
               P-ID

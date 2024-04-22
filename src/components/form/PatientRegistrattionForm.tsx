@@ -77,8 +77,8 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
         <div className="flex h-[5%] flex-row justify-between">
           <input
             type="text"
-            placeholder="first name"
-            className="h-full w-[44%] border-b border-black"
+            placeholder="First Name*"
+            className="h-full w-[44%] border-b border-black placeholder-red-500"
             name="first_name"
             required
             onChange={(e) => {
@@ -95,8 +95,8 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
           />
           <input
             type="text"
-            placeholder="last name"
-            className="h-full w-[44%] border-b border-black"
+            placeholder="Last Name*"
+            className="h-full w-[44%] border-b border-black placeholder-red-500"
             name="last_name"
             onChange={handleInputChange}
           />
@@ -104,8 +104,8 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
         <div className="flex h-[5%] flex-row justify-between">
           <input
             type="number"
-            placeholder="Contact No"
-            className="h-full w-[44%] border-b border-black"
+            placeholder="Contact No*"
+            className="h-full w-[44%] border-b border-black placeholder-red-500"
             name="contact_number"
             onChange={(e) => {
               const first_four_letters = patientData.first_name.slice(0, 4);
@@ -138,7 +138,7 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
               }}
             />
             {patientIdExists ? (
-              <div className="text-red-700">
+              <div className="text-red-500">
                 *Patient_id alreay exists update it manually
               </div>
             ) : null}{" "}
@@ -146,12 +146,18 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
           <select
             name="gender"
             id=""
-            className="h-full w-[44%] border-b border-black"
+            className={`h-full w-[44%] border-b border-black ${patientData.gender === "" ? "text-red-500" : ""}`}
             onChange={handleInputChange}
           >
-            <option value="">---Select Gender---</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
+            <option value="" className="text-black">
+              ---Select Gender--- *
+            </option>
+            <option value="Male" className="text-black">
+              Male
+            </option>
+            <option value="Female" className="text-black">
+              Female
+            </option>
           </select>
         </div>
         <div className="flex h-[5%] flex-row justify-between">
@@ -173,8 +179,8 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
         <div className="flex h-[5%] flex-row justify-between">
           <input
             type="number"
-            placeholder="Age"
-            className="h-full w-[44%] border-b border-black"
+            placeholder="Age*"
+            className="h-full w-[44%] border-b border-black placeholder-red-500"
             name="age"
             onChange={handleInputChange}
           />
