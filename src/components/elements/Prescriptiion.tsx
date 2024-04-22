@@ -515,7 +515,18 @@ const Prescriptiion: React.FunctionComponent = () => {
             </div>
           </div>
         </div>
-        <div className="flex w-1/5"></div>
+        <div className="flex w-1/5 flex-col pl-2 pt-2">
+          <p className="w-fit border-b border-[#3D4460] text-lg text-[#3D4460]">
+            Abbreviations
+          </p>
+          <ul className="ml-4 flex list-disc flex-col self-end font-bold">
+            <li>OD - Once Daily (প্রত্যহ একটি)</li>
+            <li>BD - Two Times Daily (প্রত্যহ দুইটি)</li>
+            <li>TD - Thrice Daily (প্রত্যহ তিনটি)</li>
+            <li>BM - Before Meal (খাবার আগে)</li>
+            <li>AM - After Meal (খাবার পরে)</li>
+          </ul>
+        </div>
       </div>
     </div>
   );
