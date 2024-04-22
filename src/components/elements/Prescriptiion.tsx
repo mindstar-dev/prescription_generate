@@ -5,8 +5,6 @@ import { FaXmark } from "react-icons/fa6";
 import { Modal, TextField } from "@mui/material";
 import { api } from "~/utils/api";
 import PrescipttionPopup from "./ViewPrescriptionPopup";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
 const Prescriptiion: React.FunctionComponent = () => {
   const router = useRouter();
   const ref = useRef<HTMLDivElement>(null);
@@ -55,14 +53,13 @@ const Prescriptiion: React.FunctionComponent = () => {
     id: "",
   });
   useEffect(() => {
-    if (patient_id) {
-      setPrescriptionData({
-        ...prescriptionData,
-        patient_id: patient_id as string,
-        prescription_id: `${patient_id.toString()}_${String(date.getDate()).padStart(2, "0")}${String(date.getMonth() + 1).padStart(2, "0")}${String(date.getFullYear()).slice(2)}${String(date.getHours()).padStart(2, "0")}${String(date.getMinutes()).padStart(2, "0")}`,
-      });
-    }
-    if (!isLoading && !isError && template_data && !initialFetchDone) {
+    if (
+      !isLoading &&
+      !isError &&
+      template_data &&
+      patient_id &&
+      !initialFetchDone
+    ) {
       // Perform your desired operation here
       console.log("Data successfully fetched:", template_data);
       // You can perform any operation you want with the fetched data here
@@ -81,6 +78,8 @@ const Prescriptiion: React.FunctionComponent = () => {
       });
       setPrescriptionData({
         ...prescriptionData,
+        patient_id: patient_id as string,
+        prescription_id: `${patient_id.toString()}_${String(date.getDate()).padStart(2, "0")}${String(date.getMonth() + 1).padStart(2, "0")}${String(date.getFullYear()).slice(2)}${String(date.getHours()).padStart(2, "0")}${String(date.getMinutes()).padStart(2, "0")}`,
         medicine: arr,
       });
       // Set initial fetch done to true
@@ -377,6 +376,22 @@ const Prescriptiion: React.FunctionComponent = () => {
                       medicineList.repeatitions === ""
                     ) {
                       alert("medicine name or repeatation cant be empty");
+                      return;
+                    } else if (
+                      prescriptionData.medicine.find(
+                        (item) =>
+                          item.medicine === medicineList.medicine &&
+                          item.repeatitions === medicineList.repeatitions,
+                      )
+                    ) {
+                      alert(
+                        "Same medicine with exact same repetitions already exists",
+                      );
+                      setMedicineList({
+                        medicine: "",
+                        repeatitions: "",
+                        id: "",
+                      });
                       return;
                     }
                     setPrescriptionData((prevData) => ({
