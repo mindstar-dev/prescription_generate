@@ -163,14 +163,14 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
         <div className="flex h-[5%] flex-row justify-between">
           <input
             type="text"
-            placeholder="Father/Husband's Name "
+            placeholder="Father's Name "
             className="h-full w-[44%] border-b border-black"
             name="fathers_name"
             onChange={handleInputChange}
           />
           <input
             type="text"
-            placeholder="Father/Husband's Name "
+            placeholder="Husband's Name "
             className="h-full w-[44%] border-b border-black"
             name="husbands_name"
             onChange={handleInputChange}

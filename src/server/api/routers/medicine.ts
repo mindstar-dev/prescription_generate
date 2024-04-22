@@ -21,4 +21,10 @@ export const medicineRouter = createTRPCRouter({
         },
       });
     }),
+  get_repetitions: protectedProcedure.query(async ({ ctx }) => {
+    const repetitions = await ctx.db.repetitions.findMany();
+    await ctx.db.$disconnect();
+
+    return repetitions;
+  }),
 });

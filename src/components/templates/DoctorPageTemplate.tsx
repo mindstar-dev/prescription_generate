@@ -43,8 +43,8 @@ const DoctorPageTemplate: React.FunctionComponent<IProps> = (props) => {
           <div className="flex h-[70%] w-full flex-col">
             <div
               className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "patient_registration" ? "bg-[#FCA19F]" : "bg-transparent"} cursor-pointer hover:bg-[#F36562]`}
-              onClick={() => {
-                router.push("patient-registration-form");
+              onClick={async () => {
+                await router.push("patient-registration-form");
               }}
             >
               <Image
@@ -58,8 +58,8 @@ const DoctorPageTemplate: React.FunctionComponent<IProps> = (props) => {
             </div>
             <div
               className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "appointments" ? "bg-[#FCA19F]" : "bg-transparent"} cursor-pointer hover:bg-[#F36562]`}
-              onClick={() => {
-                router.push("new-appointments");
+              onClick={async () => {
+                await router.push("new-appointments");
               }}
             >
               <Image
@@ -71,8 +71,8 @@ const DoctorPageTemplate: React.FunctionComponent<IProps> = (props) => {
             </div>
             <div
               className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "patient_list" ? "bg-[#FCA19F]" : "bg-transparent"} cursor-pointer hover:bg-[#F36562]`}
-              onClick={() => {
-                router.push("patient-lists");
+              onClick={async () => {
+                await router.push("patient-lists");
               }}
             >
               <Image
@@ -84,8 +84,8 @@ const DoctorPageTemplate: React.FunctionComponent<IProps> = (props) => {
             </div>
             <div
               className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "reports" ? "bg-[#FCA19F]" : "bg-transparent"} cursor-pointer hover:bg-[#F36562]`}
-              onClick={() => {
-                router.push("report-view");
+              onClick={async () => {
+                await router.push("report-view");
               }}
             >
               <Image
@@ -97,8 +97,8 @@ const DoctorPageTemplate: React.FunctionComponent<IProps> = (props) => {
             </div>
             <div
               className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "upload_reports" ? "bg-[#FCA19F]" : "bg-transparent"} cursor-pointer hover:bg-[#F36562]`}
-              onClick={() => {
-                router.push("report-upload");
+              onClick={async () => {
+                await router.push("report-upload");
               }}
             >
               <Image
@@ -110,8 +110,8 @@ const DoctorPageTemplate: React.FunctionComponent<IProps> = (props) => {
             </div>
             <div
               className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "templates" ? "bg-[#FCA19F]" : "bg-transparent"} cursor-pointer hover:bg-[#F36562]`}
-              onClick={() => {
-                router.push("template-list");
+              onClick={async () => {
+                await router.push("template-list");
               }}
             >
               <Image
@@ -124,8 +124,8 @@ const DoctorPageTemplate: React.FunctionComponent<IProps> = (props) => {
           </div>
           <div
             className="ml-10 flex cursor-pointer items-center"
-            onClick={() => {
-              signOut({ redirect: true, callbackUrl: "/doctor-login" });
+            onClick={async () => {
+              await signOut({ redirect: true, callbackUrl: "/doctor-login" });
             }}
           >
             <FaSignOutAlt className="mr-2 h-10 w-10 text-white" />

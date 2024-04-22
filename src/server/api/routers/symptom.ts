@@ -6,18 +6,18 @@ const symmptomInputSchema = z.string({
 });
 
 export const symptomRouter = createTRPCRouter({
-  get_all: protectedProcedure.query(async ({ ctx }) => {
-    const symptoms = await ctx.db.symptom.findMany();
-    return symptoms;
-    await ctx.db.$disconnect();
-  }),
-  create: protectedProcedure
-    .input(symmptomInputSchema)
-    .query(async ({ ctx, input }) => {
-      return await ctx.db.symptom.create({
-        data: {
-          name: input,
-        },
-      });
-    }),
+  // get_all: protectedProcedure.query(async ({ ctx }) => {
+  //   const symptoms = await ctx.db.symptom.findMany();
+  //   return symptoms;
+  //   await ctx.db.$disconnect();
+  // }),
+  // create: protectedProcedure
+  //   .input(symmptomInputSchema)
+  //   .query(async ({ ctx, input }) => {
+  //     return await ctx.db.symptom.create({
+  //       data: {
+  //         name: input,
+  //       },
+  //     });
+  //   }),
 });
