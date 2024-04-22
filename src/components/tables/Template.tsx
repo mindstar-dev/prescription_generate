@@ -9,8 +9,7 @@ import { FaXmark } from "react-icons/fa6";
 
 const Template: React.FunctionComponent = () => {
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+
   const [searchData, setSearchData] = React.useState("");
   const date = new Date();
   const { data: templates } = api.template.get_all.useQuery();
@@ -48,6 +47,24 @@ const Template: React.FunctionComponent = () => {
       ...templateData,
       [name]: value,
     });
+  };
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => {
+    setTemplateData({
+      template_id: "",
+      description: " ",
+      template_data: [] as {
+        medicine: string;
+        repeatitions: string;
+        id: string;
+      }[],
+    });
+    setMedicineList({
+      medicine: "",
+      repeatitions: "",
+      id: "",
+    });
+    setOpen(false);
   };
   const create_template = api.template.create_template.useMutation({
     onError: (err, context) => {
@@ -231,7 +248,7 @@ const Template: React.FunctionComponent = () => {
                   className="h-full w-[103px] bg-[#3D4460]"
                   onClick={handleClose}
                 >
-                  Cancle
+                  Cancel
                 </button>
                 <button
                   className="h-full w-[103px] bg-[#F36562]"

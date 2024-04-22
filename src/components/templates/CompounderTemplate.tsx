@@ -120,7 +120,9 @@ const CompounderPageTemplate: React.FunctionComponent<IProps> = (props) => {
                 {props.doctorName}
               </p>
             </div>
-            <div className="h-[90%] w-full">{props.children}</div>
+            <div className="flex h-[90%] w-full flex-wrap overflow-y-scroll">
+              {props.children}
+            </div>
           </div>
         </div>
       </main>

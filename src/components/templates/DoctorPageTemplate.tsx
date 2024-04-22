@@ -6,7 +6,7 @@ import patient_list_icon from "../../../images/User attributes.png";
 import reports_icon from "../../../images/Group 69.png";
 import upload_reports_icon from "../../../images/file 1.png";
 import templates_icon from "../../../images/Dashboard.png";
-
+import doctor_logo from "../../../images/medical-symbol 1.png";
 import Image from "next/image";
 import { FaSignOutAlt } from "react-icons/fa";
 import { FaCircleUser } from "react-icons/fa6";
@@ -133,14 +133,19 @@ const DoctorPageTemplate: React.FunctionComponent<IProps> = (props) => {
           </div>
         </div>
         <div className="flex h-screen w-4/5 flex-wrap items-center justify-center overflow-y-scroll">
-          <div className="flex h-fit min-h-[95%] w-[95%] flex-col self-center rounded-md border-2 border-black">
-            <div className="flex h-[10%] w-full items-center justify-end rounded-t-md border-black bg-[#9AA0B9]">
-              <FaCircleUser className="mr-4 h-10 w-10 text-white" />
-              <p className="mr-4 text-lg font-medium text-white">
-                {props.doctorName}
-              </p>
+          <div className="flex h-fit max-h-[95%] min-h-[95%] w-[95%] flex-col self-center rounded-md border-2 border-black">
+            <div className="flex h-fit min-h-[10%] w-full items-center justify-between rounded-t-md border-black bg-[#9AA0B9] py-4">
+              <Image alt="" src={doctor_logo} className="py-2 pl-2" />
+              <div className="flex items-center justify-center">
+                <FaCircleUser className="mr-4 h-10 w-10 text-white" />
+                <p className="mr-4 text-lg font-medium text-white">
+                  {props.doctorName}
+                </p>
+              </div>
             </div>
-            <div className="h-[90%] w-full">{props.children}</div>
+            <div className="flex h-[90%] w-full flex-wrap overflow-y-scroll">
+              {props.children}
+            </div>
           </div>
         </div>
       </main>

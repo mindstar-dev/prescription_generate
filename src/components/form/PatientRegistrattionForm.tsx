@@ -138,7 +138,9 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
               }}
             />
             {patientIdExists ? (
-              <div className="text-red-700">*Patient_id alreay exists</div>
+              <div className="text-red-700">
+                *Patient_id alreay exists update it manually
+              </div>
             ) : null}{" "}
           </div>
           <select
