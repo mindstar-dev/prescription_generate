@@ -437,7 +437,7 @@ const Prescriptiion: React.FunctionComponent = () => {
                 </button>
                 <button
                   className="flex h-10 w-20 items-center justify-center bg-[#F36562] text-white"
-                  onClick={async (e) => {
+                  onClick={(e) => {
                     e.preventDefault();
                     create();
                   }}
