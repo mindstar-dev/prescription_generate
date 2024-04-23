@@ -1,10 +1,20 @@
+import { css, Modal, styled } from "@mui/material";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { api } from "~/utils/api";
+import SuccessPopup from "../popups/Success";
+import ErrorPopup from "../popups/Error";
+import clsx from "clsx";
 
 const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
   const router = useRouter();
   const [patientIdExists, setPatientIdExists] = useState(false);
+  const [successPopupOpen, setSuccessPopupOpen] = useState(false);
+  const [registerSuccess, setRegisterSuccess] = useState(false);
+  const [errorPopup, setErrorPopup] = useState({
+    state: false,
+    type: "",
+  });
   const { data, isError, isLoading } = api.patient.get_all.useQuery();
   const [patientData, setPatientData] = useState({
     first_name: "",
@@ -46,11 +56,15 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
   }, [data, patientData.patient_id]);
   const register = api.patient.register_patient.useMutation({
     onError: (err, context) => {
-      alert("Error occured");
+      setErrorPopup({
+        state: true,
+        type: "error",
+      });
       console.log(err.data);
     },
     onSuccess: () => {
-      alert("Data added successfully");
+      setRegisterSuccess(true);
+      setSuccessPopupOpen(true);
     },
   });
   const registerPatient = () => {
@@ -62,7 +76,10 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
       patientData.age === "" ||
       patientData.patient_id === ""
     ) {
-      alert("Be sure to fill all required details");
+      setErrorPopup({
+        state: true,
+        type: "missing_data",
+      });
     } else {
       register.mutate(patientData);
     }
@@ -72,6 +89,77 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
   }
   return (
     <div className="mx-[10%] my-[5%] h-[90%] w-[80%] ">
+      <Modal
+        aria-labelledby="unstyled-modal-title"
+        aria-describedby="unstyled-modal-description"
+        open={successPopupOpen}
+        onClose={() => {
+          if (registerSuccess) {
+            setPatientData({
+              first_name: "",
+              age: "",
+              contact_number: "",
+              gender: "",
+              last_name: "",
+              patient_id: "",
+              email_id: "",
+              address_line1: "",
+              address_line2: "",
+              city: "",
+              country: "",
+              fathers_name: "",
+              husbands_name: "",
+              pin_code: "",
+              state: "",
+            });
+            setRegisterSuccess(false);
+            setSuccessPopupOpen(false);
+            return;
+          }
+          setSuccessPopupOpen(false);
+        }}
+        className="flex items-center justify-center"
+      >
+        <SuccessPopup
+          onClick={() => {
+            setPatientData({
+              first_name: "",
+              age: "",
+              contact_number: "",
+              gender: "",
+              last_name: "",
+              patient_id: "",
+              email_id: "",
+              address_line1: "",
+              address_line2: "",
+              city: "",
+              country: "",
+              fathers_name: "",
+              husbands_name: "",
+              pin_code: "",
+              state: "",
+            });
+            setSuccessPopupOpen(false);
+          }}
+          message="The Patient is Successfully registered"
+        />
+      </Modal>
+      <Modal
+        aria-labelledby="unstyled-modal-title"
+        aria-describedby="unstyled-modal-description"
+        open={errorPopup.state}
+        onClose={() => {
+          setErrorPopup({ state: false, type: "" });
+        }}
+        className="flex items-center justify-center"
+      >
+        <ErrorPopup
+          onClick={() => {
+            setErrorPopup({ state: false, type: "" });
+          }}
+          message={`${errorPopup.type === "error" ? "Oops ! Something Went Wrong" : "Be Sure to fill all required fields"}`}
+        />
+      </Modal>
       <div className="flex w-full justify-center">Registration</div>
       <form action="" className="h-full w-full space-y-4">
         <div className="flex h-[5%] flex-row justify-between">
@@ -92,6 +180,7 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
                 patient_id: `${first_four_letters}_${last_fout_numbets}`,
               });
             }}
+            value={patientData.first_name}
           />
           <input
             type="text"
@@ -99,6 +188,7 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
             className="h-full w-[44%] border-b border-black placeholder-red-500"
             name="last_name"
             onChange={handleInputChange}
+            value={patientData.last_name}
           />
         </div>
         <div className="flex h-[5%] flex-row justify-between">
@@ -116,6 +206,7 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
                 patient_id: `${first_four_letters}_${last_four_numbets}`,
               });
             }}
+            value={patientData.contact_number}
           />
           <input
             type="text"
@@ -123,6 +214,7 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
             className="h-full w-[44%] border-b border-black"
             name="email_id"
             onChange={handleInputChange}
+            value={patientData.email_id}
           />
         </div>
         <div className="flex h-[5%] flex-row justify-between">
@@ -148,6 +240,7 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
             id=""
             className={`h-full w-[44%] border-b border-black ${patientData.gender === "" ? "text-red-500" : ""}`}
             onChange={handleInputChange}
+            value={patientData.gender}
           >
             <option value="" className="text-black">
               ---Select Gender--- *
@@ -167,6 +260,7 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
             className="h-full w-[44%] border-b border-black"
             name="fathers_name"
             onChange={handleInputChange}
+            value={patientData.fathers_name}
           />
           <input
             type="text"
@@ -174,6 +268,7 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
             className="h-full w-[44%] border-b border-black"
             name="husbands_name"
             onChange={handleInputChange}
+            value={patientData.husbands_name}
           />
         </div>
         <div className="flex h-[5%] flex-row justify-between">
@@ -183,6 +278,7 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
             className="h-full w-[44%] border-b border-black placeholder-red-500"
             name="age"
             onChange={handleInputChange}
+            value={patientData.age}
           />
         </div>
         <div className="text-3xl">Patient&apos;s Address</div>
@@ -193,6 +289,7 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
             className="h-full w-full border-b border-black"
             name="address_line1"
             onChange={handleInputChange}
+            value={patientData.address_line1}
           />
         </div>
         <div className="flex h-[5%] flex-col justify-between">
@@ -202,6 +299,7 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
             className="h-full w-full border-b border-black"
             name="address_line2"
             onChange={handleInputChange}
+            value={patientData.address_line2}
           />
         </div>
         <div className="flex h-[5%] flex-row justify-between">
@@ -211,6 +309,7 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
             className="h-full w-[44%] border-b border-black"
             name="city"
             onChange={handleInputChange}
+            value={patientData.city}
           />
           <input
             type="text"
@@ -218,6 +317,7 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
             className="h-full w-[44%] border-b border-black"
             name="state"
             onChange={handleInputChange}
+            value={patientData.state}
           />
         </div>
         <div className="flex h-[5%] flex-row justify-between">
@@ -227,6 +327,7 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
             className="h-full w-[44%] border-b border-black"
             name="pin_code"
             onChange={handleInputChange}
+            value={patientData.pin_code}
           />
           <input
             type="text"
@@ -234,6 +335,7 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
             className="h-full w-[44%] border-b border-black"
             name="country"
             onChange={handleInputChange}
+            value={patientData.country}
           />
         </div>
         <div className="flex h-[4%] w-full justify-center space-x-8 text-white">

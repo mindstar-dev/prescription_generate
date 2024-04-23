@@ -5,14 +5,20 @@ import { FaXmark } from "react-icons/fa6";
 import { Modal, TextField } from "@mui/material";
 import { api } from "~/utils/api";
 import PrescipttionPopup from "./ViewPrescriptionPopup";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
+import SuccessPopup from "../popups/Success";
+import ErrorPopup from "../popups/Error";
+
 const Prescriptiion: React.FunctionComponent = () => {
   const router = useRouter();
   const ref = useRef<HTMLDivElement>(null);
   const [selectPreviousPrescription, setPreviousPrescription] = useState("");
   const [initialFetchDone, setInitialFetchDone] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [successPopupOpen, setSuccessPopupOpen] = React.useState(false);
+  const [errorPopup, setErrorPopup] = React.useState({
+    state: false,
+    type: "",
+  });
   const { patient_id, template_id } = router.query;
   const date = new Date();
   const { data: patient } = api.patient.find_by_id.useQuery(
@@ -55,14 +61,13 @@ const Prescriptiion: React.FunctionComponent = () => {
     id: "",
   });
   useEffect(() => {
-    if (patient_id) {
-      setPrescriptionData({
-        ...prescriptionData,
-        patient_id: patient_id as string,
-        prescription_id: `${patient_id.toString()}_${String(date.getDate()).padStart(2, "0")}${String(date.getMonth() + 1).padStart(2, "0")}${String(date.getFullYear()).slice(2)}${String(date.getHours()).padStart(2, "0")}${String(date.getMinutes()).padStart(2, "0")}`,
-      });
-    }
-    if (!isLoading && !isError && template_data && !initialFetchDone) {
+    if (
+      !isLoading &&
+      !isError &&
+      template_data &&
+      patient_id &&
+      !initialFetchDone
+    ) {
       // Perform your desired operation here
       console.log("Data successfully fetched:", template_data);
       // You can perform any operation you want with the fetched data here
@@ -81,6 +86,8 @@ const Prescriptiion: React.FunctionComponent = () => {
       });
       setPrescriptionData({
         ...prescriptionData,
+        patient_id: patient_id as string,
+        prescription_id: `${patient_id.toString()}_${String(date.getDate()).padStart(2, "0")}${String(date.getMonth() + 1).padStart(2, "0")}${String(date.getFullYear()).slice(2)}${String(date.getHours()).padStart(2, "0")}${String(date.getMinutes()).padStart(2, "0")}`,
         medicine: arr,
       });
       // Set initial fetch done to true
@@ -121,12 +128,17 @@ const Prescriptiion: React.FunctionComponent = () => {
       prescriptionData.patient_id === "" ||
       prescriptionData.medicine.length === 0
     ) {
-      alert("Be sure to fill all required details");
+      if (prescriptionData.patient_id === "") {
+        setErrorPopup({ type: "id", state: true });
+      } else if (prescriptionData.medicine.length === 0) {
+        setErrorPopup({ type: "medicine_empty", state: true });
+      }
       console.log(prescriptionData.medicine.length);
     } else {
       console.log(medicineList);
+
       if (medicineList.medicine !== "" || medicineList.repeatitions !== "") {
-        alert("Caution you have unsaved medicines");
+        setErrorPopup({ type: "medicine_pending", state: true });
       } else {
         savePrescription.mutate(prescriptionData);
       }
@@ -140,6 +152,38 @@ const Prescriptiion: React.FunctionComponent = () => {
   }
   return (
     <div className="flex h-full w-full flex-col" id="pdfContainer">
+      <Modal
+        aria-labelledby="unstyled-modal-title"
+        aria-describedby="unstyled-modal-description"
+        open={successPopupOpen}
+        onClose={() => {
+          setSuccessPopupOpen(false);
+        }}
+        className="flex h-full w-full items-center justify-center"
+      >
+        <SuccessPopup
+          onClick={() => {
+            setSuccessPopupOpen(false);
+          }}
+          message="The Template is Successfully saved"
+        />
+      </Modal>
+      <Modal
+        aria-labelledby="unstyled-modal-title"
+        aria-describedby="unstyled-modal-description"
+        open={errorPopup.state}
+        onClose={() => {
+          setErrorPopup({ state: false, type: "" });
+        }}
+        className="flex h-full w-full items-center justify-center"
+      >
+        <ErrorPopup
+          onClick={() => {
+            setErrorPopup({ state: false, type: "" });
+          }}
+          message={`${errorPopup.type === "id" ? "Patient id is not available please restart the process" : errorPopup.type === "medicine_empty" ? "Please add atleast one medicine in order to continue" : errorPopup.type === "medicine_pending" ? "You have unsaved medicines please save or remove them before continue" : "Error occured contact developers"}`}
+        />
+      </Modal>
       <Modal
         aria-labelledby="unstyled-modal-title"
         aria-describedby="unstyled-modal-description"
@@ -189,12 +233,14 @@ const Prescriptiion: React.FunctionComponent = () => {
         </div>
       </div>
       <div className="flex h-full w-full">
-        <div className="my-2 flex h-[99%] w-4/5 flex-col self-center border-r-2 border-[#958E8E]">
+        <div className="my-2 flex h-[99%] w-full flex-col self-center border-r-2 border-[#958E8E]">
           <div className="flex h-[15%] w-full flex-row ">
             <div className="flex h-full w-[85%] flex-col justify-evenly">
-              <div className="flex h-[45%] w-[85%] ">
+              <div className="flex h-[45%] w-[85%] justify-between">
                 <div className="ml-2 flex h-full w-1/2 items-center justify-between ">
-                  <p className="w-[20%] text-lg font-bold">Symptoms</p>
+                  <p className="xl2:text-sm xl2:w-fit w-[20%] text-lg font-bold">
+                    Symptoms
+                  </p>
                   <input
                     type="text"
                     placeholder="Enter Symptoms"
@@ -208,7 +254,9 @@ const Prescriptiion: React.FunctionComponent = () => {
                   />
                 </div>
                 <div className="ml-2 flex h-full w-1/2 items-center justify-between ">
-                  <p className="w-[20%] text-lg font-bold">BP</p>
+                  <p className="xl2:text-sm xl2:w-fit w-[20%] text-lg font-bold">
+                    BP
+                  </p>
                   <input
                     type="text"
                     placeholder="Enter BP"
@@ -224,7 +272,9 @@ const Prescriptiion: React.FunctionComponent = () => {
               </div>
               <div className="flex h-[45%] w-[85%] ">
                 <div className="ml-2 flex h-full w-1/2 items-center justify-between ">
-                  <p className="w-[20%] text-lg font-bold">Diagnosis</p>
+                  <p className="xl2:w-fit xl2:text-sm w-[20%] text-lg font-bold">
+                    Diagnosis
+                  </p>
                   <input
                     type="text"
                     placeholder="Enter Diagnosis"
@@ -238,7 +288,9 @@ const Prescriptiion: React.FunctionComponent = () => {
                   />
                 </div>
                 <div className="ml-2 flex h-full w-1/2 items-center justify-between ">
-                  <p className="w-[20%] text-lg font-bold">Weight</p>
+                  <p className="xl2:w-fit xl2:text-sm w-[20%] text-lg font-bold">
+                    Weight
+                  </p>
                   <input
                     type="number"
                     placeholder="Enter Weight (in Kg)"
@@ -378,6 +430,22 @@ const Prescriptiion: React.FunctionComponent = () => {
                     ) {
                       alert("medicine name or repeatation cant be empty");
                       return;
+                    } else if (
+                      prescriptionData.medicine.find(
+                        (item) =>
+                          item.medicine === medicineList.medicine &&
+                          item.repeatitions === medicineList.repeatitions,
+                      )
+                    ) {
+                      alert(
+                        "Same medicine with exact same repetitions already exists",
+                      );
+                      setMedicineList({
+                        medicine: "",
+                        repeatitions: "",
+                        id: "",
+                      });
+                      return;
                     }
                     setPrescriptionData((prevData) => ({
                       ...prevData,
@@ -399,8 +467,10 @@ const Prescriptiion: React.FunctionComponent = () => {
                 <TextField
                   id="outlined-multiline-flexible"
                   multiline
+                  label="Tests(Optional)"
                   maxRows={4}
                   className="min-w-0 flex-grow"
+                  placeholder="Tests(Optional)"
                   onChange={(e) => {
                     setPrescriptionData({
                       ...prescriptionData,
@@ -414,10 +484,11 @@ const Prescriptiion: React.FunctionComponent = () => {
                 <p className="w-32 text-xl font-bold">Notes</p>
                 <TextField
                   id="outlined-multiline-static"
-                  label="Notes"
+                  label="Notes (Optional)"
                   multiline
                   rows={4}
                   className="h-fit min-w-0 flex-grow"
+                  placeholder="Notes (Optional)"
                   onChange={(e) => {
                     setPrescriptionData({
                       ...prescriptionData,
@@ -500,7 +571,6 @@ const Prescriptiion: React.FunctionComponent = () => {
             </div>
           </div>
         </div>
-        <div className="flex w-1/5"></div>
       </div>
     </div>
   );

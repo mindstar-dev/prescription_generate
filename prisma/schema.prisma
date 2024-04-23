@@ -113,10 +113,9 @@ model VerificationToken {
 
 model PrescriptionTestReport{
     prescription_id String
-    test_report String
+    test_report String @id
     date DateTime
     prescription    Prescription @relation(fields: [prescription_id], references: [prescription_id])
-    @@id([prescription_id,test_report,date])
  }
 
 

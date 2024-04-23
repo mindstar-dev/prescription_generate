@@ -11,6 +11,7 @@ import clsx from "clsx";
 const NewAppointmentsTable: React.FunctionComponent = () => {
   const { data, isLoading, isError } = api.patient.get_all.useQuery();
   const [searchData, setSearchData] = React.useState("");
+  const [templateSearchText, setTemplateSearchText] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -64,9 +65,15 @@ const NewAppointmentsTable: React.FunctionComponent = () => {
               ?.filter(
                 (item) =>
                   searchData === "" ||
-                  item.patient_id.includes(searchData) ||
-                  item.first_name.includes(searchData) ||
-                  item.last_name.includes(searchData),
+                  item.patient_id
+                    .toLocaleLowerCase()
+                    .includes(searchData.toLocaleLowerCase()) ||
+                  item.first_name
+                    .toLocaleLowerCase()
+                    .includes(searchData.toLocaleLowerCase()) ||
+                  item.last_name
+                    .toLocaleLowerCase()
+                    .includes(searchData.toLocaleLowerCase()),
               )
               .map((item, index) => (
                 <div
@@ -119,41 +126,98 @@ const NewAppointmentsTable: React.FunctionComponent = () => {
                       slots={{ backdrop: StyledBackdrop }}
                       className="flex items-center justify-center"
                     >
-                      <div className="flex h-2/5 w-[30%] flex-col self-center overflow-y-scroll bg-white">
-                        {/* add code for popup to select templates */}
-                        <div
-                          className="flex h-10 w-full hover:bg-[#F0F0F0]"
-                          onClick={() => {
-                            router.push({
-                              pathname: "patient-prescription",
-                              query: {
-                                patient_id: item.patient_id,
-                                template_id: "",
-                              },
-                            });
-                          }}
-                        >
-                          Blank
+                      <div className="flex h-2/5 w-[30%] flex-col self-center bg-white">
+                        <div className="flex h-fit w-full justify-center text-2xl">
+                          <p>Select</p>
+                          <p className="pl-2 text-[#E52727]">Template</p>
                         </div>
-                        {templates?.map((template, index) => {
-                          return (
-                            <div
-                              key={index}
-                              className="h-10 w-full hover:bg-[#F0F0F0]"
-                              onClick={() => {
-                                router.push({
-                                  pathname: "patient-prescription",
-                                  query: {
-                                    patient_id: item.patient_id,
-                                    template_id: template.template_id,
-                                  },
-                                });
+                        <div className="mb-2 flex h-fit w-4/5 items-center justify-center self-center border border-[#DBDBDB]">
+                          <div className="flex w-full items-center justify-center px-2">
+                            <input
+                              className="w-full placeholder:text-[#958E8E] focus:outline-none"
+                              placeholder="Search Template..."
+                              onChange={(e) => {
+                                setTemplateSearchText(e.target.value);
                               }}
-                            >
-                              {template.template_id}
-                            </div>
-                          );
-                        })}
+                            />
+                            <FaSearch className="cursor-pointer" />
+                          </div>
+                        </div>
+                        <div className="flex h-fit w-full bg-[#F0F0F0]">
+                          <p className="flex w-1/3 items-center justify-center">
+                            Sl No.
+                          </p>
+                          <p className="flex w-1/3 items-center justify-center">
+                            Name
+                          </p>
+                          <p className="flex w-1/3 items-center justify-center">
+                            Description
+                          </p>
+                        </div>
+                        {/* add code for popup to select templates */}
+                        <div className="flex h-full w-full flex-col overflow-y-scroll pb-2">
+                          <div
+                            className="flex h-fit min-h-fit w-full cursor-pointer hover:bg-[#F0F0F0]"
+                            onClick={() => {
+                              router.push({
+                                pathname: "patient-prescription",
+                                query: {
+                                  patient_id: item.patient_id,
+                                  template_id: "",
+                                },
+                              });
+                            }}
+                          >
+                            <p className="flex h-fit min-h-fit w-1/3 flex-col items-center justify-center text-center">
+                              0.
+                            </p>
+                            <p className="flex h-fit min-h-fit w-1/3 flex-col items-center justify-center text-center">
+                              Blank
+                            </p>
+                            <p className="flex h-fit min-h-fit w-1/3 flex-col items-center justify-center  text-center">
+                              Halvah jelly-o jelly-o bonbon pastry. Candy chupa
+                              chups shortbread chocolate cake chocolate bar.
+                              Danish sweet roll tart jelly beans gingerbread
+                              cotton candy dessert.
+                            </p>
+                          </div>
+                          {templates?.map((template, index) => {
+                            if (
+                              templateSearchText === "" ||
+                              template.template_id
+                                .toLocaleLowerCase()
+                                .includes(
+                                  templateSearchText.toLocaleLowerCase(),
+                                )
+                            ) {
+                              return (
+                                <div
+                                  key={index}
+                                  className="flex h-fit w-full cursor-pointer hover:bg-[#F0F0F0]"
+                                  onClick={() => {
+                                    router.push({
+                                      pathname: "patient-prescription",
+                                      query: {
+                                        patient_id: item.patient_id,
+                                        template_id: template.template_id,
+                                      },
+                                    });
+                                  }}
+                                >
+                                  <p className="flex h-fit min-h-fit w-1/3 flex-col items-center justify-center  text-center">
+                                    {index + 1}.
+                                  </p>
+                                  <p className="flex h-fit min-h-fit w-1/3 flex-col items-center justify-center  text-center">
+                                    {template.template_id}
+                                  </p>
+                                  <p className="flex h-fit min-h-fit w-1/3 flex-col items-center justify-center  text-center">
+                                    {template.description}
+                                  </p>
+                                </div>
+                              );
+                            }
+                          })}
+                        </div>
                       </div>
                     </Modal>
                     <button

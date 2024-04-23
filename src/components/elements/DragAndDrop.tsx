@@ -6,6 +6,10 @@ import { env } from "~/env";
 import img from "../../../public/gojo.jpeg";
 import PrescriptionView from "~/pages/prescription-view";
 import Image from "next/image";
+import { Modal } from "@mui/material";
+import SuccessPopup from "../popups/Success";
+import ErrorPopup from "../popups/Error";
+import ProcessingPopup from "../popups/Processing";
 interface DragAndDropProps {
   patient_id: string;
 }
@@ -13,10 +17,16 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
   const date = new Date();
   const [files, setFiles] = useState<FileList | null>(null);
   const [dragging, setDragging] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState("");
+  const [previewUrl, setPreviewUrl] = useState<string[]>([]);
+  const [processingPopup, setProcessingPopup] = useState(false);
   const [selectedPrescription, setSelectedPrescription] = useState({
     patient: "",
     prescription: "",
+  });
+  const [successPopupOpen, setSuccessPopupOpen] = React.useState(false);
+  const [errorPopup, setErrorPopup] = React.useState({
+    state: false,
+    message: "",
   });
   useEffect(() => {
     if (props.patient_id) {
@@ -46,97 +56,186 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
     setDragging(false);
     // Handle dropped files
     const droppedFiles = e.dataTransfer.files;
-
-    if (droppedFiles.length > 0) {
-      setFiles(droppedFiles); // Storing the file or files
-
-      // Set preview URL for the first image file
-      const file = droppedFiles[0];
-      if (file?.type.startsWith("image/")) {
-        setPreviewUrl(URL.createObjectURL(file));
-      } else {
-        // Reset or handle non-image file type
-        setPreviewUrl("");
-        console.log("Dropped file is not an image");
+    if (droppedFiles) {
+      const arr = [];
+      for (let i = 0; i < droppedFiles.length; i++) {
+        const file = droppedFiles[i];
+        console.log(file?.name); // Access file properties here
+        file && file.type.startsWith("image/")
+          ? arr.push(URL.createObjectURL(file))
+          : null;
       }
+      setPreviewUrl(arr);
     }
   };
   const { data: previousPrescription } = api.prescription.get_all.useQuery();
   const { data: patient } = api.patient.get_all.useQuery();
-  const saveFile = api.prescription.upload_test_report.useMutation({
+  const saveFile = api.prescription.upload_multiple_test_report.useMutation({
     onError(error, variables, context) {
       alert(error.message);
+      sqlInsertError();
     },
     onSuccess(data, variables, context) {
-      alert("success");
+      handleCancel();
+      setSelectedPrescription({ patient: "", prescription: "" });
+      setProcessingPopup(false);
+      setSuccessPopupOpen(true);
     },
   });
-
+  const sqlInsertError = async () => {
+    const supabase_url = env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabase_anon_key = env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    const supabase = createClient(supabase_url, supabase_anon_key);
+    const { data, error: bucket } = await supabase.storage.deleteBucket(
+      selectedPrescription.prescription,
+    );
+  };
   const handleFileUpload = async () => {
     const supabase_url = env.NEXT_PUBLIC_SUPABASE_URL;
     const supabase_anon_key = env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
     const supabase = createClient(supabase_url, supabase_anon_key);
 
     // Check if files exist
-    if (!files || files.length === 0) {
-      alert("No file selected");
+    if (!files || files.length === 0 || !selectedPrescription.prescription) {
+      setProcessingPopup(false);
+
+      setErrorPopup({
+        state: true,
+        message: `Be sure to select patient_id and prescription properly and atleast one file \n Files_Length:${files?.length}\n Patient Id:${selectedPrescription.patient} \n Prescription_Id:${selectedPrescription.prescription}`,
+      });
       return;
     }
 
     // Read the first selected file
-    const fileData = files[0];
-    if (!fileData) {
-      console.error("File data is undefined");
-      return;
-    }
 
-    // Upload the file to Supabase Storage
-    const { data, error } = await supabase.storage
-      .from("test")
-      .upload(
-        `${selectedPrescription.prescription}_${fileData.name}`,
-        fileData,
-        {
-          cacheControl: "3600",
-          upsert: false,
-        },
-      );
-
-    if (error) {
-      alert(error.message);
-      console.error(error);
-    } else {
-      const filePathWithEncodedSpaces = data.path.replace(/ /g, "%20");
-      const uploadedImageUrl = `${supabase_url}/storage/v1/object/public/test/${filePathWithEncodedSpaces}`;
-      saveFile.mutate({
-        date: date,
-        prescription_id: selectedPrescription.prescription,
-        test_report: uploadedImageUrl,
+    const { data: bucketData, error: bucketError } =
+      await supabase.storage.createBucket(selectedPrescription.prescription, {
+        public: true,
+        allowedMimeTypes: ["image/*"],
       });
-      console.log(data.path);
-      console.log(uploadedImageUrl);
+    const uploadUrl = [];
+    if (bucketError) {
+      if (bucketError.message !== "The resource already exists") {
+        setProcessingPopup(false);
+
+        setErrorPopup({
+          state: true,
+          message: `${bucketError.message}`,
+        });
+      }
+    }
+    if (bucketData || bucketError.message === "The resource already exists") {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (file) {
+          console.log(file?.name); // Access file properties here
+          const { data, error } = await supabase.storage
+            .from(selectedPrescription.prescription)
+            .upload(`${file.name}`, file, {
+              cacheControl: "3600",
+              upsert: true,
+            });
+          if (data) {
+            const filePathWithEncodedSpaces = data.path.replace(/ /g, "%20");
+            const uploadedImageUrl = `${supabase_url}/storage/v1/object/public/${selectedPrescription.prescription}/${filePathWithEncodedSpaces}`;
+            uploadUrl.push(uploadedImageUrl);
+            console.log(data.path);
+            console.log(uploadedImageUrl);
+          }
+          if (error) {
+            supabase.storage.deleteBucket(selectedPrescription.prescription);
+            setProcessingPopup(false);
+            setErrorPopup({
+              state: true,
+              message: `${error.message}`,
+            });
+            return;
+          }
+        }
+      }
+    }
+    saveFile.mutate({
+      date: date,
+      prescription_id: selectedPrescription.prescription,
+      test_report: uploadUrl,
+    });
+  };
+  const handleCancel = () => {
+    setFiles(null);
+    setPreviewUrl([]);
+
+    // Reset the file input directly
+    if (ref.current) {
+      ref.current.value = ""; // This clears the input
     }
   };
-
   // Input change event handler
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Set the selected files when input changes
     const files = e.target.files;
+    console.log(files);
     if (files) {
-      const file = files[0];
-      if (file?.type.startsWith("image/")) {
-        setPreviewUrl(URL.createObjectURL(file)); // Create a URL for preview
-      } else {
-        // Optionally handle non-image file types or reset preview URL
-        setPreviewUrl("");
-        console.log("Selected file is not an image");
+      const arr = [];
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        console.log(file?.name); // Access file properties here
+        file ? arr.push(URL.createObjectURL(file)) : null;
       }
+      setPreviewUrl(arr);
     }
+
     setFiles(e.target.files);
   };
 
   return (
     <div className="flex h-full w-full flex-col">
+      <Modal
+        aria-labelledby="unstyled-modal-title"
+        aria-describedby="unstyled-modal-description"
+        open={successPopupOpen}
+        onClose={() => {
+          setSuccessPopupOpen(false);
+        }}
+        className="flex h-full w-full items-center justify-center"
+      >
+        <SuccessPopup
+          onClick={() => {
+            setSuccessPopupOpen(false);
+          }}
+          message="Files uploaded succesfully"
+        />
+      </Modal>
+      <Modal
+        aria-labelledby="unstyled-modal-title"
+        aria-describedby="unstyled-modal-description"
+        open={processingPopup}
+        onClose={() => {
+          setProcessingPopup(false);
+        }}
+        className="flex h-full w-full items-center justify-center"
+      >
+        <ProcessingPopup
+          onClick={() => {
+            setProcessingPopup(false);
+          }}
+        />
+      </Modal>
+      <Modal
+        aria-labelledby="unstyled-modal-title"
+        aria-describedby="unstyled-modal-description"
+        open={errorPopup.state}
+        onClose={() => {
+          setErrorPopup({ state: false, message: "" });
+        }}
+        className="flex h-full w-full items-center justify-center"
+      >
+        <ErrorPopup
+          onClick={() => {
+            setErrorPopup({ state: false, message: "" });
+          }}
+          message={`${errorPopup.message}`}
+        />
+      </Modal>
       <div className="flex h-[15%] w-full items-center justify-center">
         <p className="text-[30px] font-medium">Upload Reports</p>
       </div>
@@ -180,16 +279,6 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
             </span>
           </span>
         </div>
-        {/* <div className="flex flex-col">
-          <span className=" space-x-5">
-            <span className="font-bold text-black">Date:</span>
-            <span>10/05/2003</span>
-          </span>
-          <span className=" space-x-5">
-            <span className="font-bold text-black">Time:</span>
-            <span>10:30</span>
-          </span>
-        </div> */}
       </div>
       <div className=" m-[1%] flex grow flex-col space-y-[3%]">
         <p className="font-bold">Previous Prescription</p>
@@ -220,6 +309,7 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
             name=""
             id=""
             className="h-[42px] w-fit border border-[#DBDBDB] p-1"
+            value={selectedPrescription.prescription}
             onChange={(e) => {
               setSelectedPrescription({
                 ...selectedPrescription,
@@ -232,7 +322,7 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
               if (item.patient_id === selectedPrescription.patient) {
                 return (
                   <option value={item.prescription_id} key={index}>
-                    {item.date.toLocaleDateString()}-
+                    {item.prescription_id}-{item.date.toLocaleDateString()}-
                     {item.date.toLocaleTimeString()}
                   </option>
                 );
@@ -245,7 +335,9 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
             onClick={(e) => {
               e.preventDefault();
               handleFileUpload();
+              setProcessingPopup(true);
               console.log(selectedPrescription);
+              console.log(files);
             }}
           >
             <p>Upload</p>
@@ -256,6 +348,8 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
           onChange={handleFileInputChange}
           ref={ref}
           className="hidden"
+          multiple
+          accept="image/*"
         />
         {!files ? (
           <div
@@ -281,17 +375,27 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
                   Your Files Or Browse To Upload
                 </span>
                 <span className="text-[12px]/[13.8px]">
-                  Only JPEG, PNG and PDF files with max size of 15MB
+                  Only Image files with max size of 15MB
                 </span>
               </div>
             </div>
           </div>
         ) : (
-          <div className="flex self-center">
-            <Image src={previewUrl} alt="" />
-          </div>
+          previewUrl.map((item, index) => {
+            return (
+              <div className="flex self-center" key={index}>
+                <Image src={item} alt="" width={400} height={400} />
+              </div>
+            );
+          })
         )}
       </div>
+      <button
+        className="mb-2 h-10 self-end bg-[#3D4460] px-2 text-white"
+        onClick={handleCancel}
+      >
+        Cancel/New Selection
+      </button>
     </div>
   );
 };
