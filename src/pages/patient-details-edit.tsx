@@ -17,7 +17,7 @@ const PatientDetailsEdit: React.FunctionComponent = () => {
     ses.data.user.email === "doctor"
   ) {
     return (
-      <DoctorPageTemplate activePage="appointments" doctorName="Doctor's Name">
+      <DoctorPageTemplate activePage="patient_list" doctorName="Doctor's Name">
         <PatientDetailsEditComponent patient_id={patient_id as string} />
       </DoctorPageTemplate>
     );

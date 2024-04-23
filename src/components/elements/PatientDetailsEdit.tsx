@@ -1,6 +1,9 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { api } from "~/utils/api";
+import { css, Modal, styled } from "@mui/material";
+import SuccessPopup from "../popups/Success";
+import ErrorPopup from "../popups/Error";
 interface PatientDetailsEditProps {
   patient_id: string;
 }
@@ -8,6 +11,11 @@ const PatientDetailsEditComponent: React.FC<PatientDetailsEditProps> = (
   props,
 ) => {
   const router = useRouter();
+  const [successPopupOpen, setSuccessPopupOpen] = useState(false);
+  const [errorPopup, setErrorPopup] = useState({
+    state: false,
+    type: "",
+  });
   const [firstRender, setFirstRender] = useState(false);
   const [patientData, setPatientData] = useState({
     first_name: "",
@@ -69,11 +77,14 @@ const PatientDetailsEditComponent: React.FC<PatientDetailsEditProps> = (
   };
   const register = api.patient.edit_details.useMutation({
     onError: (err, context) => {
-      alert("Error occured");
+      setErrorPopup({
+        state: true,
+        type: "error",
+      });
       console.log(err.data);
     },
     onSuccess: () => {
-      alert("Data updated successfully");
+      setSuccessPopupOpen(true);
     },
   });
   const editPatient = () => {
@@ -85,20 +96,55 @@ const PatientDetailsEditComponent: React.FC<PatientDetailsEditProps> = (
       patientData.age === "" ||
       patientData.patient_id === ""
     ) {
-      alert("Be sure to fill all required details");
+      setErrorPopup({
+        state: true,
+        type: "missing_data",
+      });
     } else {
       register.mutate(patientData);
     }
   };
   return (
     <div className="mx-[10%] my-[5%] h-[90%] w-[80%] ">
+      <Modal
+        aria-labelledby="unstyled-modal-title"
+        aria-describedby="unstyled-modal-description"
+        open={successPopupOpen}
+        onClose={() => {
+          setSuccessPopupOpen(false);
+        }}
+        className="flex items-center justify-center"
+      >
+        <SuccessPopup
+          onClick={() => {
+            setSuccessPopupOpen(false);
+          }}
+          message="The Patient Data is Successfully updated"
+        />
+      </Modal>
+      <Modal
+        aria-labelledby="unstyled-modal-title"
+        aria-describedby="unstyled-modal-description"
+        open={errorPopup.state}
+        onClose={() => {
+          setErrorPopup({ state: false, type: "" });
+        }}
+        className="flex items-center justify-center"
+      >
+        <ErrorPopup
+          onClick={() => {
+            setErrorPopup({ state: false, type: "" });
+          }}
+          message={`${errorPopup.type === "error" ? "Oops ! Something Went Wrong" : "Be Sure to fill all required fields"}`}
+        />
+      </Modal>
       <div className="flex w-full justify-center">Registration</div>
       <form action="" className="h-full w-full space-y-4">
         <div className="flex h-[5%] flex-row justify-between">
           <input
             type="text"
-            placeholder="first name"
-            className="h-full w-[44%] border-b border-black"
+            placeholder="First Name*"
+            className="h-full w-[44%] border-b border-black placeholder-red-500"
             name="first_name"
             required
             onChange={handleInputChange}
@@ -106,8 +152,8 @@ const PatientDetailsEditComponent: React.FC<PatientDetailsEditProps> = (
           />
           <input
             type="text"
-            placeholder="last name"
-            className="h-full w-[44%] border-b border-black"
+            placeholder="Last Name*"
+            className="h-full w-[44%] border-b border-black placeholder-red-500"
             name="last_name"
             onChange={handleInputChange}
             value={patientData.last_name}
@@ -116,8 +162,8 @@ const PatientDetailsEditComponent: React.FC<PatientDetailsEditProps> = (
         <div className="flex h-[5%] flex-row justify-between">
           <input
             type="number"
-            placeholder="Contact No"
-            className="h-full w-[44%] border-b border-black"
+            placeholder="Contact No*"
+            className="h-full w-[44%] border-b border-black placeholder-red-500"
             name="contact_number"
             onChange={handleInputChange}
             value={patientData.contact_number}
@@ -145,11 +191,11 @@ const PatientDetailsEditComponent: React.FC<PatientDetailsEditProps> = (
           <select
             name="gender"
             id=""
-            className="h-full w-[44%] border-b border-black"
+            className={`h-full w-[44%] border-b border-black ${patientData.gender === "" ? "text-red-500" : ""}`}
             onChange={handleInputChange}
             value={patientData.gender}
           >
-            <option value="">---Select Gender---</option>
+            <option value="">---Select Gender---*</option>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
           </select>
@@ -157,7 +203,7 @@ const PatientDetailsEditComponent: React.FC<PatientDetailsEditProps> = (
         <div className="flex h-[5%] flex-row justify-between">
           <input
             type="text"
-            placeholder="Father/Husband's Name "
+            placeholder="Father's Name "
             className="h-full w-[44%] border-b border-black"
             name="fathers_name"
             onChange={handleInputChange}
@@ -165,7 +211,7 @@ const PatientDetailsEditComponent: React.FC<PatientDetailsEditProps> = (
           />
           <input
             type="text"
-            placeholder="Father/Husband's Name "
+            placeholder="Husband's Name "
             className="h-full w-[44%] border-b border-black"
             name="husbands_name"
             onChange={handleInputChange}
@@ -175,8 +221,8 @@ const PatientDetailsEditComponent: React.FC<PatientDetailsEditProps> = (
         <div className="flex h-[5%] flex-row justify-between">
           <input
             type="number"
-            placeholder="Age"
-            className="h-full w-[44%] border-b border-black"
+            placeholder="Age*"
+            className="h-full w-[44%] border-b border-black placeholder-red-500"
             name="age"
             onChange={handleInputChange}
             value={patientData.age}

@@ -6,10 +6,16 @@ import { Modal as BaseModal } from "@mui/base/Modal";
 import { FaSearch, FaEdit, FaPen } from "react-icons/fa";
 import { api } from "~/utils/api";
 import { FaXmark } from "react-icons/fa6";
+import SuccessPopup from "../popups/Success";
+import ErrorPopup from "../popups/Error";
 
 const Template: React.FunctionComponent = () => {
   const [open, setOpen] = React.useState(false);
-
+  const [successPopupOpen, setSuccessPopupOpen] = React.useState(false);
+  const [errorPopup, setErrorPopup] = React.useState({
+    state: false,
+    type: "",
+  });
   const [searchData, setSearchData] = React.useState("");
   const date = new Date();
   const { data: templates } = api.template.get_all.useQuery();
@@ -72,8 +78,8 @@ const Template: React.FunctionComponent = () => {
       console.log(err.data);
     },
     onSuccess: () => {
-      alert("Data added successfully");
       handleClose();
+      setSuccessPopupOpen(true);
       setMedicineList({
         id: "",
         medicine: "",
@@ -96,10 +102,18 @@ const Template: React.FunctionComponent = () => {
       templateData.template_id === "" ||
       templateData.template_data.length === 0
     ) {
-      alert("Be sure to fill all required details");
+      if (templateData.template_id === "") {
+        setErrorPopup({ type: "id", state: true });
+      } else if (templateData.template_data.length === 0) {
+        setErrorPopup({ type: "medicine_empty", state: true });
+      }
       console.log(templateData.template_data.length);
     } else {
-      create_template.mutate(templateData);
+      if (medicineList.medicine !== "" || medicineList.repeatitions !== "") {
+        setErrorPopup({ type: "medicine_pending", state: true });
+      } else {
+        create_template.mutate(templateData);
+      }
     }
   };
   return (
@@ -263,6 +277,38 @@ const Template: React.FunctionComponent = () => {
               </div>
             </div>
           </ModalContent>
+        </Modal>
+        <Modal
+          aria-labelledby="unstyled-modal-title"
+          aria-describedby="unstyled-modal-description"
+          open={successPopupOpen}
+          onClose={() => {
+            setSuccessPopupOpen(false);
+          }}
+          slots={{ backdrop: StyledBackdrop }}
+        >
+          <SuccessPopup
+            onClick={() => {
+              setSuccessPopupOpen(false);
+            }}
+            message="The Template is Successfully saved"
+          />
+        </Modal>
+        <Modal
+          aria-labelledby="unstyled-modal-title"
+          aria-describedby="unstyled-modal-description"
+          open={errorPopup.state}
+          onClose={() => {
+            setErrorPopup({ state: false, type: "" });
+          }}
+          slots={{ backdrop: StyledBackdrop }}
+        >
+          <ErrorPopup
+            onClick={() => {
+              setErrorPopup({ state: false, type: "" });
+            }}
+            message={`${errorPopup.type === "id" ? "Please enter a valid id" : errorPopup.type === "medicine_empty" ? "Please add atleast one medicine in order to continue" : "You have unsaved medicines please save or remove them before continue"}`}
+          />
         </Modal>
         <Heading SecondHeading1="Templates" SecondHeading2="" text="" />
       </div>
