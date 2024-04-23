@@ -76,8 +76,9 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
       sqlInsertError();
     },
     onSuccess(data, variables, context) {
+      handleCancel();
+      setSelectedPrescription({ patient: "", prescription: "" });
       setProcessingPopup(false);
-
       setSuccessPopupOpen(true);
     },
   });
@@ -93,7 +94,6 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
     const supabase_url = env.NEXT_PUBLIC_SUPABASE_URL;
     const supabase_anon_key = env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
     const supabase = createClient(supabase_url, supabase_anon_key);
-    const dateString = `${String(date.getDate()).padStart(2, "0")}${String(date.getMonth() + 1).padStart(2, "0")}${String(date.getFullYear()).slice(2)}${String(date.getHours()).padStart(2, "0")}${String(date.getMinutes()).padStart(2, "0")}`;
 
     // Check if files exist
     if (!files || files.length === 0 || !selectedPrescription.prescription) {
@@ -120,7 +120,7 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
 
         setErrorPopup({
           state: true,
-          message: `${bucketError.message} and ${bucketError.cause}`,
+          message: `${bucketError.message}`,
         });
       }
     }
@@ -131,7 +131,7 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
           console.log(file?.name); // Access file properties here
           const { data, error } = await supabase.storage
             .from(selectedPrescription.prescription)
-            .upload(`${file.name}_${dateString}`, file, {
+            .upload(`${file.name}`, file, {
               cacheControl: "3600",
               upsert: true,
             });
@@ -147,7 +147,7 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
             setProcessingPopup(false);
             setErrorPopup({
               state: true,
-              message: `${error.message} and ${error.cause}`,
+              message: `${error.message}`,
             });
             return;
           }
@@ -160,7 +160,15 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
       test_report: uploadUrl,
     });
   };
+  const handleCancel = () => {
+    setFiles(null);
+    setPreviewUrl([]);
 
+    // Reset the file input directly
+    if (ref.current) {
+      ref.current.value = ""; // This clears the input
+    }
+  };
   // Input change event handler
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Set the selected files when input changes
@@ -301,6 +309,7 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
             name=""
             id=""
             className="h-[42px] w-fit border border-[#DBDBDB] p-1"
+            value={selectedPrescription.prescription}
             onChange={(e) => {
               setSelectedPrescription({
                 ...selectedPrescription,
@@ -340,6 +349,7 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
           ref={ref}
           className="hidden"
           multiple
+          accept="image/*"
         />
         {!files ? (
           <div
@@ -365,7 +375,7 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
                   Your Files Or Browse To Upload
                 </span>
                 <span className="text-[12px]/[13.8px]">
-                  Only JPEG, PNG and PDF files with max size of 15MB
+                  Only Image files with max size of 15MB
                 </span>
               </div>
             </div>
@@ -382,10 +392,7 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
       </div>
       <button
         className="mb-2 h-10 self-end bg-[#3D4460] px-2 text-white"
-        onClick={() => {
-          setFiles(null);
-          setPreviewUrl([]);
-        }}
+        onClick={handleCancel}
       >
         Cancel/New Selection
       </button>

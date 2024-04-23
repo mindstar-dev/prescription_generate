@@ -171,11 +171,19 @@ export const prescriptionRouter = createTRPCRouter({
       const arr = [];
       for (let i = 0; i < input.test_report.length; i++) {
         arr.push(
-          ctx.db.prescriptionTestReport.create({
-            data: {
+          ctx.db.prescriptionTestReport.upsert({
+            create: {
               date: input.date,
               prescription_id: input.prescription_id,
               test_report: input.test_report[i] as string,
+            },
+            update: {
+              date: input.date,
+              prescription_id: input.prescription_id,
+              test_report: input.test_report[i] as string,
+            },
+            where: {
+              test_report: input.test_report[i],
             },
           }),
         );
