@@ -1,5 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
+import { Prisma } from "@prisma/client";
+import { DefaultArgs } from "@prisma/client/runtime/library";
 const prescriptionUniqueSchema = z.object({
   prescription_id: z.string({
     required_error: "Describe your basic units name",
@@ -52,6 +54,17 @@ const prescriptionTestReportInputSchema = z.object({
   test_report: z.string({
     required_error: "Describe your basic units name",
   }),
+});
+const prescriptionMultipleTestReportInputSchema = z.object({
+  prescription_id: z.string({
+    required_error: "Describe your basic units name",
+  }),
+  date: z.date({ required_error: "Describe your basic units name" }),
+  test_report: z.array(
+    z.string({
+      required_error: "Describe your basic units name",
+    }),
+  ),
 });
 export const prescriptionRouter = createTRPCRouter({
   get_all: protectedProcedure.query(async ({ ctx, input }) => {
@@ -151,6 +164,23 @@ export const prescriptionRouter = createTRPCRouter({
           test_report: input.test_report,
         },
       });
+    }),
+  upload_multiple_test_report: protectedProcedure
+    .input(prescriptionMultipleTestReportInputSchema)
+    .mutation(async ({ ctx, input }) => {
+      const arr = [];
+      for (let i = 0; i < input.test_report.length; i++) {
+        arr.push(
+          ctx.db.prescriptionTestReport.create({
+            data: {
+              date: input.date,
+              prescription_id: input.prescription_id,
+              test_report: input.test_report[i] as string,
+            },
+          }),
+        );
+      }
+      return await ctx.db.$transaction(arr);
     }),
   ger_test_report_by_prescription_id: protectedProcedure
     .input(prescriptionUniqueSchema)
