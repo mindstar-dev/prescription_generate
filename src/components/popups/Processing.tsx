@@ -1,5 +1,5 @@
 import React from "react";
-import checkImg from "../../../images/check_1@3x.png";
+import checkImg from "../../../images/loading.png";
 import Image from "next/image";
 interface SuccessPopupProps {
   onClick: () => void;
