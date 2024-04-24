@@ -29,7 +29,6 @@ const authOptions: AuthOptions = {
         const user = await prisma.userData.findUnique({ where: { id: id } });
 
         if (!user) return null;
-        console.log(user);
         const isCredentialsCorrect =
           password === user.password && user_type === user.user_type;
 

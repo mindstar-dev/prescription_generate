@@ -1,5 +1,5 @@
 import * as React from "react";
-import logo from "../../../images/healthcare logo 2.png";
+import logo from "../../../images/healthcare logo 2_Mesa de trabajo 1 1.png";
 import patient_registration_icon from "../../../images/registration-form 1.png";
 import appointments_icon from "../../../images/Assignment.png";
 import patient_list_icon from "../../../images/User attributes.png";
@@ -47,11 +47,13 @@ const DoctorPageTemplate: React.FunctionComponent<IProps> = (props) => {
                 await router.push("patient-registration-form");
               }}
             >
-              <Image
-                src={patient_registration_icon}
-                alt="Description of the image"
-                className="ml-10 h-10 w-10"
-              />
+              <div className="hit ml-10 flex w-14">
+                <Image
+                  src={patient_registration_icon}
+                  alt="Description of the image"
+                  className=" h-10 w-10"
+                />
+              </div>
               <p className="text-lg font-medium text-white">
                 Patient Registration
               </p>
@@ -62,11 +64,13 @@ const DoctorPageTemplate: React.FunctionComponent<IProps> = (props) => {
                 await router.push("new-appointments");
               }}
             >
-              <Image
-                src={appointments_icon}
-                alt="Description of the image"
-                className="ml-10 h-10 w-10"
-              />
+              <div className="hit ml-10 flex w-14">
+                <Image
+                  src={appointments_icon}
+                  alt="Description of the image"
+                  className=" h-10 w-10"
+                />
+              </div>
               <p className="text-lg font-medium text-white">Appointments</p>
             </div>
             <div
@@ -75,11 +79,13 @@ const DoctorPageTemplate: React.FunctionComponent<IProps> = (props) => {
                 await router.push("patient-lists");
               }}
             >
-              <Image
-                src={patient_list_icon}
-                alt="Description of the image"
-                className="ml-10 h-10 w-10"
-              />
+              <div className="hit ml-10 flex w-14">
+                <Image
+                  src={patient_list_icon}
+                  alt="Description of the image"
+                  className=" h-10 w-10"
+                />
+              </div>
               <p className="text-lg font-medium text-white">Patient List</p>
             </div>
             <div
@@ -88,11 +94,13 @@ const DoctorPageTemplate: React.FunctionComponent<IProps> = (props) => {
                 await router.push("report-view");
               }}
             >
-              <Image
-                src={reports_icon}
-                alt="Description of the image"
-                className="ml-10 h-10 w-10"
-              />
+              <div className="hit ml-10 flex w-14">
+                <Image
+                  src={reports_icon}
+                  alt="Description of the image"
+                  className=" h-10 w-10"
+                />
+              </div>
               <p className="text-lg font-medium text-white">Reports</p>
             </div>
             <div
@@ -101,11 +109,13 @@ const DoctorPageTemplate: React.FunctionComponent<IProps> = (props) => {
                 await router.push("report-upload");
               }}
             >
-              <Image
-                src={upload_reports_icon}
-                alt="Description of the image"
-                className="ml-10 h-10 w-10"
-              />
+              <div className="hit ml-10 flex w-14">
+                <Image
+                  src={upload_reports_icon}
+                  alt="Description of the image"
+                  className=" h-10 w-10"
+                />
+              </div>
               <p className="text-lg font-medium text-white">Upload Reports</p>
             </div>
             <div
@@ -114,11 +124,13 @@ const DoctorPageTemplate: React.FunctionComponent<IProps> = (props) => {
                 await router.push("template-list");
               }}
             >
-              <Image
-                src={templates_icon}
-                alt="Description of the image"
-                className="ml-10 h-10 w-10"
-              />
+              <div className="hit ml-10 flex w-14">
+                <Image
+                  src={templates_icon}
+                  alt="Description of the image"
+                  className=" h-8 w-8"
+                />
+              </div>
               <p className="text-lg font-medium text-white">Templates</p>
             </div>
           </div>
