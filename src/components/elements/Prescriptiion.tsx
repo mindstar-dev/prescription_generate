@@ -151,7 +151,10 @@ const Prescriptiion: React.FunctionComponent = () => {
     return <div>Loading</div>;
   }
   return (
-    <div className="flex h-full w-full flex-col" id="pdfContainer">
+    <div
+      className="flex h-full w-full flex-col font-serif text-xs"
+      id="pdfContainer"
+    >
       <Modal
         aria-labelledby="unstyled-modal-title"
         aria-describedby="unstyled-modal-description"
@@ -232,19 +235,19 @@ const Prescriptiion: React.FunctionComponent = () => {
           </span>
         </div>
       </div>
-      <div className="flex h-full w-full">
-        <div className="my-2 flex h-[99%] w-full flex-col self-center border-r-2 border-[#958E8E]">
+      <div className="flex h-full w-full flex-wrap overflow-y-scroll">
+        <div className="my-2 flex h-[99%] w-full flex-col self-center">
           <div className="flex h-[15%] w-full flex-row ">
             <div className="flex h-full w-[85%] flex-col justify-evenly">
               <div className="flex h-[45%] w-[85%] justify-between">
                 <div className="ml-2 flex h-full w-1/2 items-center justify-between ">
-                  <p className="xl2:text-sm xl2:w-fit w-[20%] text-lg font-bold">
+                  <p className="w-[20%] text-lg font-bold xl2:w-fit xl2:text-sm">
                     Symptoms
                   </p>
                   <input
                     type="text"
                     placeholder="Enter Symptoms"
-                    className="m-2 h-full w-[70%] border-2 border-black p-2"
+                    className="m-2 h-full w-[70%] border-2 border-[#9AA0B9] p-2 focus:outline-[#9AA0B9]"
                     onChange={(e) => {
                       setPrescriptionData({
                         ...prescriptionData,
@@ -254,13 +257,13 @@ const Prescriptiion: React.FunctionComponent = () => {
                   />
                 </div>
                 <div className="ml-2 flex h-full w-1/2 items-center justify-between ">
-                  <p className="xl2:text-sm xl2:w-fit w-[20%] text-lg font-bold">
+                  <p className="w-[20%] text-lg font-bold xl2:w-fit xl2:text-sm">
                     BP
                   </p>
                   <input
                     type="text"
                     placeholder="Enter BP"
-                    className="m-2 h-full w-[70%] border-2 border-black p-2"
+                    className="m-2 h-full w-[70%] border-2 border-[#9AA0B9] p-2 focus:outline-[#9AA0B9]"
                     onChange={(e) => {
                       setPrescriptionData({
                         ...prescriptionData,
@@ -272,13 +275,13 @@ const Prescriptiion: React.FunctionComponent = () => {
               </div>
               <div className="flex h-[45%] w-[85%] ">
                 <div className="ml-2 flex h-full w-1/2 items-center justify-between ">
-                  <p className="xl2:w-fit xl2:text-sm w-[20%] text-lg font-bold">
+                  <p className="w-[20%] text-lg font-bold xl2:w-fit xl2:text-sm">
                     Diagnosis
                   </p>
                   <input
                     type="text"
                     placeholder="Enter Diagnosis"
-                    className="m-2 h-full w-[70%] border-2 border-black p-2"
+                    className="m-2 h-full w-[70%] border-2 border-[#9AA0B9] p-2 focus:outline-[#9AA0B9]"
                     onChange={(e) => {
                       setPrescriptionData({
                         ...prescriptionData,
@@ -288,13 +291,13 @@ const Prescriptiion: React.FunctionComponent = () => {
                   />
                 </div>
                 <div className="ml-2 flex h-full w-1/2 items-center justify-between ">
-                  <p className="xl2:w-fit xl2:text-sm w-[20%] text-lg font-bold">
+                  <p className="w-[20%] text-lg font-bold xl2:w-fit xl2:text-sm">
                     Weight
                   </p>
                   <input
                     type="number"
                     placeholder="Enter Weight (in Kg)"
-                    className="m-2 h-full w-[70%] border-2 border-black p-2"
+                    className="m-2 h-full w-[70%] border-2 border-[#9AA0B9] p-2 focus:outline-[#9AA0B9]"
                     onChange={(e) => {
                       setPrescriptionData({
                         ...prescriptionData,
@@ -483,10 +486,10 @@ const Prescriptiion: React.FunctionComponent = () => {
               <div className="my-4 flex h-fit w-4/5 items-center justify-between">
                 <p className="w-32 text-xl font-bold">Notes</p>
                 <TextField
-                  id="outlined-multiline-static"
+                  id="outlined-multiline-flexible"
                   label="Notes (Optional)"
                   multiline
-                  rows={4}
+                  maxRows={4}
                   className="h-fit min-w-0 flex-grow"
                   placeholder="Notes (Optional)"
                   onChange={(e) => {
