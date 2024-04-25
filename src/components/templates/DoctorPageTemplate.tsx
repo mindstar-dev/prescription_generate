@@ -8,7 +8,11 @@ import upload_reports_icon from "../../../images/file 1.png";
 import templates_icon from "../../../images/Dashboard.png";
 import doctor_logo from "../../../images/medical-symbol 1.png";
 import Image from "next/image";
-import { FaSignOutAlt } from "react-icons/fa";
+import { FaClipboardList, FaSignOutAlt } from "react-icons/fa";
+import { LuClipboardList, LuClipboardSignature } from "react-icons/lu";
+import { PiUserList } from "react-icons/pi";
+import { TbReportAnalytics } from "react-icons/tb";
+import { MdOutlineDashboard, MdOutlineUploadFile } from "react-icons/md";
 import { FaCircleUser } from "react-icons/fa6";
 import { getSession, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -47,12 +51,13 @@ const DoctorPageTemplate: React.FunctionComponent<IProps> = (props) => {
                 await router.push("patient-registration-form");
               }}
             >
-              <div className="hit ml-10 flex w-14">
-                <Image
+              <div className="hit ml-[2.7rem] flex w-14">
+                {/* <Image
                   src={patient_registration_icon}
                   alt="Description of the image"
                   className=" h-10 w-10"
-                />
+                /> */}
+                <LuClipboardSignature className="h-10 w-10 text-white" />
               </div>
               <p className="text-lg font-medium text-white">
                 Patient Registration
@@ -64,12 +69,13 @@ const DoctorPageTemplate: React.FunctionComponent<IProps> = (props) => {
                 await router.push("new-appointments");
               }}
             >
-              <div className="hit ml-10 flex w-14">
-                <Image
+              <div className="hit ml-[2.7rem] flex w-14">
+                {/* <Image
                   src={appointments_icon}
                   alt="Description of the image"
                   className=" h-10 w-10"
-                />
+                /> */}
+                <LuClipboardList className="h-10 w-10 text-white" />
               </div>
               <p className="text-lg font-medium text-white">Appointments</p>
             </div>
@@ -80,11 +86,12 @@ const DoctorPageTemplate: React.FunctionComponent<IProps> = (props) => {
               }}
             >
               <div className="hit ml-10 flex w-14">
-                <Image
+                {/* <Image
                   src={patient_list_icon}
                   alt="Description of the image"
                   className=" h-10 w-10"
-                />
+                /> */}
+                <PiUserList className="h-10 w-10 pl-[.2rem] text-white" />
               </div>
               <p className="text-lg font-medium text-white">Patient List</p>
             </div>
@@ -95,11 +102,13 @@ const DoctorPageTemplate: React.FunctionComponent<IProps> = (props) => {
               }}
             >
               <div className="hit ml-10 flex w-14">
-                <Image
+                {/* <Image
                   src={reports_icon}
                   alt="Description of the image"
                   className=" h-10 w-10"
-                />
+                /> */}
+
+                <TbReportAnalytics className="h-10 w-10 text-white" />
               </div>
               <p className="text-lg font-medium text-white">Reports</p>
             </div>
@@ -110,11 +119,12 @@ const DoctorPageTemplate: React.FunctionComponent<IProps> = (props) => {
               }}
             >
               <div className="hit ml-10 flex w-14">
-                <Image
+                {/* <Image
                   src={upload_reports_icon}
                   alt="Description of the image"
                   className=" h-10 w-10"
-                />
+                /> */}
+                <MdOutlineUploadFile className="h-10 w-10 text-white" />
               </div>
               <p className="text-lg font-medium text-white">Upload Reports</p>
             </div>
@@ -125,11 +135,12 @@ const DoctorPageTemplate: React.FunctionComponent<IProps> = (props) => {
               }}
             >
               <div className="hit ml-10 flex w-14">
-                <Image
+                {/* <Image
                   src={templates_icon}
                   alt="Description of the image"
                   className=" h-8 w-8"
-                />
+                /> */}
+                <MdOutlineDashboard className="h-10 w-10 text-white" />
               </div>
               <p className="text-lg font-medium text-white">Templates</p>
             </div>
