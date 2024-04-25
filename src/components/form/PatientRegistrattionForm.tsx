@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { api } from "~/utils/api";
 import SuccessPopup from "../popups/Success";
 import ErrorPopup from "../popups/Error";
+import FinalizePopup from "../popups/FinalizePopup";
 import clsx from "clsx";
 
 const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
@@ -11,6 +12,8 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
   const [patientIdExists, setPatientIdExists] = useState(false);
   const [successPopupOpen, setSuccessPopupOpen] = useState(false);
   const [registerSuccess, setRegisterSuccess] = useState(false);
+  const [finalizePopup, setFinalizePopup] = useState(false);
+
   const [errorPopup, setErrorPopup] = useState({
     state: false,
     type: "",
@@ -64,6 +67,7 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
     },
     onSuccess: () => {
       setRegisterSuccess(true);
+      setFinalizePopup(false);
       setSuccessPopupOpen(true);
     },
   });
@@ -76,6 +80,7 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
       patientData.age === "" ||
       patientData.patient_id === ""
     ) {
+      setFinalizePopup(false);
       setErrorPopup({
         state: true,
         type: "missing_data",
@@ -160,7 +165,29 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
           message={`${errorPopup.type === "error" ? "Oops ! Something Went Wrong" : "Be Sure to fill all required fields"}`}
         />
       </Modal>
-      <div className="flex w-full justify-center">Registration</div>
+      <Modal
+        aria-labelledby="unstyled-modal-title"
+        aria-describedby="unstyled-modal-description"
+        open={finalizePopup}
+        onClose={() => {
+          setFinalizePopup(false);
+        }}
+        className="flex items-center justify-center"
+      >
+        <FinalizePopup
+          onYesClick={() => {
+            registerPatient();
+          }}
+          onNoClick={() => {
+            setFinalizePopup(false);
+          }}
+        />
+      </Modal>
+      <div className="flex w-full justify-center">
+        <p className='mb-4 font-["Lato"] text-4xl font-medium text-black'>
+          Registration
+        </p>
+      </div>
       <form action="" className="h-full w-full space-y-4">
         <div className="flex h-[5%] flex-row justify-between">
           <input
@@ -356,7 +383,7 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
             onClick={(e) => {
               e.preventDefault();
               console.log(patientData);
-              registerPatient();
+              setFinalizePopup(true);
             }}
           >
             Save

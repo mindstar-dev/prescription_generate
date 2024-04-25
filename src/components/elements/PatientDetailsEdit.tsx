@@ -4,6 +4,7 @@ import { api } from "~/utils/api";
 import { css, Modal, styled } from "@mui/material";
 import SuccessPopup from "../popups/Success";
 import ErrorPopup from "../popups/Error";
+import FinalizePopup from "../popups/FinalizePopup";
 interface PatientDetailsEditProps {
   patient_id: string;
 }
@@ -12,6 +13,7 @@ const PatientDetailsEditComponent: React.FC<PatientDetailsEditProps> = (
 ) => {
   const router = useRouter();
   const [successPopupOpen, setSuccessPopupOpen] = useState(false);
+  const [finalizePopup, setFinalizePopup] = useState(false);
   const [errorPopup, setErrorPopup] = useState({
     state: false,
     type: "",
@@ -84,6 +86,7 @@ const PatientDetailsEditComponent: React.FC<PatientDetailsEditProps> = (
       console.log(err.data);
     },
     onSuccess: () => {
+      setFinalizePopup(false);
       setSuccessPopupOpen(true);
     },
   });
@@ -96,6 +99,7 @@ const PatientDetailsEditComponent: React.FC<PatientDetailsEditProps> = (
       patientData.age === "" ||
       patientData.patient_id === ""
     ) {
+      setFinalizePopup(false);
       setErrorPopup({
         state: true,
         type: "missing_data",
@@ -138,7 +142,29 @@ const PatientDetailsEditComponent: React.FC<PatientDetailsEditProps> = (
           message={`${errorPopup.type === "error" ? "Oops ! Something Went Wrong" : "Be Sure to fill all required fields"}`}
         />
       </Modal>
-      <div className="flex w-full justify-center">Registration</div>
+      <Modal
+        aria-labelledby="unstyled-modal-title"
+        aria-describedby="unstyled-modal-description"
+        open={finalizePopup}
+        onClose={() => {
+          setFinalizePopup(false);
+        }}
+        className="flex items-center justify-center"
+      >
+        <FinalizePopup
+          onYesClick={() => {
+            editPatient();
+          }}
+          onNoClick={() => {
+            setFinalizePopup(false);
+          }}
+        />
+      </Modal>
+      <div className="flex w-full justify-center">
+        <p className='mb-4 font-["Lato"] text-4xl font-medium text-black'>
+          Edit Patient Details
+        </p>
+      </div>
       <form action="" className="h-full w-full space-y-4">
         <div className="flex h-[5%] flex-row justify-between">
           <input
@@ -289,7 +315,8 @@ const PatientDetailsEditComponent: React.FC<PatientDetailsEditProps> = (
           {" "}
           <button
             className="h-full w-[103px] bg-[#3D4460]"
-            onClick={() => {
+            onClick={(e) => {
+              e.preventDefault();
               router.back();
             }}
           >
@@ -300,7 +327,7 @@ const PatientDetailsEditComponent: React.FC<PatientDetailsEditProps> = (
             onClick={(e) => {
               e.preventDefault();
               console.log(patientData);
-              editPatient();
+              setFinalizePopup(true);
             }}
           >
             Save

@@ -5,9 +5,21 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import { FaEye, FaUser } from "react-icons/fa";
 import { signIn } from "next-auth/react";
+import { Modal } from "@mui/material";
+import SuccessPopup from "~/components/popups/Success";
+import ProcessingPopup from "~/components/popups/Processing";
+import ErrorPopup from "~/components/popups/Error";
 
 const CompounderLogin: React.FunctionComponent = () => {
   const router = useRouter();
+  const [passwordHidden, setPasswordHidden] = React.useState(true);
+  const [successPopupOpen, setSuccessPopupOpen] = React.useState(false);
+  const [errorPopup, setErrorPopup] = React.useState({
+    state: false,
+    message: "",
+  });
+  const [processingPopup, setProcessingPopup] = React.useState(false);
+
   const [userInfo, setUserInfo] = React.useState({
     id: "",
     password: "",
@@ -29,8 +41,8 @@ const CompounderLogin: React.FunctionComponent = () => {
       });
     }
     if (res?.error) {
-      // Authentication error occurred
-      alert("Incorrect username or password. Please try again.");
+      setProcessingPopup(false);
+      setErrorPopup({ message: res.error, state: true });
     }
     return undefined;
   };
@@ -38,6 +50,53 @@ const CompounderLogin: React.FunctionComponent = () => {
     <>
       <title></title>
       <main className="flex h-screen w-screen flex-nowrap items-center justify-center bg-cover bg-center bg-no-repeat">
+        <Modal
+          aria-labelledby="unstyled-modal-title"
+          aria-describedby="unstyled-modal-description"
+          open={successPopupOpen}
+          onClose={() => {
+            setSuccessPopupOpen(false);
+          }}
+          className="flex h-full w-full items-center justify-center"
+        >
+          <SuccessPopup
+            onClick={() => {
+              setSuccessPopupOpen(false);
+            }}
+            message="Files uploaded succesfully"
+          />
+        </Modal>
+        <Modal
+          aria-labelledby="unstyled-modal-title"
+          aria-describedby="unstyled-modal-description"
+          open={processingPopup}
+          onClose={() => {
+            setProcessingPopup(false);
+          }}
+          className="flex h-full w-full items-center justify-center"
+        >
+          <ProcessingPopup
+            onClick={() => {
+              setProcessingPopup(false);
+            }}
+          />
+        </Modal>
+        <Modal
+          aria-labelledby="unstyled-modal-title"
+          aria-describedby="unstyled-modal-description"
+          open={errorPopup.state}
+          onClose={() => {
+            setErrorPopup({ state: false, message: "" });
+          }}
+          className="flex h-full w-full items-center justify-center"
+        >
+          <ErrorPopup
+            onClick={() => {
+              setErrorPopup({ state: false, message: "" });
+            }}
+            message={`${errorPopup.message === "CredentialsSignin" ? "Invalid User Id or Password" : "Server Error"}`}
+          />
+        </Modal>
         <div className="relative flex h-screen w-2/3 flex-wrap">
           <Image
             src={img}
@@ -84,21 +143,31 @@ const CompounderLogin: React.FunctionComponent = () => {
                 placeholder="Enter User-id"
                 className="ml-1 h-5/6 w-4/5 outline-none"
                 value={userInfo.password}
+                type={`${passwordHidden ? "password" : "text"}`}
                 onChange={({ target }) =>
                   setUserInfo({ ...userInfo, password: target.value })
                 }
               />
-              <FaEye className="mr-4 h-5 w-5" />
+              <FaEye
+                className="mr-4 h-5 w-5"
+                onClick={() => {
+                  setPasswordHidden(!passwordHidden);
+                }}
+              />
             </div>
           </div>
           <button
             className="flex h-[6%] w-1/5 cursor-pointer items-center justify-center rounded-2xl bg-[#3D4460] text-center text-2xl font-medium text-white"
-            onClick={handleSubmit}
+            onClick={(e) => {
+              e.preventDefault();
+              setProcessingPopup(true);
+              handleSubmit();
+            }}
           >
             Submit
           </button>
           <p
-            className="cursor-pointer font-bold text-[#F36562]"
+            className="cursor-pointer text-sm text-[#F36562]"
             onClick={async () => {
               await router.push({
                 pathname: "/doctor-login",
