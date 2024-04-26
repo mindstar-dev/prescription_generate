@@ -21,7 +21,8 @@ const PatientDetailsEditComponent: React.FC<PatientDetailsEditProps> = (
   const [firstRender, setFirstRender] = useState(false);
   const [patientData, setPatientData] = useState({
     first_name: "",
-    age: "",
+    age_in_year: "",
+    age_in_month: "",
     contact_number: "",
     gender: "",
     last_name: "",
@@ -49,9 +50,13 @@ const PatientDetailsEditComponent: React.FC<PatientDetailsEditProps> = (
     // Check if there's valid data and update state
     if (data && !firstRender && !isLoading && !isError) {
       setFirstRender(true);
+      const age_in_year = data.age.split(" ")[0] as string;
+      const age_in_month = data.age.split(" ")[2] as string;
+
       setPatientData({
         first_name: data.first_name,
-        age: data.age.toString(),
+        age_in_year: age_in_year,
+        age_in_month: age_in_month,
         contact_number: data.contact_number.toString() || "",
         gender: data.gender,
         last_name: data.last_name,
@@ -96,7 +101,7 @@ const PatientDetailsEditComponent: React.FC<PatientDetailsEditProps> = (
       patientData.last_name === "" ||
       patientData.contact_number === "" ||
       patientData.gender === "" ||
-      patientData.age === "" ||
+      patientData.age_in_year === "" ||
       patientData.patient_id === ""
     ) {
       setFinalizePopup(false);
@@ -248,11 +253,19 @@ const PatientDetailsEditComponent: React.FC<PatientDetailsEditProps> = (
         <div className="flex h-[5%] flex-row justify-between">
           <input
             type="number"
-            placeholder="Age*"
+            placeholder="Age in years*"
             className="h-full w-[44%] border-b border-black placeholder-red-500 focus:outline-[#9AA0B9]"
-            name="age"
+            name="age_in_year"
             onChange={handleInputChange}
-            value={patientData.age}
+            value={patientData.age_in_year}
+          />
+          <input
+            type="number"
+            placeholder="Age in months"
+            className="h-full w-[44%] border-b border-black  focus:outline-[#9AA0B9]"
+            name="age_in_month"
+            onChange={handleInputChange}
+            value={patientData.age_in_month}
           />
         </div>
         <div className="text-3xl">Patient&apos;s Address</div>

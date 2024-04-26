@@ -83,7 +83,23 @@ export const prescriptionRouter = createTRPCRouter({
       await ctx.db.$disconnect();
       return prescription;
     }),
-
+  get_whole_prescription_data_by_id: protectedProcedure
+    .input(prescriptionUniqueSchema)
+    .query(async ({ ctx, input }) => {
+      const prescription = await ctx.db.prescription.findUnique({
+        where: {
+          prescription_id: input.prescription_id,
+        },
+      });
+      const prescription_data = await ctx.db.prescriptionMedicineData.findMany({
+        where: { prescription_id: input.prescription_id },
+      });
+      await ctx.db.$disconnect();
+      return {
+        prescription: prescription,
+        prescription_data: prescription_data,
+      };
+    }),
   get_prescription_medicine_data: protectedProcedure
     .input(prescriptionUniqueSchema)
     .query(async ({ ctx, input }) => {

@@ -7,19 +7,23 @@ import { api } from "~/utils/api";
 import PrescipttionPopup from "./ViewPrescriptionPopup";
 import SuccessPopup from "../popups/Success";
 import ErrorPopup from "../popups/Error";
-
-const Prescriptiion: React.FunctionComponent = () => {
+import NotSavedPopup from "../popups/NotSavedPopup";
+interface Iprops {
+  previous_prescription?: string;
+}
+const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
   const router = useRouter();
   const ref = useRef<HTMLDivElement>(null);
   const [selectPreviousPrescription, setPreviousPrescription] = useState("");
   const [initialFetchDone, setInitialFetchDone] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [isSavedPopupOpen, setIsSavedPopupOpen] = React.useState(false);
   const [successPopupOpen, setSuccessPopupOpen] = React.useState(false);
   const [errorPopup, setErrorPopup] = React.useState({
     state: false,
     type: "",
   });
-  const { patient_id, template_id } = router.query;
+  const { patient_id, template_id, previous_prescription } = router.query;
   const date = new Date();
   const { data: patient } = api.patient.find_by_id.useQuery(
     patient_id as string,
@@ -31,10 +35,17 @@ const Prescriptiion: React.FunctionComponent = () => {
   } = api.template.template_data_by_id.useQuery({
     template_id: template_id as string,
   });
-  const { data: previous_prescriptions } =
+  const { data: previousPrescriptions } =
     api.prescription.get_by_patient_id.useQuery({
       patient_id: patient_id as string,
     });
+  const {
+    data: previousPrescriptionData,
+    isLoading: isPreviousPrescriptionDataLoading,
+    isError: isPreviousPrescriptionDataError,
+  } = api.prescription.get_whole_prescription_data_by_id.useQuery({
+    prescription_id: props.previous_prescription as string,
+  });
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -62,6 +73,46 @@ const Prescriptiion: React.FunctionComponent = () => {
   });
   useEffect(() => {
     if (
+      previous_prescription &&
+      !initialFetchDone &&
+      !isPreviousPrescriptionDataError &&
+      !isPreviousPrescriptionDataLoading &&
+      previousPrescriptionData &&
+      previousPrescriptionData.prescription &&
+      previousPrescriptionData.prescription_data
+    ) {
+      console.log(previousPrescriptionData.prescription);
+      console.log(previousPrescriptionData.prescription_data);
+
+      const arr: {
+        id: string;
+        medicine: string;
+        repeatitions: string;
+      }[] = [];
+      previousPrescriptionData.prescription_data.forEach((item) => {
+        const newItem = {
+          id: date.toISOString(),
+          medicine: item.medicine,
+          repeatitions: item.repeatitions, // Renaming 'doseage' to 'repetitions'
+        };
+        arr.push(newItem);
+      });
+      setPrescriptionData({
+        ...prescriptionData,
+        patient_id: patient_id as string,
+        prescription_id: `${previousPrescriptionData.prescription.patient_id.toString()}_${String(date.getDate()).padStart(2, "0")}${String(date.getMonth() + 1).padStart(2, "0")}${String(date.getFullYear()).slice(2)}${String(date.getHours()).padStart(2, "0")}${String(date.getMinutes()).padStart(2, "0")}`,
+        medicine: arr,
+        tests: previousPrescriptionData.prescription.tests as string,
+        note: previousPrescriptionData.prescription.note as string,
+        symptom: previousPrescriptionData.prescription.symptom,
+        diagnosis: previousPrescriptionData.prescription.diagnosis,
+        bp: previousPrescriptionData.prescription.bp,
+        weight: previousPrescriptionData.prescription.weight.toString(),
+      });
+
+      // Set initial fetch done to true
+      setInitialFetchDone(true);
+    } else if (
       !isLoading &&
       !isError &&
       template_data &&
@@ -90,6 +141,7 @@ const Prescriptiion: React.FunctionComponent = () => {
         prescription_id: `${patient_id.toString()}_${String(date.getDate()).padStart(2, "0")}${String(date.getMonth() + 1).padStart(2, "0")}${String(date.getFullYear()).slice(2)}${String(date.getHours()).padStart(2, "0")}${String(date.getMinutes()).padStart(2, "0")}`,
         medicine: arr,
       });
+
       // Set initial fetch done to true
       setInitialFetchDone(true);
     }
@@ -112,10 +164,14 @@ const Prescriptiion: React.FunctionComponent = () => {
 
   const savePrescription = api.prescription.create_prescription.useMutation({
     onError(error, variables, context) {
-      alert(error.message);
+      setErrorPopup({
+        state: true,
+        type: error.message,
+      });
     },
     onSuccess(data, variables, context) {
-      alert("success");
+      setIsSaved(true);
+      setSuccessPopupOpen(true);
     },
   });
   const create = () => {
@@ -147,7 +203,8 @@ const Prescriptiion: React.FunctionComponent = () => {
   const { data: repetitions } = api.medicine.get_repetitions.useQuery();
 
   const { data: medicine } = api.medicine.get_all.useQuery();
-  if (isError || isLoading) {
+
+  if (!initialFetchDone) {
     return <div>Loading</div>;
   }
   return (
@@ -168,7 +225,7 @@ const Prescriptiion: React.FunctionComponent = () => {
           onClick={() => {
             setSuccessPopupOpen(false);
           }}
-          message="The Template is Successfully saved"
+          message="The Prescription is Successfully saved"
         />
       </Modal>
       <Modal
@@ -184,7 +241,26 @@ const Prescriptiion: React.FunctionComponent = () => {
           onClick={() => {
             setErrorPopup({ state: false, type: "" });
           }}
-          message={`${errorPopup.type === "id" ? "Patient id is not available please restart the process" : errorPopup.type === "medicine_empty" ? "Please add atleast one medicine in order to continue" : errorPopup.type === "medicine_pending" ? "You have unsaved medicines please save or remove them before continue" : "Error occured contact developers"}`}
+          message={`${errorPopup.type === "id" ? "Patient id is not available please restart the process" : errorPopup.type === "medicine_empty" ? "Please add atleast one medicine in order to continue" : errorPopup.type === "medicine_pending" ? "You have unsaved medicines please save or remove them before continue" : `Error occured contact developers ${errorPopup.type}`}`}
+        />
+      </Modal>
+      <Modal
+        aria-labelledby="unstyled-modal-title"
+        aria-describedby="unstyled-modal-description"
+        open={isSavedPopupOpen}
+        onClose={() => {
+          setIsSavedPopupOpen(false);
+        }}
+        className="flex h-full w-full items-center justify-center"
+      >
+        <NotSavedPopup
+          onNoClick={() => {
+            setIsSavedPopupOpen(false);
+          }}
+          onYesClick={() => {
+            setIsSavedPopupOpen(false);
+            setOpen(true);
+          }}
         />
       </Modal>
       <Modal
@@ -248,6 +324,7 @@ const Prescriptiion: React.FunctionComponent = () => {
                     type="text"
                     placeholder="Enter Symptoms"
                     className="m-2 h-full w-[70%] border-2 border-[#9AA0B9] p-2 focus:outline-[#9AA0B9]"
+                    value={prescriptionData.symptom}
                     onChange={(e) => {
                       setPrescriptionData({
                         ...prescriptionData,
@@ -263,6 +340,7 @@ const Prescriptiion: React.FunctionComponent = () => {
                   <input
                     type="text"
                     placeholder="Enter BP"
+                    value={prescriptionData.bp}
                     className="m-2 h-full w-[70%] border-2 border-[#9AA0B9] p-2 focus:outline-[#9AA0B9]"
                     onChange={(e) => {
                       setPrescriptionData({
@@ -281,6 +359,7 @@ const Prescriptiion: React.FunctionComponent = () => {
                   <input
                     type="text"
                     placeholder="Enter Diagnosis"
+                    value={prescriptionData.diagnosis}
                     className="m-2 h-full w-[70%] border-2 border-[#9AA0B9] p-2 focus:outline-[#9AA0B9]"
                     onChange={(e) => {
                       setPrescriptionData({
@@ -297,6 +376,7 @@ const Prescriptiion: React.FunctionComponent = () => {
                   <input
                     type="number"
                     placeholder="Enter Weight (in Kg)"
+                    value={prescriptionData.weight}
                     className="m-2 h-full w-[70%] border-2 border-[#9AA0B9] p-2 focus:outline-[#9AA0B9]"
                     onChange={(e) => {
                       setPrescriptionData({
@@ -324,7 +404,7 @@ const Prescriptiion: React.FunctionComponent = () => {
                 <FaEye
                   className="h-8 w-8 text-[#7E7E7E]"
                   onClick={() => {
-                    setOpen(true);
+                    isSaved ? setOpen(true) : setIsSavedPopupOpen(true);
                     console.log(template_id, patient_id);
                   }}
                 />
@@ -470,8 +550,8 @@ const Prescriptiion: React.FunctionComponent = () => {
                 <TextField
                   id="outlined-multiline-flexible"
                   multiline
-                  label="Tests(Optional)"
                   maxRows={4}
+                  value={prescriptionData.tests}
                   className="min-w-0 flex-grow"
                   placeholder="Tests(Optional)"
                   onChange={(e) => {
@@ -487,9 +567,9 @@ const Prescriptiion: React.FunctionComponent = () => {
                 <p className="w-32 text-xl font-bold">Notes</p>
                 <TextField
                   id="outlined-multiline-flexible"
-                  label="Notes (Optional)"
                   multiline
                   maxRows={4}
+                  value={prescriptionData.note}
                   className="h-fit min-w-0 flex-grow"
                   placeholder="Notes (Optional)"
                   onChange={(e) => {
@@ -535,7 +615,7 @@ const Prescriptiion: React.FunctionComponent = () => {
                     <option value="">
                       Tap to view previous prescriptions with report
                     </option>
-                    {previous_prescriptions?.map(
+                    {previousPrescriptions?.map(
                       (previous_prescription, index) => {
                         return (
                           <option

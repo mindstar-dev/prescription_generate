@@ -4,10 +4,11 @@ import y from "/public/favicon.ico";
 import { Button, Modal } from "@mui/material";
 import { FaPrint } from "react-icons/fa";
 import { FaCopy } from "react-icons/fa6";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { api } from "~/utils/api";
 import { useRouter } from "next/router";
 import { image } from "html2canvas/dist/types/css/types/image";
+import PrescipttionPopup from "./ViewPrescriptionPopup";
 interface PrescriptionViewProps {
   prescription_id: string;
   pateint_id: string;
@@ -16,6 +17,47 @@ interface PrescriptionViewProps {
 const PrescriptionViewComponent: React.FunctionComponent<
   PrescriptionViewProps
 > = (props) => {
+  const date = new Date();
+  const ref = React.useRef<HTMLDivElement>(null);
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const [previewData, setPreviewData] = useState<{
+    patient:
+      | {
+          first_name: string;
+          last_name: string;
+          contact_number: bigint;
+          email_id: string | null;
+          patient_id: string;
+          gender: string;
+          fathers_name: string | null;
+          husbands_name: string | null;
+          age: string;
+          address_line1: string | null;
+          address_line2: string | null;
+          city: string | null;
+          state: string | null;
+          pin_code: number | null;
+          country: string | null;
+        }
+      | null
+      | undefined;
+    prescription_data: {
+      patient_id: string;
+      tests: string;
+      symptom: string;
+      bp: string;
+      diagnosis: string;
+      weight: string;
+      note: string;
+      medicine: {
+        medicine: string;
+        repeatitions: string;
+        id: string;
+      }[];
+    };
+  }>();
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [startY, setStartY] = useState(0);
@@ -69,8 +111,54 @@ const PrescriptionViewComponent: React.FunctionComponent<
     api.prescription.ger_test_report_by_prescription_id.useQuery({
       prescription_id: props.prescription_id,
     });
+  useEffect(() => {
+    if (patientData && prescriptionData && data) {
+      const arr: {
+        id: string;
+        medicine: string;
+        repeatitions: string;
+      }[] = [];
+      prescriptionData.forEach((item) => {
+        const newItem = {
+          id: date.toISOString(),
+          medicine: item.medicine,
+          repeatitions: item.repeatitions, // Renaming 'doseage' to 'repetitions'
+        };
+        arr.push(newItem);
+      });
+      setPreviewData({
+        patient: patientData,
+        prescription_data: {
+          bp: data.bp,
+          diagnosis: data.diagnosis,
+          medicine: arr,
+          note: data.note as string,
+          patient_id: data.patient_id,
+          symptom: data.symptom,
+          tests: data.tests as string,
+          weight: data.weight.toString(),
+        },
+      });
+    }
+  }, [patientData, prescriptionData, data]);
+  if (!previewData) {
+    return <div>Loading</div>;
+  }
   return (
     <div className="flex h-full w-full flex-col">
+      <Modal
+        aria-labelledby="unstyled-modal-title"
+        aria-describedby="unstyled-modal-description"
+        open={open}
+        onClose={handleClose}
+        className="flex  items-center justify-center"
+      >
+        <PrescipttionPopup
+          patient={patientData}
+          prescription_data={previewData.prescription_data}
+          ref={ref}
+        ></PrescipttionPopup>
+      </Modal>
       <div className="flex h-fit w-full flex-row justify-between bg-[#F0F0F0] p-[1%]">
         <div className="flex flex-col ">
           <span className=" space-x-5">
@@ -104,7 +192,7 @@ const PrescriptionViewComponent: React.FunctionComponent<
         </div>
       </div>
       <div className="flex h-[80%] flex-1  flex-row p-[1%]">
-        <div className="flex h-full w-[50%] flex-col space-y-[2%]  border-r border-gray-700">
+        <div className="flex h-full w-[50%] flex-col space-y-[2%]  ">
           <div className="flex flex-row justify-end space-x-[2%] pr-[1%]">
             {/* <select
               name=""
@@ -120,11 +208,25 @@ const PrescriptionViewComponent: React.FunctionComponent<
             </button> */}
             <div className="flex flex-row space-x-4">
               <div className="flex flex-col items-center justify-center">
-                <FaCopy className="h-[32px] w-[32px] text-[#7E7E7E]" />
+                <FaCopy
+                  className="h-[32px] w-[32px] cursor-pointer text-[#7E7E7E]"
+                  onClick={() => {
+                    router.push({
+                      pathname: "patient-prescription",
+                      query: {
+                        previous_prescription: props.prescription_id,
+                        patient_id: props.pateint_id,
+                      },
+                    });
+                  }}
+                />
                 <p className=" text-xs">Copy Data</p>
               </div>
               <div className="flex flex-col items-center justify-center">
-                <FaPrint className="h-[32px] w-[32px] text-[#7E7E7E]" />
+                <FaPrint
+                  className="h-[32px] w-[32px] cursor-pointer text-[#7E7E7E]"
+                  onClick={handleOpen}
+                />
                 <p className="text-xs">Print</p>
               </div>
             </div>
@@ -181,7 +283,7 @@ const PrescriptionViewComponent: React.FunctionComponent<
             </button>
           </div>
         </div>
-        <div className="flex h-full w-[50%] flex-col  items-center justify-center overflow-hidden">
+        <div className="flex h-full w-[50%] flex-col  items-center justify-center overflow-hidden border-l border-gray-700">
           {/* <div className="mx-[2%] h-[10%] w-full">
             <div className="flex flex-row space-x-[2%] ">
               <select
@@ -198,7 +300,7 @@ const PrescriptionViewComponent: React.FunctionComponent<
               </button>
             </div>
           </div> */}
-          <div className="h-[59%] w-[62%] overflow-hidden bg-black">
+          <div className="h-[59%] w-[62%] overflow-hidden ">
             <div className="h-full snap-y snap-mandatory overflow-x-hidden overflow-y-scroll">
               {testReport?.map((item, index) => (
                 <div
@@ -230,6 +332,8 @@ const PrescriptionViewComponent: React.FunctionComponent<
               <Image
                 src={selectedImage}
                 alt=""
+                width={400}
+                height={400}
                 className="aspect-square h-fit w-fit"
               />
             </div>

@@ -21,7 +21,8 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
   const { data, isError, isLoading } = api.patient.get_all.useQuery();
   const [patientData, setPatientData] = useState({
     first_name: "",
-    age: "",
+    age_in_year: "",
+    age_in_month: "",
     contact_number: "",
     gender: "",
     last_name: "",
@@ -77,7 +78,7 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
       patientData.last_name === "" ||
       patientData.contact_number === "" ||
       patientData.gender === "" ||
-      patientData.age === "" ||
+      patientData.age_in_year === "" ||
       patientData.patient_id === ""
     ) {
       setFinalizePopup(false);
@@ -102,7 +103,8 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
           if (registerSuccess) {
             setPatientData({
               first_name: "",
-              age: "",
+              age_in_year: "",
+              age_in_month: "",
               contact_number: "",
               gender: "",
               last_name: "",
@@ -129,7 +131,8 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
           onClick={() => {
             setPatientData({
               first_name: "",
-              age: "",
+              age_in_year: "",
+              age_in_month: "",
               contact_number: "",
               gender: "",
               last_name: "",
@@ -304,19 +307,27 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
         <div className="flex h-[5%] flex-row justify-between">
           <input
             type="number"
-            placeholder="Age*"
+            placeholder="Age in years*"
             className="h-full w-[44%] border-b border-black placeholder-red-500 focus:outline-[#9AA0B9]"
-            name="age"
+            name="age_in_year"
             onChange={handleInputChange}
-            value={patientData.age}
+            value={patientData.age_in_year}
+          />
+          <input
+            type="number"
+            placeholder="Age in months"
+            className="h-full w-[44%] border-b border-black  focus:outline-[#9AA0B9]"
+            name="age_in_month"
+            onChange={handleInputChange}
+            value={patientData.age_in_month}
           />
         </div>
         <div className="text-3xl">Patient&apos;s Address</div>
         <div className="flex h-[5%] flex-col justify-between">
           <input
             type="text"
-            placeholder="Address Line 1 focus:outline-[#9AA0B9]"
-            className="h-full w-full border-b border-black"
+            placeholder="Address Line 1"
+            className="h-full w-full border-b border-black  focus:outline-[#9AA0B9]"
             name="address_line1"
             onChange={handleInputChange}
             value={patientData.address_line1}
@@ -325,8 +336,8 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
         <div className="flex h-[5%] flex-col justify-between">
           <input
             type="text"
-            placeholder="Address Line 2 focus:outline-[#9AA0B9]"
-            className="h-full w-full border-b border-black"
+            placeholder="Address Line 2"
+            className="h-full w-full border-b border-black focus:outline-[#9AA0B9]"
             name="address_line2"
             onChange={handleInputChange}
             value={patientData.address_line2}

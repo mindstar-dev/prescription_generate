@@ -86,7 +86,7 @@ model VerificationToken {
     gender String
     fathers_name String?
     husbands_name String?
-    age Int
+    age String
     address_line1 String?
     address_line2 String?
     city String?
