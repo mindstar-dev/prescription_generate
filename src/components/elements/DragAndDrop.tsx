@@ -23,6 +23,20 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
     patient: "",
     prescription: "",
   });
+  const [previousPrescriptionData, setPreviousPrescriptionData] = useState<
+    | {
+        prescription_id: string;
+        patient_id: string;
+        date: Date;
+        symptom: string;
+        bp: string;
+        tests: string | null;
+        diagnosis: string;
+        weight: number;
+        note: string | null;
+      }
+    | undefined
+  >();
   const [successPopupOpen, setSuccessPopupOpen] = React.useState(false);
   const [errorPopup, setErrorPopup] = React.useState({
     state: false,
@@ -275,7 +289,6 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
                   (item) => item.patient_id === selectedPrescription.patient,
                 )?.age
               }
-              Y
             </span>
           </span>
         </div>
@@ -315,6 +328,11 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
                 ...selectedPrescription,
                 prescription: e.target.value,
               });
+              const ele = previousPrescription?.find(
+                (item) => item.prescription_id === e.target.value,
+              );
+              console.log(ele);
+              setPreviousPrescriptionData(ele);
             }}
           >
             <option value="">---select prescription---</option>
@@ -342,6 +360,10 @@ const DragAndDrop: React.FunctionComponent<DragAndDropProps> = (props) => {
           >
             <p>Upload</p>
           </button>
+        </div>
+        <div className="flex h-fit  w-full items-center">
+          <p className="mr-2 font-bold">Prescribed Tests:</p>
+          {previousPrescriptionData?.tests}
         </div>
         <input
           type="file"

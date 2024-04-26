@@ -33,7 +33,7 @@ const PrescriptionViewComponent: React.FunctionComponent<
           gender: string;
           fathers_name: string | null;
           husbands_name: string | null;
-          age: number;
+          age: string;
           address_line1: string | null;
           address_line2: string | null;
           city: string | null;

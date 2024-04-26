@@ -7,6 +7,7 @@ import { api } from "~/utils/api";
 import PrescipttionPopup from "./ViewPrescriptionPopup";
 import SuccessPopup from "../popups/Success";
 import ErrorPopup from "../popups/Error";
+import NotSavedPopup from "../popups/NotSavedPopup";
 interface Iprops {
   previous_prescription?: string;
 }
@@ -16,6 +17,7 @@ const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
   const [selectPreviousPrescription, setPreviousPrescription] = useState("");
   const [initialFetchDone, setInitialFetchDone] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [isSavedPopupOpen, setIsSavedPopupOpen] = React.useState(false);
   const [successPopupOpen, setSuccessPopupOpen] = React.useState(false);
   const [errorPopup, setErrorPopup] = React.useState({
     state: false,
@@ -162,10 +164,14 @@ const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
 
   const savePrescription = api.prescription.create_prescription.useMutation({
     onError(error, variables, context) {
-      alert(error.message);
+      setErrorPopup({
+        state: true,
+        type: error.message,
+      });
     },
     onSuccess(data, variables, context) {
-      alert("success");
+      setIsSaved(true);
+      setSuccessPopupOpen(true);
     },
   });
   const create = () => {
@@ -219,7 +225,7 @@ const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
           onClick={() => {
             setSuccessPopupOpen(false);
           }}
-          message="The Template is Successfully saved"
+          message="The Prescription is Successfully saved"
         />
       </Modal>
       <Modal
@@ -235,7 +241,26 @@ const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
           onClick={() => {
             setErrorPopup({ state: false, type: "" });
           }}
-          message={`${errorPopup.type === "id" ? "Patient id is not available please restart the process" : errorPopup.type === "medicine_empty" ? "Please add atleast one medicine in order to continue" : errorPopup.type === "medicine_pending" ? "You have unsaved medicines please save or remove them before continue" : "Error occured contact developers"}`}
+          message={`${errorPopup.type === "id" ? "Patient id is not available please restart the process" : errorPopup.type === "medicine_empty" ? "Please add atleast one medicine in order to continue" : errorPopup.type === "medicine_pending" ? "You have unsaved medicines please save or remove them before continue" : `Error occured contact developers ${errorPopup.type}`}`}
+        />
+      </Modal>
+      <Modal
+        aria-labelledby="unstyled-modal-title"
+        aria-describedby="unstyled-modal-description"
+        open={isSavedPopupOpen}
+        onClose={() => {
+          setIsSavedPopupOpen(false);
+        }}
+        className="flex h-full w-full items-center justify-center"
+      >
+        <NotSavedPopup
+          onNoClick={() => {
+            setIsSavedPopupOpen(false);
+          }}
+          onYesClick={() => {
+            setIsSavedPopupOpen(false);
+            setOpen(true);
+          }}
         />
       </Modal>
       <Modal
@@ -379,7 +404,7 @@ const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
                 <FaEye
                   className="h-8 w-8 text-[#7E7E7E]"
                   onClick={() => {
-                    setOpen(true);
+                    isSaved ? setOpen(true) : setIsSavedPopupOpen(true);
                     console.log(template_id, patient_id);
                   }}
                 />

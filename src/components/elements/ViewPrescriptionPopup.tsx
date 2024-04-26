@@ -14,7 +14,7 @@ interface pdfProps {
         gender: string;
         fathers_name: string | null;
         husbands_name: string | null;
-        age: number;
+        age: string;
         address_line1: string | null;
         address_line2: string | null;
         city: string | null;
@@ -72,7 +72,7 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
       imgWidth * ratio,
       imgHeight * ratio,
     );
-    pdf.output("dataurlnewwindow");
+    pdf.save(`${props.patient?.patient_id}_${date.toISOString()}.pdf`);
   };
 
   return (

@@ -21,9 +21,10 @@ const registerPatientSchema = z.object({
   }),
   fathers_name: z.string(),
   husbands_name: z.string(),
-  age: z.string({
+  age_in_year: z.string({
     required_error: "Describe your basic units name",
   }),
+  age_in_month: z.string(),
   address_line1: z.string(),
   address_line2: z.string(),
   city: z.string(),
@@ -73,7 +74,7 @@ export const patientRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       return await ctx.db.patient.create({
         data: {
-          age: parseInt(input.age),
+          age: `${input.age_in_year} years ${input.age_in_month ? input.age_in_month : 0} months`,
           contact_number: parseInt(input.contact_number),
           first_name: input.first_name,
           gender: input.gender,
@@ -108,7 +109,7 @@ export const patientRouter = createTRPCRouter({
           patient_id: input.patient_id,
         },
         data: {
-          age: parseInt(input.age),
+          age: `${input.age_in_year} years ${input.age_in_month ? input.age_in_month : 0} months`,
           contact_number: parseInt(input.contact_number),
           first_name: input.first_name,
           gender: input.gender,

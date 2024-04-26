@@ -89,6 +89,20 @@ export const templateRouter = createTRPCRouter({
             doseage: item.repeatitions,
           },
         });
+        arr.push(
+          ctx.db.medicine.upsert({
+            where: { name: item.medicine },
+            create: { name: item.medicine },
+            update: { name: item.medicine },
+          }),
+        );
+        arr.push(
+          ctx.db.repetitions.upsert({
+            where: { name: item.repeatitions },
+            create: { name: item.repeatitions },
+            update: { name: item.repeatitions },
+          }),
+        );
         arr.push(temp);
       });
       return await ctx.db.$transaction(arr);

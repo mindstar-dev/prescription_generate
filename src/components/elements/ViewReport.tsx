@@ -14,7 +14,20 @@ const ViewReport: React.FunctionComponent<DragAndDropProps> = (props) => {
   const handleCloseModal = () => {
     setOpenModal(false);
   };
-
+  const [previousPrescriptionData, setPreviousPrescriptionData] = useState<
+    | {
+        prescription_id: string;
+        patient_id: string;
+        date: Date;
+        symptom: string;
+        bp: string;
+        tests: string | null;
+        diagnosis: string;
+        weight: number;
+        note: string | null;
+      }
+    | undefined
+  >();
   const handleImageClick = (imageUrl: string) => {
     setSelectedImage(imageUrl);
     setOpenModal(true);
@@ -80,12 +93,11 @@ const ViewReport: React.FunctionComponent<DragAndDropProps> = (props) => {
                   (item) => item.patient_id === selectedPrescription.patient,
                 )?.age
               }
-              Y
             </span>
           </span>
         </div>
       </div>
-      <div className=" m-[1%] flex grow flex-col space-y-[3%]">
+      <div className=" m-[1%] flex grow flex-col space-y-[1%]">
         <p className="font-bold">Previous Prescription</p>
         <div className="flex flex-row space-x-[2%] ">
           <select
@@ -119,6 +131,11 @@ const ViewReport: React.FunctionComponent<DragAndDropProps> = (props) => {
                 ...selectedPrescription,
                 prescription: e.target.value,
               });
+              const ele = previousPrescription?.find(
+                (item) => item.prescription_id === e.target.value,
+              );
+              console.log(ele);
+              setPreviousPrescriptionData(ele);
             }}
           >
             <option value="">---select prescription---</option>
@@ -134,7 +151,10 @@ const ViewReport: React.FunctionComponent<DragAndDropProps> = (props) => {
             })}
           </select>
         </div>
-
+        <div className="flex h-fit  w-full items-center">
+          <p className="mr-2 font-bold">Prescribed Tests:</p>
+          {previousPrescriptionData?.tests}
+        </div>
         <div className="flex h-full w-full flex-wrap items-center justify-center self-center">
           <div className="h-[400px] w-[400px] self-center overflow-hidden">
             <div className="h-full snap-y snap-mandatory overflow-x-hidden overflow-y-scroll ">
