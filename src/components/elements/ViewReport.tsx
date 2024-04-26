@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { api } from "~/utils/api";
+import PrescipttionPopup from "./ViewPrescriptionPopup";
 import Image from "next/image";
 import { Modal } from "@mui/material";
 import { env } from "~/env";
@@ -167,6 +168,8 @@ const ViewReport: React.FunctionComponent<DragAndDropProps> = (props) => {
               <div className="h-fit w-fit">
                 <Image
                   src={selectedImage}
+                  width={400}
+                  height={400}
                   alt=""
                   className="aspect-square h-fit w-fit"
                 />

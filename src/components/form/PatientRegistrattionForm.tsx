@@ -315,8 +315,8 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
         <div className="flex h-[5%] flex-col justify-between">
           <input
             type="text"
-            placeholder="Address Line 1 focus:outline-[#9AA0B9]"
-            className="h-full w-full border-b border-black"
+            placeholder="Address Line 1"
+            className="h-full w-full border-b border-black  focus:outline-[#9AA0B9]"
             name="address_line1"
             onChange={handleInputChange}
             value={patientData.address_line1}
@@ -325,8 +325,8 @@ const PatientRegistrattionFormComponent: React.FunctionComponent = () => {
         <div className="flex h-[5%] flex-col justify-between">
           <input
             type="text"
-            placeholder="Address Line 2 focus:outline-[#9AA0B9]"
-            className="h-full w-full border-b border-black"
+            placeholder="Address Line 2"
+            className="h-full w-full border-b border-black focus:outline-[#9AA0B9]"
             name="address_line2"
             onChange={handleInputChange}
             value={patientData.address_line2}
