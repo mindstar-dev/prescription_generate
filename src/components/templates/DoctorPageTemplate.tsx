@@ -162,7 +162,7 @@ const DoctorPageTemplate: React.FunctionComponent<IProps> = (props) => {
               <div className="flex items-center justify-center">
                 <FaCircleUser className="mr-4 h-10 w-10 text-white" />
                 <p className="mr-4 text-lg font-medium text-white">
-                  {props.doctorName}
+                  Dr. Amitava Bhattacharya
                 </p>
               </div>
             </div>

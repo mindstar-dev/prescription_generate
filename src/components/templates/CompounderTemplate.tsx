@@ -110,7 +110,7 @@ const CompounderPageTemplate: React.FunctionComponent<IProps> = (props) => {
             <div className="flex h-[10%] w-full items-center justify-end rounded-t-md border-black bg-[#9AA0B9]">
               <FaCircleUser className="mr-4 h-10 w-10 text-white" />
               <p className="mr-4 text-lg font-medium text-white">
-                {props.doctorName}
+                Dr. Amitava Bhattacharya
               </p>
             </div>
             <div className="flex h-[90%] w-full flex-wrap overflow-y-scroll">
