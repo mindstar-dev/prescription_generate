@@ -93,7 +93,7 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
             <Image src={img} className="h-full w-full text-white" alt="" />
           </div>
           <div className="flex h-[65%] w-fit flex-col justify-between text-white">
-            <span className="whitespace-nowrap">Dr. Name Surname</span>
+            <span className="whitespace-nowrap">Dr. Amitava Bhattacharya</span>
             <span className="whitespace-nowrap text-sm">Qualification</span>
             <span className="whitespace-nowrap text-sm">Address & Contact</span>
           </div>
