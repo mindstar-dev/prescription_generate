@@ -47,7 +47,7 @@ const PatientDetailsComponent: React.FunctionComponent<PatientDetailsProps> = (
             <span className="text-[20px]/[24px] font-bold text-black">
               Age:
             </span>
-            <span>{data?.age}Y</span>
+            <span>{data?.age}</span>
           </span>
         </div>
         <div className="flex w-[42%] flex-col space-y-[20%]">
