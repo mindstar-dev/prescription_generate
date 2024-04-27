@@ -130,7 +130,7 @@ const Template: React.FunctionComponent = () => {
           slots={{ backdrop: StyledBackdrop }}
         >
           <ModalContent sx={{ width: 736, height: 635 }}>
-            <div className="flex h-full w-full flex-col">
+            <div className="flex h-full w-full flex-col overflow-y-scroll pr-2">
               <div className="h-[15%] w-full">
                 <p className="text-center text-[32px]">Add New Template</p>
               </div>
@@ -257,15 +257,15 @@ const Template: React.FunctionComponent = () => {
                   </button>
                 </div>
               </div>
-              <div className="flex h-[8%] w-full justify-center space-x-8 self-end text-white">
+              <div className="flex h-fit w-full justify-center space-x-8 self-end text-white">
                 <button
-                  className="h-full w-[103px] bg-[#3D4460]"
+                  className="h-10 w-[103px] bg-[#3D4460]"
                   onClick={handleClose}
                 >
                   Cancel
                 </button>
                 <button
-                  className="h-full w-[103px] bg-[#F36562]"
+                  className="h-10 w-[103px] bg-[#F36562]"
                   onClick={() => {
                     console.log(templateData);
 

@@ -8,6 +8,7 @@ import PrescipttionPopup from "./ViewPrescriptionPopup";
 import SuccessPopup from "../popups/Success";
 import ErrorPopup from "../popups/Error";
 import NotSavedPopup from "../popups/NotSavedPopup";
+import ProcessingPopup from "../popups/Processing";
 interface Iprops {
   previous_prescription?: string;
 }
@@ -18,6 +19,8 @@ const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
   const [initialFetchDone, setInitialFetchDone] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [isSavedPopupOpen, setIsSavedPopupOpen] = React.useState(false);
+  const [alreadySavedPopup, setAlreadySavedPopup] = React.useState(false);
+  const [processingPopup, setProcessingPopup] = useState(false);
   const [successPopupOpen, setSuccessPopupOpen] = React.useState(false);
   const [errorPopup, setErrorPopup] = React.useState({
     state: false,
@@ -164,6 +167,7 @@ const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
 
   const savePrescription = api.prescription.create_prescription.useMutation({
     onError(error, variables, context) {
+      setProcessingPopup(false);
       setErrorPopup({
         state: true,
         type: error.message,
@@ -171,10 +175,17 @@ const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
     },
     onSuccess(data, variables, context) {
       setIsSaved(true);
+      setProcessingPopup(false);
       setSuccessPopupOpen(true);
     },
   });
   const create = () => {
+    if (isSaved) {
+      setAlreadySavedPopup(true);
+      return;
+    }
+    setProcessingPopup(true);
+
     setPrescriptionData({
       ...prescriptionData,
       prescription_id: `${patient_id?.toString()}_${String(date.getDate()).padStart(2, "0")}${String(date.getMonth() + 1).padStart(2, "0")}${String(date.getFullYear()).slice(2)}${String(date.getHours()).padStart(2, "0")}${String(date.getMinutes()).padStart(2, "0")}`,
@@ -184,16 +195,30 @@ const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
       prescriptionData.patient_id === "" ||
       prescriptionData.medicine.length === 0
     ) {
+      setProcessingPopup(false);
       if (prescriptionData.patient_id === "") {
         setErrorPopup({ type: "id", state: true });
+        return;
       } else if (prescriptionData.medicine.length === 0) {
         setErrorPopup({ type: "medicine_empty", state: true });
+        return;
       }
       console.log(prescriptionData.medicine.length);
+    } else if (
+      prescriptionData.symptom === "" ||
+      prescriptionData.diagnosis === "" ||
+      prescriptionData.weight === "" ||
+      prescriptionData.bp === ""
+    ) {
+      setProcessingPopup(false);
+      setErrorPopup({ type: "prescription_data", state: true });
+      return;
     } else {
       console.log(medicineList);
 
       if (medicineList.medicine !== "" || medicineList.repeatitions !== "") {
+        setProcessingPopup(false);
+
         setErrorPopup({ type: "medicine_pending", state: true });
       } else {
         savePrescription.mutate(prescriptionData);
@@ -241,7 +266,7 @@ const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
           onClick={() => {
             setErrorPopup({ state: false, type: "" });
           }}
-          message={`${errorPopup.type === "id" ? "Patient id is not available please restart the process" : errorPopup.type === "medicine_empty" ? "Please add atleast one medicine in order to continue" : errorPopup.type === "medicine_pending" ? "You have unsaved medicines please save or remove them before continue" : `Error occured contact developers ${errorPopup.type}`}`}
+          message={`${errorPopup.type === "id" ? "Patient id is not available please restart the process" : errorPopup.type === "medicine_empty" ? "Please add atleast one medicine in order to continue" : errorPopup.type === "medicine_pending" ? "You have unsaved medicines please save or remove them before continue" : errorPopup.type === "prescription_data" ? "Please enter symptom , diagnosis, bp and weight" : `Error occured contact developers ${errorPopup.type}`}`}
         />
       </Modal>
       <Modal
@@ -260,6 +285,37 @@ const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
           onYesClick={() => {
             setIsSavedPopupOpen(false);
             setOpen(true);
+          }}
+        />
+      </Modal>
+      <Modal
+        aria-labelledby="unstyled-modal-title"
+        aria-describedby="unstyled-modal-description"
+        open={alreadySavedPopup}
+        onClose={() => {
+          setAlreadySavedPopup(false);
+        }}
+        className="flex h-full w-full items-center justify-center"
+      >
+        <ErrorPopup
+          onClick={() => {
+            setAlreadySavedPopup(false);
+          }}
+          message="Prescription is already saved"
+        />
+      </Modal>
+      <Modal
+        aria-labelledby="unstyled-modal-title"
+        aria-describedby="unstyled-modal-description"
+        open={processingPopup}
+        onClose={() => {
+          setProcessingPopup(false);
+        }}
+        className="flex h-full w-full items-center justify-center"
+      >
+        <ProcessingPopup
+          onClick={() => {
+            setProcessingPopup(false);
           }}
         />
       </Modal>
@@ -290,7 +346,7 @@ const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
           </span>
           <span className=" space-x-5">
             <span className="font-bold text-black">Age:</span>
-            <span>{patient?.age}y</span>
+            <span>{patient?.age}</span>
           </span>
         </div>
         <div className="flex flex-col">
@@ -622,7 +678,8 @@ const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
                             value={previous_prescription.prescription_id}
                             key={index}
                           >
-                            {previous_prescription.prescription_id}
+                            {previous_prescription.date.toDateString()}-
+                            {previous_prescription.date.toLocaleTimeString()}
                           </option>
                         );
                       },

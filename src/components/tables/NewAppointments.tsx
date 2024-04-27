@@ -54,9 +54,9 @@ const NewAppointmentsTable: React.FunctionComponent = () => {
             </p>
           </div>
           {/* add code for popup to select templates */}
-          <div className="flex h-full w-full flex-col overflow-y-scroll pb-2">
+          <div className="flex h-full w-full flex-col overflow-y-scroll pb-2 pl-1">
             <div
-              className="flex h-fit min-h-fit w-full cursor-pointer hover:bg-[#F0F0F0]"
+              className="flex h-fit min-h-fit w-full cursor-pointer border-b border-black hover:bg-[#F0F0F0]"
               onClick={() => {
                 router.push({
                   pathname: "patient-prescription",
@@ -67,16 +67,14 @@ const NewAppointmentsTable: React.FunctionComponent = () => {
                 });
               }}
             >
-              <p className="flex h-fit min-h-fit w-1/3 flex-col items-center justify-center text-center">
+              <p className="flex h-fit min-h-fit w-1/3 flex-col items-center justify-center self-center text-center">
                 0.
               </p>
-              <p className="flex h-fit min-h-fit w-1/3 flex-col items-center justify-center text-center">
+              <p className="flex h-fit min-h-fit w-1/3 flex-col items-center justify-center self-center text-center">
                 Blank
               </p>
-              <p className="flex h-fit min-h-fit w-1/3 flex-col items-center justify-center  text-center">
-                Halvah jelly-o jelly-o bonbon pastry. Candy chupa chups
-                shortbread chocolate cake chocolate bar. Danish sweet roll tart
-                jelly beans gingerbread cotton candy dessert.
+              <p className="flex h-fit min-h-fit w-1/3 flex-col items-center justify-center  self-center text-center">
+                This is a blank template and it creates a blank prescription
               </p>
             </div>
             {templates?.map((template, index) => {
@@ -89,7 +87,7 @@ const NewAppointmentsTable: React.FunctionComponent = () => {
                 return (
                   <div
                     key={index}
-                    className="flex h-fit w-full cursor-pointer hover:bg-[#F0F0F0]"
+                    className="flex h-fit w-full cursor-pointer border-b border-black hover:bg-[#F0F0F0]"
                     onClick={() => {
                       console.log(attendPatientData);
                       console.log(template.template_id);
@@ -103,13 +101,13 @@ const NewAppointmentsTable: React.FunctionComponent = () => {
                       });
                     }}
                   >
-                    <p className="flex h-fit min-h-fit w-1/3 flex-col items-center justify-center  text-center">
+                    <p className="flex h-fit min-h-fit w-1/3 flex-col items-center justify-center  self-center text-center">
                       {index + 1}.
                     </p>
-                    <p className="flex h-fit min-h-fit w-1/3 flex-col items-center justify-center  text-center">
+                    <p className="flex h-fit min-h-fit w-1/3 flex-col items-center justify-center  self-center text-center">
                       {template.template_id}
                     </p>
-                    <p className="flex h-fit min-h-fit w-1/3 flex-col items-center justify-center  text-center">
+                    <p className="flex h-fit min-h-fit w-1/3 flex-col items-center justify-center  self-center text-center">
                       {template.description}
                     </p>
                   </div>
