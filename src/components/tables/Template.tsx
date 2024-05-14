@@ -172,13 +172,37 @@ const Template: React.FunctionComponent = () => {
                         <FaPen
                           className="h-4 w-4 text-[#4690C7]"
                           onClick={() => {
+                            if (
+                              medicineList.medicine !== "" ||
+                              medicineList.repeatitions !== ""
+                            ) {
+                              const arr = templateData.template_data;
+                              arr.push(medicineList);
+                              setTemplateData({
+                                ...templateData,
+                                template_data: arr,
+                              });
+                              const element = templateData.template_data.find(
+                                (ele) =>
+                                  ele.id === item.id &&
+                                  ele.medicine === item.medicine &&
+                                  ele.repeatitions === item.repeatitions,
+                              );
+                              element ? setMedicineList(element) : null;
+                            }
                             const element = templateData.template_data.find(
-                              (ele) => ele.id === item.id,
+                              (ele) =>
+                                ele.id === item.id &&
+                                ele.medicine === item.medicine &&
+                                ele.repeatitions === item.repeatitions,
                             );
                             element ? setMedicineList(element) : null;
                             const updatedMedicineList =
                               templateData.template_data.filter(
-                                (ele) => ele.id !== item.id,
+                                (ele) =>
+                                  ele.id !== item.id ||
+                                  ele.medicine !== item.medicine ||
+                                  ele.repeatitions !== item.repeatitions,
                               );
                             setTemplateData({
                               ...templateData,

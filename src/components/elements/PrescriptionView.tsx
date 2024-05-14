@@ -48,6 +48,7 @@ const PrescriptionViewComponent: React.FunctionComponent<
       tests: string;
       symptom: string;
       bp: string;
+      reports: string;
       diagnosis: string;
       weight: string;
       note: string;
@@ -130,6 +131,7 @@ const PrescriptionViewComponent: React.FunctionComponent<
         patient: patientData,
         prescription_data: {
           bp: data.bp,
+          reports: data.reports as string,
           diagnosis: data.diagnosis,
           medicine: arr,
           note: data.note as string,
@@ -145,7 +147,7 @@ const PrescriptionViewComponent: React.FunctionComponent<
     return <div>Loading</div>;
   }
   return (
-    <div className="flex h-full w-full flex-col">
+    <div className="flex h-full w-full flex-col font-serif">
       <Modal
         aria-labelledby="unstyled-modal-title"
         aria-describedby="unstyled-modal-description"
@@ -240,6 +242,10 @@ const PrescriptionViewComponent: React.FunctionComponent<
             <p>{data?.diagnosis}</p>
           </div>
           <div className="flex flex-row space-x-[4%]">
+            <p className="font-bold">Reports:</p>
+            <p>{data?.reports}</p>
+          </div>
+          <div className="flex flex-row space-x-[4%]">
             <p className="font-bold">BP:</p>
             <p>{data?.bp}</p>
           </div>
@@ -263,7 +269,7 @@ const PrescriptionViewComponent: React.FunctionComponent<
           </div>
           <div className="flex flex-row space-x-[4%]">
             <p className="font-bold">Note:</p>
-            <p className="text-[#7E7E7E]">{data?.note}</p>
+            <p className="">{data?.note}</p>
           </div>
           <div className="flex w-full justify-end pr-[5%]">
             <button

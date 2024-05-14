@@ -32,6 +32,7 @@ interface pdfProps {
     diagnosis: string;
     weight: string;
     note: string;
+    reports: string;
     medicine: {
       medicine: string;
       repeatitions: string;
@@ -135,15 +136,19 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
         </div>
 
         <div className="flex w-full flex-1 flex-row border-t-[.1rem] border-[#958E8E]">
-          <div className="h-full w-[45%] space-y-[3rem] border-r-[.1rem] border-[#958E8E] p-[.5rem]">
-            <div className="flex w-full  flex-row justify-between whitespace-nowrap">
-              <span className="font-bold">Symptopms</span>
-              <span className="">{props.prescription_data.symptom}</span>
-            </div>
-            <div className="flex flex-row justify-between  whitespace-nowrap">
-              <span className="font-bold">Diagnosis</span>
-              <span className="">{props.prescription_data.diagnosis}</span>
-            </div>
+          <div className="h-full w-[30%] space-y-[3rem] border-r-[.1rem] border-[#958E8E] p-[.5rem]">
+            <p className="text-wrap break-all">
+              <span className="mr-1 font-bold">Symptopms</span>
+              {props.prescription_data.symptom}
+            </p>
+            <p className="text-wrap break-all">
+              <span className="mr-1 font-bold">Diagnosis</span>
+              {props.prescription_data.diagnosis}
+            </p>
+            <p className="text-wrap break-all">
+              <span className="mr-1 font-bold">Reports</span>
+              {props.prescription_data.reports}
+            </p>
             <div className="flex w-full flex-row justify-between whitespace-nowrap">
               <span className="font-bold">BP</span>
               <span className="">{props.prescription_data.bp}</span>
@@ -153,7 +158,7 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
               <span className="">{props.prescription_data.weight}KG</span>
             </div>
           </div>
-          <div className="flex h-full w-[55%] flex-col px-[1rem]">
+          <div className="flex h-full w-[70%] flex-col px-[1rem]">
             <div className="flex h-fit w-full flex-col">
               <h2 className="text-lg font-bold">RX</h2>
               <div className="flex h-[25%] w-full flex-col ">

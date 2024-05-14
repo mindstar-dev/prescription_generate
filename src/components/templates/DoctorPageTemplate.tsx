@@ -95,39 +95,39 @@ const DoctorPageTemplate: React.FunctionComponent<IProps> = (props) => {
               </div>
               <p className="text-lg font-medium text-white">Patient List</p>
             </div>
-            <div
+            {/* <div
               className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "reports" ? "bg-[#FCA19F]" : "bg-transparent"} cursor-pointer hover:bg-[#F36562]`}
               onClick={async () => {
                 await router.push("report-view");
               }}
             >
-              <div className="hit ml-10 flex w-14">
-                {/* <Image
-                  src={reports_icon}
-                  alt="Description of the image"
-                  className=" h-10 w-10"
-                /> */}
+              // <div className="hit ml-10 flex w-14">
+              //   <Image
+              //     src={reports_icon}
+              //     alt="Description of the image"
+              //     className=" h-10 w-10"
+              //   />
 
                 <TbReportAnalytics className="h-10 w-10 text-white" />
               </div>
               <p className="text-lg font-medium text-white">Reports</p>
-            </div>
-            <div
+            </div> */}
+            {/* <div
               className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "upload_reports" ? "bg-[#FCA19F]" : "bg-transparent"} cursor-pointer hover:bg-[#F36562]`}
               onClick={async () => {
                 await router.push("report-upload");
               }}
             >
               <div className="hit ml-10 flex w-14">
-                {/* <Image
-                  src={upload_reports_icon}
-                  alt="Description of the image"
-                  className=" h-10 w-10"
-                /> */}
+                // <Image
+                //   src={upload_reports_icon}
+                //   alt="Description of the image"
+                //   className=" h-10 w-10"
+                // />
                 <MdOutlineUploadFile className="h-10 w-10 text-white" />
               </div>
               <p className="text-lg font-medium text-white">Upload Reports</p>
-            </div>
+            </div> */}
             <div
               className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "templates" ? "bg-[#FCA19F]" : "bg-transparent"} cursor-pointer hover:bg-[#F36562]`}
               onClick={async () => {

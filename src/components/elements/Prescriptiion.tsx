@@ -62,6 +62,7 @@ const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
     diagnosis: "",
     weight: "",
     note: "",
+    reports: "",
     test_report: "",
     medicine: [] as {
       medicine: string;
@@ -443,6 +444,22 @@ const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
                   />
                 </div>
               </div>
+              <div className="flex h-[45%] w-[85%] items-center justify-between">
+                <p className="ml-2 w-[14%] text-lg font-bold xl2:w-fit xl2:text-sm">
+                  Reports
+                </p>
+                <textarea
+                  placeholder="Reports(Optional)"
+                  value={prescriptionData.reports}
+                  className="mr-2 h-full w-[80%] flex-grow border-2 border-[#9AA0B9] p-2 focus:outline-[#9AA0B9]"
+                  onChange={(e) => {
+                    setPrescriptionData({
+                      ...prescriptionData,
+                      reports: e.target.value,
+                    });
+                  }}
+                />
+              </div>
             </div>
             <div className="flex h-full w-[15%]">
               <div className="flex w-1/2 cursor-pointer flex-col items-center justify-center">
@@ -484,6 +501,24 @@ const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
                       <FaPen
                         className="h-4 w-4 text-[#4690C7]"
                         onClick={() => {
+                          if (
+                            medicineList.medicine !== "" ||
+                            medicineList.repeatitions !== ""
+                          ) {
+                            const arr = prescriptionData.medicine;
+                            arr.push(medicineList);
+                            setPrescriptionData({
+                              ...prescriptionData,
+                              medicine: arr,
+                            });
+                            const element = prescriptionData.medicine.find(
+                              (ele) =>
+                                ele.id === item.id &&
+                                ele.medicine === item.medicine &&
+                                ele.repeatitions === item.repeatitions,
+                            );
+                            element ? setMedicineList(element) : null;
+                          }
                           const element = prescriptionData.medicine.find(
                             (ele) =>
                               ele.id === item.id &&
@@ -608,7 +643,7 @@ const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
                   multiline
                   maxRows={4}
                   value={prescriptionData.tests}
-                  className="min-w-0 flex-grow"
+                  className="min-w-0 flex-grow font-serif"
                   placeholder="Tests(Optional)"
                   onChange={(e) => {
                     setPrescriptionData({
@@ -626,7 +661,7 @@ const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
                   multiline
                   maxRows={4}
                   value={prescriptionData.note}
-                  className="h-fit min-w-0 flex-grow"
+                  className="h-fit min-w-0 flex-grow font-serif"
                   placeholder="Notes (Optional)"
                   onChange={(e) => {
                     setPrescriptionData({

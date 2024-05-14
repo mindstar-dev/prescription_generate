@@ -81,7 +81,7 @@ const CompounderPageTemplate: React.FunctionComponent<IProps> = (props) => {
               <p className="text-lg font-medium text-white">Patient List</p>
             </div>
 
-            <div
+            {/* <div
               className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "upload_reports" ? "bg-[#FCA19F]" : "bg-transparent"} cursor-pointer hover:bg-[#F36562]`}
               onClick={async () => {
                 await router.push("report-upload");
@@ -93,7 +93,7 @@ const CompounderPageTemplate: React.FunctionComponent<IProps> = (props) => {
                 className="ml-10 h-10 w-10"
               />
               <p className="text-lg font-medium text-white">Upload Reports</p>
-            </div>
+            </div> */}
           </div>
           <div
             className="ml-10 flex cursor-pointer items-center"

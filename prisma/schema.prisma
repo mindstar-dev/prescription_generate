@@ -103,6 +103,7 @@ model VerificationToken {
     symptom String
     bp String
     tests String?
+    reports String?
     diagnosis String
     weight Int
     note String?
