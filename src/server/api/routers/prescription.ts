@@ -32,6 +32,7 @@ const prescriptionInputSchema = z.object({
   weight: z.string({ required_error: "Describe your basic units name" }),
   note: z.string(),
   tests: z.string(),
+  reports: z.string(),
   medicine: z.array(
     z.object({
       medicine: z.string({
@@ -136,6 +137,7 @@ export const prescriptionRouter = createTRPCRouter({
             symptom: input.symptom,
             weight: parseInt(input.weight),
             note: input.note,
+            reports: input.reports,
             prescription_id: input.prescription_id,
             tests: input.tests,
           },
