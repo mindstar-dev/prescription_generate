@@ -75,15 +75,54 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
     );
     pdf.save(`${props.patient?.patient_id}_${date.toISOString()}.pdf`);
   };
+  const handleDownloadPdf = async () => {
+    if (!ref.current) {
+      return;
+    }
+
+    // Increase the resolution of the captured canvas
+    const scaleFactor = 4; // You can adjust this value for higher resolution
+    const canvas = await html2canvas(ref.current, {
+      scale: scaleFactor,
+    });
+
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF("p", "px", "a4", true);
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+    const imgWidth = canvas.width / scaleFactor; // Adjusted width based on scale factor
+    const imgHeight = canvas.height / scaleFactor; // Adjusted height based on scale factor
+    const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+    const imgX = (pdfWidth - imgWidth * ratio) / 2;
+    const imgY = 0;
+    pdf.addImage(
+      imgData,
+      "PNG",
+      imgX,
+      imgY,
+      imgWidth * ratio,
+      imgHeight * ratio,
+    );
+    pdf.autoPrint();
+    window.open(pdf.output("bloburl"), "_blank");
+  };
 
   return (
     <div className="flex h-fit w-fit flex-col items-center justify-center">
-      <button
-        onClick={handleGeneratePdf}
-        className="mb-4 h-8 w-fit min-w-16 self-end bg-[#F36562] px-2 text-white"
-      >
-        Download
-      </button>
+      <div className="flex gap-x-4 self-end">
+        <button
+          onClick={handleGeneratePdf}
+          className="mb-4 h-8 w-fit min-w-16 self-end bg-[#F36562] px-2 text-white"
+        >
+          Download
+        </button>
+        <button
+          onClick={handleDownloadPdf}
+          className="mb-4 h-8 w-fit min-w-16 self-end bg-[#F36562] px-2 text-white"
+        >
+          Print
+        </button>
+      </div>
       <div
         className="flex h-[841px] w-[595px] flex-col  bg-white"
         id="pdfContainer"

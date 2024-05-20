@@ -56,7 +56,7 @@ const NewAppointmentsTable: React.FunctionComponent = () => {
           {/* add code for popup to select templates */}
           <div className="flex h-full w-full flex-col overflow-y-scroll pb-2 pl-1">
             <div
-              className="flex h-fit min-h-fit w-full cursor-pointer border-b border-black hover:bg-[#F0F0F0]"
+              className="flex h-fit min-h-fit w-full cursor-pointer gap-x-2 border-b border-black hover:bg-[#F0F0F0]"
               onClick={() => {
                 router.push({
                   pathname: "patient-prescription",
@@ -87,7 +87,7 @@ const NewAppointmentsTable: React.FunctionComponent = () => {
                 return (
                   <div
                     key={index}
-                    className="flex h-fit w-full cursor-pointer border-b border-black hover:bg-[#F0F0F0]"
+                    className="flex h-fit w-full cursor-pointer gap-x-2 border-b border-black hover:bg-[#F0F0F0]"
                     onClick={() => {
                       console.log(attendPatientData);
                       console.log(template.template_id);
