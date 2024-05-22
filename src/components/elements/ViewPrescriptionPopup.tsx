@@ -108,7 +108,7 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
   };
 
   return (
-    <div className="flex h-fit w-fit flex-col items-center justify-center">
+    <div className="flex h-fit w-fit flex-col items-center justify-center overflow-y-scroll">
       <div className="flex gap-x-4 self-end">
         <button
           onClick={handleGeneratePdf}

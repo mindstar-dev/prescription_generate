@@ -120,9 +120,7 @@ const NewAppointmentsTable: React.FunctionComponent = () => {
       <Heading
         SecondHeading1={"New Appointment"}
         SecondHeading2={"List"}
-        text={
-          "Lorem ipsum dolor amet consectetur adipisicing eliteiuim sete eiusmod tempor incididunt ut labore etnalom dolore magna aliqua udiminimate veniam quis norud."
-        }
+        text={""}
       />
       <div className="flex h-[5%] justify-start space-x-2">
         <input
@@ -170,7 +168,8 @@ const NewAppointmentsTable: React.FunctionComponent = () => {
                     .includes(searchData.toLocaleLowerCase()) ||
                   item.last_name
                     .toLocaleLowerCase()
-                    .includes(searchData.toLocaleLowerCase()),
+                    .includes(searchData.toLocaleLowerCase()) ||
+                  item.contact_number.toString().includes(searchData),
               )
               .map((item, index) => (
                 <div
@@ -217,7 +216,7 @@ const NewAppointmentsTable: React.FunctionComponent = () => {
                       ATTEND
                     </button>
 
-                    <button
+                    {/* <button
                       className="h-[41px] w-[95px] bg-[#FCA19F] hover:bg-[#F36562]"
                       onClick={() => {
                         router.push({
@@ -229,7 +228,7 @@ const NewAppointmentsTable: React.FunctionComponent = () => {
                       }}
                     >
                       REPORT
-                    </button>
+                    </button> */}
                   </div>
                 </div>
               ))}

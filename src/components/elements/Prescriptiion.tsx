@@ -39,9 +39,12 @@ const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
     template_id: template_id as string,
   });
   const { data: previousPrescriptions } =
-    api.prescription.get_by_patient_id.useQuery({
-      patient_id: patient_id as string,
-    });
+    api.prescription.get_by_patient_id.useQuery(
+      {
+        patient_id: patient_id as string,
+      },
+      { refetchInterval: 2000 },
+    );
   const {
     data: previousPrescriptionData,
     isLoading: isPreviousPrescriptionDataLoading,
@@ -325,7 +328,7 @@ const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
         aria-describedby="unstyled-modal-description"
         open={open}
         onClose={handleClose}
-        className="flex  items-center justify-center"
+        className="flex   justify-center overflow-x-scroll overflow-y-scroll"
       >
         <PrescipttionPopup
           patient={patient}
