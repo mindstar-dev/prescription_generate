@@ -139,7 +139,7 @@ const PatientListTable: React.FunctionComponent = () => {
                   </button>
                   <button
                     className="h-[41px] w-[95px] bg-[#FCA19F] hover:bg-[#F36562]"
-                    onClick={async () => {
+                    onClick={() => {
                       // router.push({
                       //   pathname: "report-view",
                       //   query: {
