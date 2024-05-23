@@ -135,8 +135,8 @@ export const patientRouter = createTRPCRouter({
 
       return await ctx.db.$transaction([
         ...testReportArray,
-        patientPrescription,
         patientPrescriptionData,
+        patientPrescription,
         patient,
       ]);
     }),
