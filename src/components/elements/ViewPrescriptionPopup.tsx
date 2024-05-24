@@ -177,7 +177,7 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
         <div className="flex w-full flex-1 flex-row border-t-[.1rem] border-[#958E8E]">
           <div className="h-full w-[30%] space-y-[3rem] border-r-[.1rem] border-[#958E8E] p-[.5rem]">
             <p className="text-wrap break-all">
-              <span className="mr-1 font-bold">Symptopms</span>
+              <span className="mr-1 font-bold">Symptoms</span>
               {props.prescription_data.symptom}
             </p>
             <p className="text-wrap break-all">
