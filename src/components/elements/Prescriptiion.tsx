@@ -380,8 +380,7 @@ const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
                   <p className="w-[20%] text-lg font-bold xl2:w-fit xl2:text-sm">
                     Symptoms
                   </p>
-                  <input
-                    type="text"
+                  <textarea
                     placeholder="Enter Symptoms"
                     className="m-2 h-full w-[70%] border-2 border-[#9AA0B9] p-2 focus:outline-[#9AA0B9]"
                     value={prescriptionData.symptom}
@@ -416,8 +415,7 @@ const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
                   <p className="w-[20%] text-lg font-bold xl2:w-fit xl2:text-sm">
                     Diagnosis
                   </p>
-                  <input
-                    type="text"
+                  <textarea
                     placeholder="Enter Diagnosis"
                     value={prescriptionData.diagnosis}
                     className="m-2 h-full w-[70%] border-2 border-[#9AA0B9] p-2 focus:outline-[#9AA0B9]"

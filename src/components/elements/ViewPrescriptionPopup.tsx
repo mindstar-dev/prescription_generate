@@ -106,6 +106,10 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
     pdf.autoPrint();
     window.open(pdf.output("bloburl"), "_blank");
   };
+  const formatTextWithLineBreaks = (text: string) => {
+    if (!text) return "";
+    return text.replace(/\n/g, "<br>");
+  };
 
   return (
     <div className="flex h-[400px] flex-col items-center justify-center self-center">
@@ -125,7 +129,7 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
       </div>
       <div className="flex h-full w-fit flex-col items-center justify-center self-center overflow-y-scroll">
         <div
-          className="flex h-[630px] min-h-[630px] w-[419.766px] flex-col  bg-white"
+          className="flex h-[630px] max-h-[630px] min-h-[630px] w-[419.766px] flex-col  bg-white pb-[72px]"
           id="pdfContainer"
           ref={ref}
         >
@@ -139,8 +143,8 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
             <span className="whitespace-nowrap text-sm">Address & Contact</span>
           </div>
         </div> */}
-          <div className="mt-[144px] flex h-fit w-full flex-row flex-wrap items-center justify-between bg-[#F0F0F0] px-[2rem]">
-            <div className="flex h-full w-[25%] flex-col justify-end ">
+          <div className="mt-[144px] flex h-fit min-h-[72px] w-full flex-row flex-wrap items-center justify-between bg-[#F0F0F0] px-[2rem]">
+            <div className="flex h-full w-[25%] flex-col justify-start ">
               <div className="flex flex-row  whitespace-nowrap text-sm">
                 <span className="mr-2 font-bold">P-ID: </span>
                 <span>{props.patient?.patient_id}</span>
@@ -151,10 +155,10 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
                   {props.patient?.first_name} {props.patient?.last_name}
                 </span>
               </div>
-              <div className="flex flex-row  whitespace-nowrap text-sm">
+              {/* <div className="flex flex-row  whitespace-nowrap text-sm">
                 <span className="mb-4 mr-2 font-bold">Age: </span>
                 <span>{props.patient?.age}</span>
-              </div>
+              </div> */}
             </div>
             <div className="justify flex h-full w-[25%] flex-col ">
               <div className="flex flex-row space-x-[1rem] whitespace-nowrap text-sm">
@@ -176,22 +180,41 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
           </div>
 
           <div className="flex w-full flex-1 flex-row border-t-[.1rem] border-[#958E8E]">
-            <div className="h-full w-[30%] space-y-[3rem] border-r-[.1rem] border-[#958E8E] p-[.5rem] text-sm">
+            <div className="h-full w-[30%] space-y-[0.5rem] border-r-[.1rem] border-[#958E8E] p-[.5rem] text-sm">
               <p className="text-wrap break-all">
                 <span className="mr-1 font-bold">Symptoms</span>
-                {props.prescription_data.symptom}
+                {/* {props.prescription_data.symptom} */}
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: formatTextWithLineBreaks(
+                      props.prescription_data.symptom,
+                    ),
+                  }}
+                ></span>
               </p>
               <p className="text-wrap break-all">
                 <span className="mr-1 font-bold">Diagnosis</span>
-                {props.prescription_data.diagnosis}
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: formatTextWithLineBreaks(
+                      props.prescription_data.diagnosis,
+                    ),
+                  }}
+                ></span>
               </p>
               <p className="text-wrap break-all">
                 <span className="mr-1 font-bold">Reports</span>
-                {props.prescription_data.reports}
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: formatTextWithLineBreaks(
+                      props.prescription_data.reports,
+                    ),
+                  }}
+                ></span>
               </p>
               <div className="flex w-full flex-row justify-between whitespace-nowrap">
                 <span className="font-bold">BP</span>
-                <span className="">{props.prescription_data.bp}</span>
+                <span className="">{props.prescription_data.bp} mm Hg</span>
               </div>
               <div className="flex w-full flex-row justify-between whitespace-nowrap">
                 <span className="font-bold">Weight</span>
@@ -217,13 +240,25 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
               </div>
               <div className={`mt-4 flex h-fit min-h-[108px] w-full flex-col`}>
                 <h2 className="text-md font-bold">Test To Do</h2>
-                <div className="flex h-fit w-[80%] flex-col justify-between">
-                  {props.prescription_data.tests}
+                <div className="flex h-fit w-[80%] flex-col">
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: formatTextWithLineBreaks(
+                        props.prescription_data.tests,
+                      ),
+                    }}
+                  ></span>
                 </div>
               </div>
               <div className="flex h-fit w-full flex-col">
                 <h2 className="text-md font-bold">Note</h2>
-                <div>{props.prescription_data.note}</div>
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: formatTextWithLineBreaks(
+                      props.prescription_data.note,
+                    ),
+                  }}
+                ></span>
               </div>
             </div>
           </div>
