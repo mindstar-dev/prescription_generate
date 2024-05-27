@@ -57,7 +57,7 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
     });
 
     const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF("p", "px", "a4", true);
+    const pdf = new jsPDF("p", "px", "a5", true);
     const pdfWidth = pdf.internal.pageSize.getWidth();
     const pdfHeight = pdf.internal.pageSize.getHeight();
     const imgWidth = canvas.width / scaleFactor; // Adjusted width based on scale factor
