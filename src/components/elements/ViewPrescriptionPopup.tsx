@@ -124,11 +124,11 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
         </button>
       </div>
       <div
-        className="flex h-[841px] w-[595px] flex-col  bg-white"
+        className="flex h-[630px] w-[417.6px] flex-col  bg-white"
         id="pdfContainer"
         ref={ref}
       >
-        <div className="flex h-[14%] w-full flex-row items-center justify-between bg-[#9AA0B9] px-[2rem]">
+        {/* <div className="flex h-[14%] w-full flex-row items-center justify-between bg-[#9AA0B9] px-[2rem]">
           <div className="h-[40%] w-[10%]">
             <Image src={img} className="h-full w-full text-white" alt="" />
           </div>
@@ -137,8 +137,8 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
             <span className="whitespace-nowrap text-sm">Qualification</span>
             <span className="whitespace-nowrap text-sm">Address & Contact</span>
           </div>
-        </div>
-        <div className="flex h-fit w-full flex-row flex-wrap items-center justify-between bg-[#F0F0F0] px-[2rem]">
+        </div> */}
+        <div className="mt-[144px] flex h-fit w-full flex-row flex-wrap items-center justify-between bg-[#F0F0F0] px-[2rem]">
           <div className="flex h-full w-[25%] flex-col justify-end ">
             <div className="flex flex-row  whitespace-nowrap text-sm">
               <span className="mr-2 font-bold">P-ID: </span>
@@ -175,7 +175,7 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
         </div>
 
         <div className="flex w-full flex-1 flex-row border-t-[.1rem] border-[#958E8E]">
-          <div className="h-full w-[30%] space-y-[3rem] border-r-[.1rem] border-[#958E8E] p-[.5rem]">
+          <div className="h-full w-[30%] space-y-[3rem] border-r-[.1rem] border-[#958E8E] p-[.5rem] text-sm">
             <p className="text-wrap break-all">
               <span className="mr-1 font-bold">Symptoms</span>
               {props.prescription_data.symptom}
@@ -199,8 +199,8 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
           </div>
           <div className="flex h-full w-[70%] flex-col px-[1rem]">
             <div className="flex h-fit w-full flex-col">
-              <h2 className="text-lg font-bold">RX</h2>
-              <div className="flex h-[25%] w-full flex-col ">
+              <h2 className="text-md font-bold">RX</h2>
+              <div className="flex h-[25%] w-full flex-col text-sm">
                 {props.prescription_data.medicine.map((item, index) => {
                   return (
                     <div
@@ -214,14 +214,14 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
                 })}
               </div>
             </div>
-            <div className="flex h-fit w-full flex-col">
-              <h2 className="text-lg font-bold">Test To Do</h2>
+            <div className={`mt-4 flex h-fit min-h-[108px] w-full flex-col`}>
+              <h2 className="text-md font-bold">Test To Do</h2>
               <div className="flex h-fit w-[80%] flex-col justify-between">
                 {props.prescription_data.tests}
               </div>
             </div>
             <div className="flex h-fit w-full flex-col">
-              <h2 className="text-lg font-bold">Note</h2>
+              <h2 className="text-md font-bold">Note</h2>
               <div>{props.prescription_data.note}</div>
             </div>
           </div>
