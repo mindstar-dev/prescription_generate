@@ -182,7 +182,7 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
           <div className="flex w-full flex-1 flex-row border-t-[.1rem] border-[#958E8E]">
             <div className="h-full w-[30%] space-y-[0.5rem] border-r-[.1rem] border-[#958E8E] p-[.5rem] text-sm">
               <p className="text-wrap break-all">
-                <span className="mr-1 font-bold">Symptoms</span>
+                <span className="mr-1 font-bold">Symptoms:</span>
                 {/* {props.prescription_data.symptom} */}
                 <span
                   dangerouslySetInnerHTML={{
@@ -193,7 +193,7 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
                 ></span>
               </p>
               <p className="text-wrap break-all">
-                <span className="mr-1 font-bold">Diagnosis</span>
+                <span className="mr-1 font-bold">Diagnosis:</span>
                 <span
                   dangerouslySetInnerHTML={{
                     __html: formatTextWithLineBreaks(
@@ -203,7 +203,7 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
                 ></span>
               </p>
               <p className="text-wrap break-all">
-                <span className="mr-1 font-bold">Reports</span>
+                <span className="mr-1 font-bold">Reports:</span>
                 <span
                   dangerouslySetInnerHTML={{
                     __html: formatTextWithLineBreaks(
@@ -239,7 +239,7 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
                 </div>
               </div>
               <div className={`mt-4 flex h-fit min-h-[108px] w-full flex-col`}>
-                <h2 className="text-md font-bold">Test To Do</h2>
+                <h2 className="text-md font-bold">Test To Do:</h2>
                 <div className="flex h-fit w-[80%] flex-col">
                   <span
                     dangerouslySetInnerHTML={{
@@ -251,7 +251,7 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
                 </div>
               </div>
               <div className="flex h-fit w-full flex-col">
-                <h2 className="text-md font-bold">Note</h2>
+                <h2 className="text-md font-bold">Note:</h2>
                 <span
                   dangerouslySetInnerHTML={{
                     __html: formatTextWithLineBreaks(
