@@ -112,7 +112,7 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
   };
 
   return (
-    <div className="flex h-[400px] flex-col items-center justify-center self-center">
+    <div className="flex h-[440px] flex-col items-center justify-center self-center">
       <div className="flex gap-x-4">
         <button
           onClick={handleGeneratePdf}
@@ -129,7 +129,7 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
       </div>
       <div className="flex h-full w-fit flex-col items-center justify-center self-center overflow-y-scroll">
         <div
-          className="flex h-[630px] max-h-[630px] min-h-[630px] w-[419.766px] flex-col  bg-white pb-[72px]"
+          className="flex h-[630px] max-h-[630px] min-h-[630px] w-[419.766px] flex-col  bg-white pb-[72px] pt-[122px]"
           id="pdfContainer"
           ref={ref}
         >
@@ -143,7 +143,7 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
             <span className="whitespace-nowrap text-sm">Address & Contact</span>
           </div>
         </div> */}
-          <div className="mt-[144px] flex h-fit min-h-[72px] w-full flex-row flex-wrap items-center justify-between bg-[#F0F0F0] px-[2rem]">
+          <div className="flex h-fit w-full flex-row flex-wrap items-center justify-between px-[2rem] pb-[8px]">
             <div className="flex h-full w-[25%] flex-col justify-start ">
               <div className="flex flex-row  whitespace-nowrap text-sm">
                 <span className="mr-2 font-bold">P-ID: </span>
