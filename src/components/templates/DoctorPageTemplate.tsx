@@ -37,7 +37,7 @@ const DoctorPageTemplate: React.FunctionComponent<IProps> = (props) => {
   return (
     <>
       <title></title>
-      <main className="flex h-screen w-screen flex-nowrap">
+      <main className=" flex h-screen w-screen flex-nowrap">
         <div className="flex h-full w-1/5 flex-col justify-evenly bg-[#3D4460]">
           <Image
             src={logo}
@@ -46,54 +46,58 @@ const DoctorPageTemplate: React.FunctionComponent<IProps> = (props) => {
           />
           <div className="flex h-[70%] w-full flex-col">
             <div
-              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "patient_registration" ? "bg-[#FCA19F]" : "bg-transparent"} cursor-pointer hover:bg-[#F36562]`}
+              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "patient_registration" ? "bg-[#FCA19F]" : "bg-transparent"} tablet:gap-x-[6px] cursor-pointer hover:bg-[#F36562]`}
               onClick={async () => {
                 await router.push("patient-registration-form");
               }}
             >
-              <div className="hit ml-[2.7rem] flex w-14">
+              <div className="hit tablet:ml-4 tablet:w-fit ml-[2.7rem] flex w-14">
                 {/* <Image
                   src={patient_registration_icon}
                   alt="Description of the image"
                   className=" h-10 w-10"
                 /> */}
-                <LuClipboardSignature className="h-10 w-10 text-white" />
+                <LuClipboardSignature className="tablet:h-8 tablet:w-8 h-10 w-10 text-white" />
               </div>
-              <p className="text-lg font-medium text-white">
+              <p className="tablet:text-sm text-lg font-medium text-white">
                 Patient Registration
               </p>
             </div>
             <div
-              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "appointments" ? "bg-[#FCA19F]" : "bg-transparent"} cursor-pointer hover:bg-[#F36562]`}
+              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "appointments" ? "bg-[#FCA19F]" : "bg-transparent"} tablet:gap-x-[6px] cursor-pointer hover:bg-[#F36562]`}
               onClick={async () => {
                 await router.push("new-appointments");
               }}
             >
-              <div className="hit ml-[2.7rem] flex w-14">
+              <div className="hit tablet:ml-4 tablet:w-fit   ml-[2.7rem] flex w-14">
                 {/* <Image
                   src={appointments_icon}
                   alt="Description of the image"
                   className=" h-10 w-10"
                 /> */}
-                <LuClipboardList className="h-10 w-10 text-white" />
+                <LuClipboardList className="tablet:h-8 tablet:w-8 h-10 w-10 text-white" />
               </div>
-              <p className="text-lg font-medium text-white">Appointments</p>
+              <p className="tablet:text-sm text-lg font-medium text-white">
+                Appointments
+              </p>
             </div>
             <div
-              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "patient_list" ? "bg-[#FCA19F]" : "bg-transparent"} cursor-pointer hover:bg-[#F36562]`}
+              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "patient_list" ? "bg-[#FCA19F]" : "bg-transparent"} tablet:gap-x-[6px] cursor-pointer hover:bg-[#F36562]`}
               onClick={async () => {
                 await router.push("patient-lists");
               }}
             >
-              <div className="hit ml-10 flex w-14">
+              <div className="hit tablet:ml-4 tablet:w-fit ml-10  flex w-14">
                 {/* <Image
                   src={patient_list_icon}
                   alt="Description of the image"
                   className=" h-10 w-10"
                 /> */}
-                <PiUserList className="h-10 w-10 pl-[.2rem] text-white" />
+                <PiUserList className="tablet:h-8 tablet:w-8 tablet:pl-0 h-10 w-10  pl-[.2rem] text-white" />
               </div>
-              <p className="text-lg font-medium text-white">Patient List</p>
+              <p className="tablet:text-sm text-lg font-medium text-white">
+                Patient List
+              </p>
             </div>
             {/* <div
               className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "reports" ? "bg-[#FCA19F]" : "bg-transparent"} cursor-pointer hover:bg-[#F36562]`}
@@ -129,30 +133,34 @@ const DoctorPageTemplate: React.FunctionComponent<IProps> = (props) => {
               <p className="text-lg font-medium text-white">Upload Reports</p>
             </div> */}
             <div
-              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "templates" ? "bg-[#FCA19F]" : "bg-transparent"} cursor-pointer hover:bg-[#F36562]`}
+              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "templates" ? "bg-[#FCA19F]" : "bg-transparent"} tablet:gap-x-[6px] cursor-pointer hover:bg-[#F36562]`}
               onClick={async () => {
                 await router.push("template-list");
               }}
             >
-              <div className="hit ml-10 flex w-14">
+              <div className="hit tablet:ml-4 tablet:w-fit ml-10  flex w-14">
                 {/* <Image
                   src={templates_icon}
                   alt="Description of the image"
                   className=" h-8 w-8"
                 /> */}
-                <MdOutlineDashboard className="h-10 w-10 text-white" />
+                <MdOutlineDashboard className="tablet:h-8 tablet:w-8 h-10 w-10 text-white" />
               </div>
-              <p className="text-lg font-medium text-white">Templates</p>
+              <p className="tablet:text-sm text-lg font-medium text-white">
+                Templates
+              </p>
             </div>
           </div>
           <div
-            className="ml-10 flex cursor-pointer items-center"
+            className="tablet:ml-4 ml-10 flex cursor-pointer  items-center"
             onClick={async () => {
               await signOut({ redirect: true, callbackUrl: "/doctor-login" });
             }}
           >
-            <FaSignOutAlt className="mr-2 h-10 w-10 text-white" />
-            <p className="text-lg font-medium text-white">Sign Out</p>
+            <FaSignOutAlt className="tablet:h-8 tablet:w-8 mr-2 h-10 w-10 text-white" />
+            <p className="tablet:text-sm text-lg font-medium text-white">
+              Sign Out
+            </p>
           </div>
         </div>
         <div className="flex h-screen w-4/5 flex-wrap items-center justify-center overflow-y-scroll">

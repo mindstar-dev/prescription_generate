@@ -110,22 +110,21 @@ const PatientListTable: React.FunctionComponent = () => {
                 key={index}
                 className={`${index % 2 !== 0 ? "bg-[#F9F1F1]" : "bg-[#F0F0F0]"} flex h-[86px]`}
               >
-                <div className="flex  w-[15%] items-center justify-center">
+                <div className="tablet:text-sm  flex w-[15%] items-center justify-center text-center">
                   {item.patient_id}
                 </div>
-                <div className="flex  w-[20%] items-center justify-center">
-                  {item.first_name}
-                  {item.last_name}
+                <div className="tablet:text-sm  flex w-[20%] items-center justify-center text-center">
+                  {item.first_name} {item.last_name}
                 </div>
-                <div className="flex w-[15%] items-center justify-center">
+                <div className="tablet:text-sm flex w-[15%] items-center justify-center text-center">
                   {item.age}
                 </div>
-                <div className="flex  w-[20%] items-center justify-center">
+                <div className="tablet:text-sm  flex w-[20%] items-center justify-center text-center">
                   {item.contact_number.toString()}
                 </div>
-                <div className="flex w-[30%] items-center justify-center space-x-4">
+                <div className="tablet:text-sm tablet:space-x-2 flex w-[30%] items-center justify-center space-x-4">
                   <button
-                    className="h-[41px] w-[95px] bg-[#FCA19F] hover:bg-[#F36562]"
+                    className="tablet:h-[30px] tablet:w-[70px] h-[41px] w-[95px] bg-[#FCA19F] hover:bg-[#F36562]"
                     onClick={() => {
                       router.push({
                         pathname: "patient-details",
@@ -138,7 +137,7 @@ const PatientListTable: React.FunctionComponent = () => {
                     DETAILS
                   </button>
                   <button
-                    className="h-[41px] w-[95px] bg-[#FCA19F] hover:bg-[#F36562]"
+                    className="tablet:h-[30px] tablet:w-[70px] h-[41px] w-[95px] bg-[#FCA19F] hover:bg-[#F36562]"
                     onClick={() => {
                       // router.push({
                       //   pathname: "report-view",

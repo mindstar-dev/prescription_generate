@@ -165,11 +165,15 @@ const Template: React.FunctionComponent = () => {
     }
   };
   return (
-    <div className="h-full w-full">
+    <div className="h-full w-full overflow-x-hidden">
       <div className="relative h-fit w-full">
-        <TriggerButton type="button" onClick={handleOpen}>
+        <button
+          type="button"
+          onClick={handleOpen}
+          className="absolute left-[83.7%] top-[5%] h-[41px] w-[182px] rounded-[8px] bg-[#f36562] text-white tablet:left-[78%] tablet:h-fit tablet:w-[110px]"
+        >
           Add New Template
-        </TriggerButton>
+        </button>
         <Modal
           aria-labelledby="unstyled-modal-title"
           aria-describedby="unstyled-modal-description"
@@ -413,7 +417,7 @@ const Template: React.FunctionComponent = () => {
             .map((item, index) => (
               <div
                 key={index}
-                className={`${index % 2 !== 0 ? "bg-[#F9F1F1]" : "bg-[#F0F0F0]"} flex h-[86px] w-full flex-row items-center justify-evenly`}
+                className={`${index % 2 !== 0 ? "bg-[#F9F1F1]" : "bg-[#F0F0F0]"} flex h-[86px] w-full flex-row items-center justify-evenly tablet:text-center tablet:text-sm`}
               >
                 <div className="flex w-1/3 justify-center">
                   {item.template_id}
@@ -561,11 +565,6 @@ const TriggerButton = styled("button")(
     border: 1px solid ${theme.palette.mode === "dark" ? grey[700] : grey[200]};
     color: ${theme.palette.mode === "dark" ? grey[200] : grey[900]};
     box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-
-    // &:hover {
-    //   background: ${theme.palette.mode === "dark" ? grey[800] : grey[50]};
-    //   border-color: ${theme.palette.mode === "dark" ? grey[600] : grey[300]};
-    // }
 
     &:active {
       background: ${theme.palette.mode === "dark" ? grey[700] : grey[100]};

@@ -12,7 +12,7 @@ export default {
     screens: {
       xl2: { max: "1299px" },
       laptop: "1024px",
-
+      tablet: { max: "820px", min: "768px" },
       desktop: "1280px",
     },
   },
