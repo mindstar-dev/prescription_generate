@@ -87,8 +87,10 @@ const Template: React.FunctionComponent = () => {
   };
   const create_template = api.template.create_template.useMutation({
     onError: (err, context) => {
-      alert("Error occured");
-      console.log(err.data);
+      setErrorPopup({
+        state: true,
+        message: `Error occured while creating the template ${err.message}`,
+      });
     },
     onSuccess: () => {
       handleClose();
@@ -216,11 +218,11 @@ const Template: React.FunctionComponent = () => {
                   {templateData.template_data.map((item, index) => {
                     return (
                       <div
-                        className="my-2 flex w-3/5 items-center justify-between text-xl"
+                        className="my-2 flex w-full items-center justify-between text-xl"
                         key={index}
                       >
-                        <p className="w-2/4">{item.medicine}</p>
-                        <p className="w-1/4">{item.repeatitions}</p>
+                        <p className="w-2/5">{item.medicine}</p>
+                        <p className="w-2/5">{item.repeatitions}</p>
                         <FaPen
                           className="h-4 w-4 text-[#4690C7]"
                           onClick={() => {
@@ -267,7 +269,10 @@ const Template: React.FunctionComponent = () => {
                           onClick={() => {
                             const updatedMedicineList =
                               templateData.template_data.filter(
-                                (ele) => ele.id !== item.id,
+                                (ele) =>
+                                  ele.id !== item.id ||
+                                  ele.medicine !== item.medicine ||
+                                  ele.repeatitions !== item.repeatitions,
                               );
                             setTemplateData({
                               ...templateData,
@@ -419,10 +424,10 @@ const Template: React.FunctionComponent = () => {
                 key={index}
                 className={`${index % 2 !== 0 ? "bg-[#F9F1F1]" : "bg-[#F0F0F0]"} flex h-[86px] w-full flex-row items-center justify-evenly tablet:text-center tablet:text-sm`}
               >
-                <div className="flex w-1/3 justify-center">
+                <div className="flex w-1/3 justify-center  text-center">
                   {item.template_id}
                 </div>
-                <div className="flex w-1/3 justify-center">
+                <div className="flex w-1/3 justify-center text-center">
                   {item.description}
                 </div>
                 <div className="flex w-1/3 justify-center gap-x-4 text-[#F36562]">
