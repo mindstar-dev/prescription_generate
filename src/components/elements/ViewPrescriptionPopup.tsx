@@ -87,7 +87,7 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
     });
 
     const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF("p", "px", "a5", true);
+    const pdf = new jsPDF("p", "px", "a4", true);
     const pdfWidth = pdf.internal.pageSize.getWidth();
     const pdfHeight = pdf.internal.pageSize.getHeight();
     const imgWidth = canvas.width / scaleFactor; // Adjusted width based on scale factor
@@ -127,23 +127,27 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
           Print
         </button>
       </div>
-      <div className="flex h-full w-fit flex-col items-center justify-center self-center overflow-y-scroll">
+      <div className="flex h-full w-fit flex-col items-center justify-center self-center overflow-y-scroll pt-[400px]">
         <div
-          className="flex h-[630px] max-h-[630px] min-h-[630px] w-[419.766px] flex-col  bg-white pb-[72px] pt-[112px]"
+          className="flex h-[842px] max-h-[842px] min-h-[842px] w-[595px] max-w-full flex-col  bg-white"
           id="pdfContainer"
           ref={ref}
         >
-          {/* <div className="flex h-[14%] w-full flex-row items-center justify-between bg-[#9AA0B9] px-[2rem]">
-          <div className="h-[40%] w-[10%]">
-            <Image src={img} className="h-full w-full text-white" alt="" />
+          <div className="flex h-[20%] w-full flex-row items-center justify-between bg-[#9AA0B9] px-[2rem]">
+            <div className="h-[40%] w-[10%]">
+              <Image src={img} className="h-full w-full text-white" alt="" />
+            </div>
+            <div className="flex h-[65%] w-fit flex-col justify-between text-white">
+              <span className="whitespace-nowrap">
+                Dr. Amitava Bhattacharya
+              </span>
+              <span className="whitespace-nowrap text-sm">Qualification</span>
+              <span className="whitespace-nowrap text-sm">
+                Address & Contact
+              </span>
+            </div>
           </div>
-          <div className="flex h-[65%] w-fit flex-col justify-between text-white">
-            <span className="whitespace-nowrap">Dr. Amitava Bhattacharya</span>
-            <span className="whitespace-nowrap text-sm">Qualification</span>
-            <span className="whitespace-nowrap text-sm">Address & Contact</span>
-          </div>
-        </div> */}
-          <div className="flex h-fit w-full flex-row flex-wrap items-center justify-between pb-[8px] pr-[2rem]">
+          <div className="flex h-fit w-full flex-row flex-wrap items-center justify-between px-[2rem] pb-[8px]">
             <div className="flex h-full w-[25%] flex-col justify-start ">
               <div className="flex flex-row  whitespace-nowrap text-sm">
                 <span className="mr-2 font-bold">P-ID: </span>
