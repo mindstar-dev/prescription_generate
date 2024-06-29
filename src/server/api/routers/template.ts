@@ -61,6 +61,13 @@ export const templateRouter = createTRPCRouter({
     .input(templateInputSchema)
     .mutation(async ({ ctx, input }) => {
       const arr = [];
+      arr.push(
+        ctx.db.templateData.deleteMany({
+          where: {
+            template_id: input.template_id,
+          },
+        }),
+      );
       const template = ctx.db.template.upsert({
         where: {
           template_id: input.template_id,

@@ -137,7 +137,7 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
             <div className="h-[40%] w-[10%]">
               <Image src={img} className="h-full w-full text-white" alt="" />
             </div>
-            <div className="flex h-[65%] w-fit flex-col justify-between text-white">
+            {/* <div className="flex h-[65%] w-fit flex-col justify-between text-white">
               <span className="whitespace-nowrap">
                 Dr. Amitava Bhattacharya
               </span>
@@ -145,7 +145,7 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
               <span className="whitespace-nowrap text-sm">
                 Address & Contact
               </span>
-            </div>
+            </div> */}
           </div>
           <div className="flex h-fit w-full flex-row flex-wrap items-center justify-between px-[2rem] pb-[8px]">
             <div className="flex h-full w-[25%] flex-col justify-start ">
@@ -232,11 +232,13 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
                   {props.prescription_data.medicine.map((item, index) => {
                     return (
                       <div
-                        className="flex w-[80%] flex-row justify-between"
+                        className="flex w-full flex-col justify-between"
                         key={index}
                       >
-                        <span>{item.medicine}</span>
-                        <span>{item.repeatitions}</span>
+                        <div className="flex w-full justify-between">
+                          <div className="w-[45%]">{item.medicine}</div>
+                          <div className="w-[45%]">{item.repeatitions}</div>
+                        </div>
                       </div>
                     );
                   })}

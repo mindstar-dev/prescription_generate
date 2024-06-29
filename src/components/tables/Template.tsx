@@ -17,6 +17,7 @@ const Template: React.FunctionComponent = () => {
     message: "",
   });
   const [searchData, setSearchData] = React.useState("");
+  const [isEditing, setIsEditing] = React.useState(false);
   const date = new Date();
   const { data: templates } = api.template.get_all.useQuery(undefined, {
     refetchInterval: 1000,
@@ -84,6 +85,7 @@ const Template: React.FunctionComponent = () => {
       id: "",
     });
     setOpen(false);
+    setIsEditing(false);
   };
   const create_template = api.template.create_template.useMutation({
     onError: (err, context) => {
@@ -162,6 +164,16 @@ const Template: React.FunctionComponent = () => {
           state: true,
         });
       } else {
+        const exists = templates?.some(
+          (template) => template.template_id === templateData.template_id,
+        );
+        if (exists && !isEditing) {
+          setErrorPopup({
+            message: "A template already exists with same name",
+            state: true,
+          });
+          return;
+        }
         create_template.mutate(templateData);
       }
     }
@@ -321,6 +333,17 @@ const Template: React.FunctionComponent = () => {
                     className="text-[#F36562]"
                     onClick={() => {
                       console.log(medicineList);
+                      if (
+                        medicineList.medicine === "" ||
+                        medicineList.repeatitions === ""
+                      ) {
+                        setErrorPopup({
+                          state: true,
+                          message: "Medicine or repeatitions cant be empty",
+                        });
+
+                        return;
+                      }
                       setTemplateData((prevData) => ({
                         ...prevData,
                         template_data: [
@@ -350,7 +373,6 @@ const Template: React.FunctionComponent = () => {
                   className="h-10 w-[103px] bg-[#F36562]"
                   onClick={() => {
                     console.log(templateData);
-
                     create();
                   }}
                 >
@@ -434,6 +456,7 @@ const Template: React.FunctionComponent = () => {
                   <FaEdit
                     onClick={() => {
                       handleOpen();
+                      setIsEditing(true);
                       const temp_data = templatesData?.filter(
                         (ele) => ele.template_id === item.template_id,
                       );
