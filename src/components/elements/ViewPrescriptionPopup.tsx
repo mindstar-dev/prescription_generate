@@ -133,9 +133,11 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
           id="pdfContainer"
           ref={ref}
         >
-          <div className="flex h-[20%] w-full flex-row items-center justify-between bg-[#9AA0B9] px-[2rem]">
+          <div className="flex h-[20%] w-full flex-row items-center justify-between  px-[2rem]">
+            {" "}
+            {/*bg-[#9AA0B9] */}
             <div className="h-[40%] w-[10%]">
-              <Image src={img} className="h-full w-full text-white" alt="" />
+              {/* <Image src={img} className="h-full w-full text-white" alt="" /> */}
             </div>
             {/* <div className="flex h-[65%] w-fit flex-col justify-between text-white">
               <span className="whitespace-nowrap">
@@ -147,7 +149,7 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
               </span>
             </div> */}
           </div>
-          <div className="flex h-fit w-full flex-row flex-wrap items-center justify-between px-[2rem] pb-[8px]">
+          <div className="flex h-fit w-full flex-row flex-wrap items-center justify-between border-t-[.1rem] border-[#958E8E] px-[2rem] pb-[8px]">
             <div className="flex h-full w-[25%] flex-col justify-start ">
               <div className="flex flex-row  whitespace-nowrap text-sm">
                 <span className="mr-2 font-bold">P-ID: </span>
