@@ -108,7 +108,7 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
   };
   const formatTextWithLineBreaks = (text: string) => {
     if (!text) return "";
-    return text.replace(/\n/g, "<br>");
+    return text.replace(/\n/g, "-<br>");
   };
 
   return (
@@ -237,7 +237,7 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
                         className="flex w-full flex-col justify-between"
                         key={index}
                       >
-                        <div className="flex w-full justify-between">
+                        <div className="mb-2 flex w-full justify-between">
                           <div className="w-[45%]">{item.medicine}</div>
                           <div className="w-[45%]">{item.repeatitions}</div>
                         </div>
