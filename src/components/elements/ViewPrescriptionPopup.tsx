@@ -108,7 +108,7 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
   };
   const formatTextWithLineBreaks = (text: string) => {
     if (!text) return "";
-    return text.replace(/\n/g, "-<br>");
+    return text.replace(/\n/g, "<br>");
   };
 
   return (
