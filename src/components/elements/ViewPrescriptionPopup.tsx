@@ -133,7 +133,7 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
           id="pdfContainer"
           ref={ref}
         >
-          <div className="flex h-[20%] w-full flex-row items-center justify-between  px-[2rem]">
+          <div className="flex h-[22.5%] w-full flex-row items-center justify-between  px-[2rem]">
             {" "}
             {/*bg-[#9AA0B9] */}
             <div className="h-[40%] w-[10%]">
