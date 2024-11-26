@@ -43,7 +43,7 @@ export const patientRouter = createTRPCRouter({
   get_all: protectedProcedure.query(async ({ ctx }) => {
     const patients = await ctx.db.patient.findMany();
     await ctx.db.$disconnect();
-    return patients;
+    return patients.reverse();
   }),
   register_patient: protectedProcedure
     .input(patientSchema)

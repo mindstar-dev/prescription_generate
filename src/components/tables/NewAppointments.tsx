@@ -29,7 +29,7 @@ const NewAppointmentsTable: React.FunctionComponent = () => {
         slots={{ backdrop: StyledBackdrop }}
         className="flex items-center justify-center"
       >
-        <div className="flex h-2/5 w-[30%] flex-col self-center bg-white tablet:w-[85%]">
+        <div className="flex h-4/5 w-4/5 flex-col self-center bg-white tablet:w-[85%]">
           <div className="flex h-fit w-full justify-center text-2xl">
             <p>Select</p>
             <p className="pl-2 text-[#E52727]">Template</p>
