@@ -113,8 +113,10 @@ const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
         note: previousPrescriptionData.prescription.note as string,
         symptom: previousPrescriptionData.prescription.symptom,
         diagnosis: previousPrescriptionData.prescription.diagnosis,
-        bp: previousPrescriptionData.prescription.bp,
-        weight: previousPrescriptionData.prescription.weight.toString(),
+        bp: previousPrescriptionData.prescription.bp as string,
+        weight: previousPrescriptionData.prescription.weight
+          ? previousPrescriptionData.prescription.weight.toString()
+          : "",
       });
 
       // Set initial fetch done to true
@@ -210,9 +212,7 @@ const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
       console.log(prescriptionData.medicine.length);
     } else if (
       prescriptionData.symptom === "" ||
-      prescriptionData.diagnosis === "" ||
-      prescriptionData.weight === "" ||
-      prescriptionData.bp === ""
+      prescriptionData.diagnosis === ""
     ) {
       setProcessingPopup(false);
       setErrorPopup({ type: "prescription_data", state: true });
@@ -270,7 +270,7 @@ const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
           onClick={() => {
             setErrorPopup({ state: false, type: "" });
           }}
-          message={`${errorPopup.type === "id" ? "Patient id is not available please restart the process" : errorPopup.type === "medicine_empty" ? "Please add atleast one medicine in order to continue" : errorPopup.type === "medicine_pending" ? "You have unsaved medicines please save or remove them before continue" : errorPopup.type === "prescription_data" ? "Please enter symptom , diagnosis, bp and weight" : `Error occured contact developers ${errorPopup.type}`}`}
+          message={`${errorPopup.type === "id" ? "Patient id is not available please restart the process" : errorPopup.type === "medicine_empty" ? "Please add atleast one medicine in order to continue" : errorPopup.type === "medicine_pending" ? "You have unsaved medicines please save or remove them before continue" : errorPopup.type === "prescription_data" ? "Please enter symptom , diagnosis, " : `Error occured contact developers ${errorPopup.type}`}`}
         />
       </Modal>
       <Modal
