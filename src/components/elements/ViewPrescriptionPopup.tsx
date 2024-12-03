@@ -149,7 +149,7 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
               </span>
             </div> */}
           </div>
-          <div className="flex h-fit w-full flex-row flex-wrap items-center justify-between border-t-[.1rem] border-[#958E8E] px-[2rem] pb-[8px]">
+          <div className="flex h-fit w-full flex-row flex-wrap items-center justify-between border-t-[.1rem] border-[#958E8E] px-[1rem] pb-[8px]">
             <div className="flex h-full w-[25%] flex-col justify-start ">
               <div className="flex flex-row  whitespace-nowrap text-sm">
                 <span className="mr-2 font-bold">P-ID: </span>
@@ -161,10 +161,10 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
                   {props.patient?.first_name} {props.patient?.last_name}
                 </span>
               </div>
-              {/* <div className="flex flex-row  whitespace-nowrap text-sm">
-                <span className="mb-4 mr-2 font-bold">Age: </span>
+              <div className="flex flex-row  whitespace-nowrap text-sm">
+                <span className="mr-2 font-bold">Age: </span>
                 <span>{props.patient?.age}</span>
-              </div> */}
+              </div>
             </div>
             <div className="justify flex h-full w-[25%] flex-col ">
               <div className="flex flex-row space-x-[1rem] whitespace-nowrap text-sm">
@@ -185,10 +185,10 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
             </div>
           </div>
 
-          <div className="flex w-full flex-1 flex-row border-t-[.1rem] border-[#958E8E]">
-            <div className="h-full w-[30%] space-y-[0.5rem] border-r-[.1rem] border-[#958E8E] p-[.5rem] text-sm">
-              <p className="text-wrap break-all">
-                <span className="mr-1 font-bold">Symptoms:</span>
+          <div className="flex w-full flex-1 flex-col border-t-[.1rem] border-[#958E8E]">
+            <div className="h-fit w-full space-y-[0.5rem] border-b-[.1rem] border-[#958E8E] p-[1rem] text-sm">
+              <p className="space-x-2 text-wrap break-all">
+                <span className="font-bold">Symptoms:</span>
                 {/* {props.prescription_data.symptom} */}
                 <span
                   dangerouslySetInnerHTML={{
@@ -198,8 +198,8 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
                   }}
                 ></span>
               </p>
-              <p className="text-wrap break-all">
-                <span className="mr-1 font-bold">Diagnosis:</span>
+              <p className="space-x-2 text-wrap break-all">
+                <span className="font-bold">Diagnosis:</span>
                 <span
                   dangerouslySetInnerHTML={{
                     __html: formatTextWithLineBreaks(
@@ -218,12 +218,12 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
                   }}
                 ></span>
               </p>
-              <div className="flex w-full flex-row justify-between whitespace-nowrap">
-                <span className="font-bold">BP</span>
+              <div className="flex w-full flex-row  space-x-2 whitespace-nowrap">
+                <span className="font-bold">BP:</span>
                 <span className="">{props.prescription_data.bp} mm Hg</span>
               </div>
-              <div className="flex w-full flex-row justify-between whitespace-nowrap">
-                <span className="font-bold">Weight</span>
+              <div className="flex w-full flex-row space-x-2 whitespace-nowrap">
+                <span className="font-bold">Weight:</span>
                 <span className="">{props.prescription_data.weight}KG</span>
               </div>
             </div>

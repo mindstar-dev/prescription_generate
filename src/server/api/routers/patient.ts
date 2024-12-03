@@ -41,7 +41,9 @@ const deletePatientSchema = z.object({
 
 export const patientRouter = createTRPCRouter({
   get_all: protectedProcedure.query(async ({ ctx }) => {
-    const patients = await ctx.db.patient.findMany();
+    const patients = await ctx.db.patient.findMany({
+      orderBy: { date: "asc" },
+    });
     await ctx.db.$disconnect();
     return patients.reverse();
   }),

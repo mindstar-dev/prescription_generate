@@ -94,6 +94,7 @@ model VerificationToken {
     pin_code Int?
     country String?
     prescriptions Prescription[]
+    date DateTime @default(now())
  }
 
  model Prescription{
