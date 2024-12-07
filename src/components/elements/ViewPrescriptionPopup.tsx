@@ -187,26 +187,13 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
 
           <div className="flex w-full flex-1 flex-col border-t-[.1rem] border-[#958E8E]">
             <div className="h-fit w-full space-y-[0.5rem] border-b-[.1rem] border-[#958E8E] p-[1rem] text-sm">
-              <p className="space-x-2 text-wrap break-all">
-                <span className="font-bold">Symptoms:</span>
-                {/* {props.prescription_data.symptom} */}
-                <span
-                  dangerouslySetInnerHTML={{
-                    __html: formatTextWithLineBreaks(
-                      props.prescription_data.symptom,
-                    ),
-                  }}
-                ></span>
+              <p className="space-x-2 text-wrap ">
+                <span className="mr-1 font-bold">Symptoms:</span>
+                {props.prescription_data.symptom}
               </p>
-              <p className="space-x-2 text-wrap break-all">
-                <span className="font-bold">Diagnosis:</span>
-                <span
-                  dangerouslySetInnerHTML={{
-                    __html: formatTextWithLineBreaks(
-                      props.prescription_data.diagnosis,
-                    ),
-                  }}
-                ></span>
+              <p className="l space-x-2 text-wrap">
+                <span className="mr-1 font-bold">Diagnosis:</span>
+                {props.prescription_data.diagnosis}
               </p>
               <p className="text-wrap break-all">
                 <span className="mr-1 font-bold">Reports:</span>
@@ -218,35 +205,35 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
                   }}
                 ></span>
               </p>
-              <div className="flex w-full flex-row  space-x-2 whitespace-nowrap">
-                <span className="font-bold">BP:</span>
-                <span className="">{props.prescription_data.bp} mm Hg</span>
-              </div>
-              <div className="flex w-full flex-row space-x-2 whitespace-nowrap">
-                <span className="font-bold">Weight:</span>
-                <span className="">{props.prescription_data.weight}KG</span>
+              <div className="grid grid-cols-2">
+                <div className="flex w-full flex-row  space-x-1 whitespace-nowrap">
+                  <span className="font-bold">BP:</span>
+                  <span className="">{props.prescription_data.bp} mm Hg</span>
+                </div>
+                <div className="flex w-full flex-row space-x-1 whitespace-nowrap">
+                  <span className="font-bold">Weight:</span>
+                  <span className="">{props.prescription_data.weight}KG</span>
+                </div>
               </div>
             </div>
-            <div className="flex h-full w-[70%] flex-col px-[1rem]">
+            <div className="flex h-full w-full flex-col gap-y-2 px-[1rem]">
               <div className="flex h-fit w-full flex-col">
                 <h2 className="text-md font-bold">RX</h2>
-                <div className="flex h-[25%] w-full flex-col text-sm">
+                <div className="flex h-fit w-full flex-col text-sm">
                   {props.prescription_data.medicine.map((item, index) => {
                     return (
                       <div
-                        className="flex w-full flex-col justify-between"
+                        className="mb-2 grid w-full grid-cols-2 justify-between"
                         key={index}
                       >
-                        <div className="mb-2 flex w-full justify-between">
-                          <div className="w-[45%]">{item.medicine}</div>
-                          <div className="w-[45%]">{item.repeatitions}</div>
-                        </div>
+                        <div className="">{item.medicine}</div>
+                        <div className="">{item.repeatitions}</div>
                       </div>
                     );
                   })}
                 </div>
               </div>
-              <div className={`mt-4 flex h-fit min-h-[108px] w-full flex-col`}>
+              <div className={`flex h-fit w-full flex-col`}>
                 <h2 className="text-md font-bold">Test To Do:</h2>
                 <div className="flex h-fit w-[80%] flex-col">
                   <span
