@@ -134,67 +134,70 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
           ref={ref}
         >
           <div className="flex h-[22.5%] w-full flex-row items-center justify-between  px-[2rem]">
-            {" "}
-            {/*bg-[#9AA0B9] */}
-            <div className="h-[40%] w-[10%]">
-              {/* <Image src={img} className="h-full w-full text-white" alt="" /> */}
-            </div>
-            {/* <div className="flex h-[65%] w-fit flex-col justify-between text-white">
-              <span className="whitespace-nowrap">
-                Dr. Amitava Bhattacharya
-              </span>
-              <span className="whitespace-nowrap text-sm">Qualification</span>
-              <span className="whitespace-nowrap text-sm">
-                Address & Contact
-              </span>
-            </div> */}
+            <div className="h-[40%] w-[10%]"></div>
           </div>
           <div className="flex h-fit w-full flex-row flex-wrap items-center justify-between border-t-[.1rem] border-[#958E8E] px-[1rem] pb-[8px]">
-            <div className="flex h-full w-[25%] flex-col justify-start ">
-              <div className="flex flex-row  whitespace-nowrap text-sm">
-                <span className="mr-2 font-bold">P-ID: </span>
-                <span className="">{props.patient?.patient_id}</span>
+            <div className="flex h-full w-full flex-col justify-start ">
+              <div className="flex flex-row gap-x-4 text-sm">
+                <div>
+                  <span className="mr-2 font-bold">P-ID: </span>
+                  <span className="">{props.patient?.patient_id}</span>{" "}
+                </div>
+                <div className="flex flex-row space-x-[1rem] whitespace-nowrap text-sm">
+                  <span className="font-bold">Date:</span>
+                  <span>
+                    {date.getDate()}-{date.getMonth() + 1}-{date.getFullYear()}
+                  </span>
+                </div>
+                <div className="flex flex-row space-x-[1rem] whitespace-nowrap text-sm">
+                  <span className="font-bold">Time:</span>
+                  <span>
+                    {date.getHours()}:
+                    {date.getMinutes() < 10
+                      ? `0${date.getMinutes()}`
+                      : date.getMinutes()}
+                  </span>
+                </div>
               </div>
-              <div className="flex flex-row whitespace-nowrap text-sm">
-                <span className="mr-2 font-bold">Name: </span>
-                <span className="">
-                  {props.patient?.first_name} {props.patient?.last_name}
-                </span>
-              </div>
-              <div className="flex flex-row  whitespace-nowrap text-sm">
-                <span className="mr-2 font-bold">Age: </span>
-                <span>{props.patient?.age}</span>
-              </div>
-            </div>
-            <div className="justify flex h-full w-[25%] flex-col ">
-              <div className="flex flex-row space-x-[1rem] whitespace-nowrap text-sm">
-                <span className="font-bold">Date:</span>
-                <span>
-                  {date.getDate()}-{date.getMonth() + 1}-{date.getFullYear()}
-                </span>
-              </div>
-              <div className="flex flex-row space-x-[1rem] whitespace-nowrap text-sm">
-                <span className="font-bold">Time:</span>
-                <span>
-                  {date.getHours()}:
-                  {date.getMinutes() < 10
-                    ? `0${date.getMinutes()}`
-                    : date.getMinutes()}
-                </span>
+              <div className="flex flex-row gap-x-4 text-sm">
+                <div className="flex flex-row whitespace-nowrap text-sm">
+                  <span className="mr-2 font-bold">Name: </span>
+                  <span className="">
+                    {props.patient?.first_name} {props.patient?.last_name}
+                  </span>
+                </div>
+                <div className="flex flex-row  whitespace-nowrap text-sm">
+                  <span className="mr-2 font-bold">Age: </span>
+                  <span>{props.patient?.age}</span>
+                </div>
               </div>
             </div>
           </div>
 
           <div className="flex w-full flex-1 flex-col border-t-[.1rem] border-[#958E8E]">
             <div className="h-fit w-full space-y-[0.5rem] border-b-[.1rem] border-[#958E8E] p-[1rem] text-sm">
-              <p className="space-x-2 text-wrap ">
+              <p className="text-wrap ">
                 <span className="mr-1 font-bold">Symptoms:</span>
                 {props.prescription_data.symptom}
               </p>
-              <p className="l space-x-2 text-wrap">
+              {/* <p className="l space-x-2 text-wrap">
                 <span className="mr-1 font-bold">Diagnosis:</span>
                 {props.prescription_data.diagnosis}
-              </p>
+              </p> */}
+              <div className="flex flex-row flex-wrap gap-x-4 gap-y-2">
+                <p className="gap-x-2 text-wrap">
+                  <span className="font-bold">Diagnosis:</span>
+                  {props.prescription_data.diagnosis}
+                </p>
+                <div className="flex flex-row  gap-x-2 whitespace-nowrap">
+                  <span className="font-bold">BP:</span>
+                  <span className="">{props.prescription_data.bp} mm Hg</span>
+                </div>
+                <div className="flex flex-row gap-x-2 whitespace-nowrap">
+                  <span className="font-bold">Weight:</span>
+                  <span className="">{props.prescription_data.weight}KG</span>
+                </div>
+              </div>
               <p className="text-wrap break-all">
                 <span className="mr-1 font-bold">Reports:</span>
                 <span
@@ -205,7 +208,7 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
                   }}
                 ></span>
               </p>
-              <div className="grid grid-cols-2">
+              {/* <div className="grid grid-cols-2">
                 <div className="flex w-full flex-row  space-x-1 whitespace-nowrap">
                   <span className="font-bold">BP:</span>
                   <span className="">{props.prescription_data.bp} mm Hg</span>
@@ -214,7 +217,21 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
                   <span className="font-bold">Weight:</span>
                   <span className="">{props.prescription_data.weight}KG</span>
                 </div>
-              </div>
+              </div> */}
+              {/* <div className="flex flex-row">
+                <div className="flex flex-row  space-x-1 whitespace-nowrap">
+                  <span className="font-bold">BP:</span>
+                  <span className="">{props.prescription_data.bp} mm Hg</span>
+                </div>
+                <div className="flex flex-row space-x-1 whitespace-nowrap">
+                  <span className="font-bold">Weight:</span>
+                  <span className="">{props.prescription_data.weight}KG</span>
+                </div>
+                <p className="l space-x-2 text-wrap">
+                  <span className="mr-1 font-bold">Diagnosis:</span>
+                  {props.prescription_data.diagnosis}
+                </p>
+              </div> */}
             </div>
             <div className="flex h-full w-full flex-col gap-y-2 px-[1rem]">
               <div className="flex h-fit w-full flex-col">
