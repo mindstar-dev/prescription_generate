@@ -136,7 +136,7 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
           <div className="flex h-[22.5%] w-full flex-row items-center justify-between  px-[2rem]">
             <div className="h-[40%] w-[10%]"></div>
           </div>
-          <div className="flex h-fit w-full flex-row flex-wrap items-center justify-between border-t-[.1rem] border-[#958E8E] px-[1rem] pb-[8px]">
+          <div className="flex h-fit w-full flex-row flex-wrap items-center justify-between border-t-[.1rem] border-[#958E8E] px-[1rem] py-[8px]">
             <div className="flex h-full w-full flex-col justify-start ">
               <div className="flex flex-row gap-x-4 text-sm">
                 <div>
