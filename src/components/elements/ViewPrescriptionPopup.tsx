@@ -198,7 +198,7 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
                   <span className="">{props.prescription_data.weight}KG</span>
                 </div>
               </div>
-              <p className="text-wrap break-all">
+              {/* <p className="text-wrap break-all">
                 <span className="mr-1 font-bold">Reports:</span>
                 <span
                   dangerouslySetInnerHTML={{
@@ -207,7 +207,7 @@ const PrescipttionPopup: React.FC<pdfProps> = (props) => {
                     ),
                   }}
                 ></span>
-              </p>
+              </p> */}
               {/* <div className="grid grid-cols-2">
                 <div className="flex w-full flex-row  space-x-1 whitespace-nowrap">
                   <span className="font-bold">BP:</span>
