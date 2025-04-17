@@ -445,7 +445,7 @@ const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
                   />
                 </div>
               </div>
-              <div className="flex h-[45%] w-[85%] items-center justify-between">
+              {/* <div className="flex h-[45%] w-[85%] items-center justify-between">
                 <p className="ml-2 w-[14%] text-lg font-bold xl2:w-fit xl2:text-sm">
                   Reports
                 </p>
@@ -460,7 +460,7 @@ const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
                     });
                   }}
                 />
-              </div>
+              </div> */}
             </div>
             <div className="flex h-full w-[15%]">
               <div className="flex w-1/2 cursor-pointer flex-col items-center justify-center">
