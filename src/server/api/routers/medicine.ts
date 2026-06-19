@@ -4,6 +4,9 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 const medicineInputSchema = z.string({
   required_error: "Describe your basic units name",
 });
+const repetitionInputSchema = z.string({
+  required_error: "Describe your basic units name",
+});
 
 export const medicineRouter = createTRPCRouter({
   get_all: protectedProcedure.query(async ({ ctx }) => {
@@ -27,4 +30,22 @@ export const medicineRouter = createTRPCRouter({
 
     return repetitions;
   }),
+  delete: protectedProcedure
+    .input(medicineInputSchema)
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.medicine.delete({
+        where: {
+          name: input,
+        },
+      });
+    }),
+    deleteRepition: protectedProcedure
+    .input(repetitionInputSchema)
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.repetitions.delete({
+        where: {
+          name: input,
+        },
+      });
+    }),
 });

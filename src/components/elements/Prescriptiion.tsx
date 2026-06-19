@@ -78,6 +78,9 @@ const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
     repeatitions: "",
     id: "",
   });
+  const [note, setNote] = useState("");
+  const [test, setTest] = useState("");
+
   useEffect(() => {
     if (
       previous_prescription &&
@@ -171,6 +174,23 @@ const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
     });
   };
 
+  const handleNoteChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setNote(value);
+    setPrescriptionData({
+      ...prescriptionData,
+      note: value,
+    });
+  };
+  const handleTestChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setTest(value);
+    setPrescriptionData({
+      ...prescriptionData,
+      tests: value,
+    });
+  };
+
   const savePrescription = api.prescription.create_prescription.useMutation({
     onError(error, variables, context) {
       setProcessingPopup(false);
@@ -232,6 +252,11 @@ const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
   const { data: repetitions } = api.medicine.get_repetitions.useQuery();
 
   const { data: medicine } = api.medicine.get_all.useQuery();
+
+  const { data: notes } = api.note.get_all.useQuery();
+
+  const { data: tests } = api.test.get_all.useQuery();
+
 
   if (!initialFetchDone) {
     return <div>Loading</div>;
@@ -639,38 +664,38 @@ const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
 
               <div className="mt-4 flex h-fit w-4/5 items-center justify-between">
                 <p className="w-32 text-xl font-bold">Tests To do</p>
-                <TextField
-                  id="outlined-multiline-flexible"
-                  multiline
-                  maxRows={4}
-                  value={prescriptionData.tests}
-                  className="min-w-0 flex-grow font-serif"
-                  placeholder="Tests(Optional)"
-                  onChange={(e) => {
-                    setPrescriptionData({
-                      ...prescriptionData,
-                      tests: e.target.value,
-                    });
-                  }}
+                <input
+                  name="test"
+                  className="h-11 w-full border-2 border-[#DBDBDB] focus:outline-[#DBDBDB]"
+                  list="test"
+                  type="text"
+                  placeholder="Select Or Type Note"
+                  onChange={handleTestChange}
+                  value={test}
                 />
+                <datalist id="test">
+                  {tests?.map((item, index) => {
+                    return <option key={index} value={item.name}></option>;
+                  })}
+                </datalist>
               </div>
 
               <div className="my-4 flex h-fit w-4/5 items-center justify-between">
                 <p className="w-32 text-xl font-bold">Notes</p>
-                <TextField
-                  id="outlined-multiline-flexible"
-                  multiline
-                  maxRows={4}
-                  value={prescriptionData.note}
-                  className="h-fit min-w-0 flex-grow font-serif"
-                  placeholder="Notes (Optional)"
-                  onChange={(e) => {
-                    setPrescriptionData({
-                      ...prescriptionData,
-                      note: e.target.value,
-                    });
-                  }}
+                <input
+                  name="note"
+                  className="h-11 w-full border-2 border-[#DBDBDB] focus:outline-[#DBDBDB]"
+                  list="note"
+                  type="text"
+                  placeholder="Select Or Type Note"
+                  onChange={handleNoteChange}
+                  value={note}
                 />
+                <datalist id="note">
+                  {notes?.map((item, index) => {
+                    return <option key={index} value={item.name}></option>;
+                  })}
+                </datalist>
               </div>
               <div className="mb-2 mt-4 flex h-fit w-full items-center justify-center gap-x-4">
                 <button

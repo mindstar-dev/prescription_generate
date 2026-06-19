@@ -151,3 +151,11 @@ model Medicine{
 model Repetitions{
     name String @id
 }
+
+model Tests{
+    name String @id
+}
+
+model Notes{
+    name String @id
+}

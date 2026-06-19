@@ -5,7 +5,7 @@ import { DefaultArgs } from "@prisma/client/runtime/library";
 const prescriptionUniqueSchema = z.object({
   prescription_id: z.string({
     required_error: "Describe your basic units name",
-  }),
+  }).optional(),
 });
 const prescriptionFindByPatientSchema = z.object({
   patient_id: z.string({
@@ -85,6 +85,9 @@ export const prescriptionRouter = createTRPCRouter({
   get_whole_prescription_data_by_id: protectedProcedure
     .input(prescriptionUniqueSchema)
     .query(async ({ ctx, input }) => {
+      if(!input.prescription_id){
+        return null;
+      }
       const prescription = await ctx.db.prescription.findUnique({
         where: {
           prescription_id: input.prescription_id,
@@ -139,6 +142,16 @@ export const prescriptionRouter = createTRPCRouter({
             prescription_id: input.prescription_id,
             tests: input.tests,
           },
+        }),
+        ctx.db.notes.upsert({
+          create: { name: input.note },
+          update: { name: input.note },
+          where: { name: input.note },
+        }),
+        ctx.db.tests.upsert({
+          create: { name: input.tests },
+          update: { name: input.tests },
+          where: { name: input.tests },
         }),
       );
       input.medicine.map((item) => {

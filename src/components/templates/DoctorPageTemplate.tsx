@@ -8,12 +8,12 @@ import upload_reports_icon from "../../../images/file 1.png";
 import templates_icon from "../../../images/Dashboard.png";
 import doctor_logo from "../../../images/medical-symbol 1.png";
 import Image from "next/image";
-import { FaClipboardList, FaSignOutAlt } from "react-icons/fa";
+import { FaClipboardList, FaRegStickyNote, FaSignOutAlt } from "react-icons/fa";
 import { LuClipboardList, LuClipboardSignature } from "react-icons/lu";
-import { PiUserList } from "react-icons/pi";
+import { PiTestTube, PiUserList } from "react-icons/pi";
 import { TbReportAnalytics } from "react-icons/tb";
 import { MdOutlineDashboard, MdOutlineUploadFile } from "react-icons/md";
-import { FaCircleUser } from "react-icons/fa6";
+import { FaCircleUser, FaKitMedical, FaRepeat } from "react-icons/fa6";
 import { getSession, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 interface IProps {
@@ -27,6 +27,10 @@ interface IProps {
     | "reports"
     | "upload_reports"
     | "templates"
+    | "medicines"
+    | "notes"
+    | "tests"
+    | "repetition"
     | "";
   doctorName: string;
   children?: JSX.Element | JSX.Element[];
@@ -88,50 +92,66 @@ const DoctorPageTemplate: React.FunctionComponent<IProps> = (props) => {
               }}
             >
               <div className="hit ml-10 flex w-14  tablet:ml-4 tablet:w-fit">
-                {/* <Image
-                  src={patient_list_icon}
-                  alt="Description of the image"
-                  className=" h-10 w-10"
-                /> */}
                 <PiUserList className="h-10 w-10 pl-[.2rem] text-white tablet:h-8  tablet:w-8 tablet:pl-0" />
               </div>
               <p className="text-lg font-medium text-white tablet:text-sm">
                 Patient List
               </p>
             </div>
-            {/* <div
-              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "reports" ? "bg-[#FCA19F]" : "bg-transparent"} cursor-pointer hover:bg-[#F36562]`}
+            <div
+              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "medicines" ? "bg-[#FCA19F]" : "bg-transparent"} cursor-pointer hover:bg-[#F36562] tablet:gap-x-[6px]`}
               onClick={async () => {
-                await router.push("report-view");
+                await router.push("medicines");
               }}
             >
-              // <div className="hit ml-10 flex w-14">
-              //   <Image
-              //     src={reports_icon}
-              //     alt="Description of the image"
-              //     className=" h-10 w-10"
-              //   />
-
-                <TbReportAnalytics className="h-10 w-10 text-white" />
-              </div>
-              <p className="text-lg font-medium text-white">Reports</p>
-            </div> */}
-            {/* <div
-              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "upload_reports" ? "bg-[#FCA19F]" : "bg-transparent"} cursor-pointer hover:bg-[#F36562]`}
+            <div className="hit ml-10 flex w-14  tablet:ml-4 tablet:w-fit">
+                <FaKitMedical className="h-10 w-10 pl-[.2rem] text-white tablet:h-8  tablet:w-8 tablet:pl-0" />
+            </div>
+              <p className="text-lg font-medium text-white tablet:text-sm">
+                Medicine Repository
+              </p>
+            </div>
+            <div
+              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "repetition" ? "bg-[#FCA19F]" : "bg-transparent"} cursor-pointer hover:bg-[#F36562] tablet:gap-x-[6px]`}
               onClick={async () => {
-                await router.push("report-upload");
+                await router.push("repititions");
               }}
             >
-              <div className="hit ml-10 flex w-14">
-                // <Image
-                //   src={upload_reports_icon}
-                //   alt="Description of the image"
-                //   className=" h-10 w-10"
-                // />
-                <MdOutlineUploadFile className="h-10 w-10 text-white" />
-              </div>
-              <p className="text-lg font-medium text-white">Upload Reports</p>
-            </div> */}
+            <div className="hit ml-10 flex w-14  tablet:ml-4 tablet:w-fit">
+                <FaRepeat  className="h-10 w-10 pl-[.2rem] text-white tablet:h-8  tablet:w-8 tablet:pl-0" />
+            </div>
+              <p className="text-lg font-medium text-white tablet:text-sm">
+                Repetition Repository
+              </p>
+            </div>
+            <div
+              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "notes" ? "bg-[#FCA19F]" : "bg-transparent"} cursor-pointer hover:bg-[#F36562] tablet:gap-x-[6px]`}
+              onClick={async () => {
+                await router.push("notes");
+              }}
+            >
+            <div className="hit ml-10 flex w-14  tablet:ml-4 tablet:w-fit">
+                <FaRegStickyNote  className="h-10 w-10 pl-[.2rem] text-white tablet:h-8  tablet:w-8 tablet:pl-0" />
+            </div>
+              <p className="text-lg font-medium text-white tablet:text-sm">
+                Notes Repository
+              </p>
+            </div>
+            <div
+              className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "tests" ? "bg-[#FCA19F]" : "bg-transparent"} cursor-pointer hover:bg-[#F36562] tablet:gap-x-[6px]`}
+              onClick={async () => {
+                await router.push("tests");
+              }}
+            >
+            <div className="hit ml-10 flex w-14  tablet:ml-4 tablet:w-fit">
+                <PiTestTube    className="h-10 w-10 pl-[.2rem] text-white tablet:h-8  tablet:w-8 tablet:pl-0" />
+            </div>
+              <p className="text-lg font-medium text-white tablet:text-sm">
+                Tests Repository
+              </p>
+            </div>
+            
+            
             <div
               className={`flex h-[10%] w-full items-center rounded-[45px] ${props.activePage === "templates" ? "bg-[#FCA19F]" : "bg-transparent"} cursor-pointer hover:bg-[#F36562] tablet:gap-x-[6px]`}
               onClick={async () => {

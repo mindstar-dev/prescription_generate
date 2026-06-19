@@ -5,6 +5,8 @@ import { medicineRouter } from "./routers/medicine";
 import { symptomRouter } from "./routers/symptom";
 import { templateRouter } from "./routers/template";
 import { prescriptionRouter } from "./routers/prescription";
+import { noteRouter } from "./routers/notes";
+import { testRouter } from "./routers/tests";
 
 /**
  * This is the primary router for your server.
@@ -15,6 +17,8 @@ export const appRouter = createTRPCRouter({
   post: postRouter,
   patient: patientRouter,
   medicine: medicineRouter,
+  note: noteRouter,
+  test: testRouter,
   symptom: symptomRouter,
   template: templateRouter,
   prescription: prescriptionRouter,
