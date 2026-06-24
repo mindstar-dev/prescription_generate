@@ -121,6 +121,8 @@ const Prescriptiion: React.FunctionComponent<Iprops> = (props) => {
           ? previousPrescriptionData.prescription.weight.toString()
           : "",
       });
+      setNote(previousPrescriptionData.prescription.note as string);
+      setTest(previousPrescriptionData.prescription.tests as string);
 
       // Set initial fetch done to true
       setInitialFetchDone(true);
